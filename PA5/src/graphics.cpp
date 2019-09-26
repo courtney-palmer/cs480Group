@@ -45,8 +45,8 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   }
 
   // Create the objects
-  planet = new Object(false, 1.0f, 2000.0f, 1500.0f);
-  moon = new Object(true, 0.5f, 1000.0f, 700.0f);
+  planet = new Object(false, 1.0f, 2000.0f, 1000.0f);
+  moon = new Object(true, 0.5f, 800.0f, 700.0f);
 
   // Set up the shaders
   m_shader = new Shader();
