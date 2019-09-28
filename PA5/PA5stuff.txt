@@ -1,0 +1,53 @@
+List of variables each assimp object contains:
+
+aiScene:
+unsigned int mNumMeshes;
+aiMesh **mMeshes; //aiMeshes
+
+aiMesh:
+unsigned int mNumFaces;
+aiFace *mFaces; //aiFaces
+aiVector3D *mVertices;
+
+mFaces:
+unsigned int *mIndices; 
+unsigned int mNumIndices;
+
+//////////////////////////////things to add//////////////////////////////////////////
+Object.h:
+
+private:
+	std::vector<Vertex> vertices;
+	//std::vector<glm::vec2> uvs;
+	//std::vector<glm::vec3> normals;
+
+Object.cpp - Object::Object():
+
+struct Vertex
+{
+	GLfloat position[3];
+	GLfloat color[3];
+} v;
+
+int faceNumber;
+int indiceNumber;
+int vertexNumber;
+aiMesh *mesh;
+
+for (int meshNums = 0; meshNums < meshNumber; meshNums++)
+{
+	mesh = scene->mMeshes[meshNums]; //holds current mesh
+	scene->mMaterials[meshNums+1]->Get(color stuff);
+	faceNumber = scene->mMeshes[meshNums]->mNumFaces //holds the number of faces in the current mesh
+	for(int faceNums = 0; faceNums < faceNumber; faceNums++) //loop through each face
+	{
+		indiceNumber = scene->mMeshes[meshNums]->mFaces[faceNums]->mNumIndices; //holds number of indices in current face
+		for(int i = 0; i < indiceNumber; i++) //loop through each index
+		{
+			//places the vertex in the position of the ith index into the Vertex position
+			//so if mIndices = [5, 3, 7], v.position will take in the 5th vertex, the 3rd vertex, then the 7th vertex
+			v.position[i] = [mesh->mVertices[mesh->mFaces[faceNums]->mIndices[i]]];
+		}
+		vertices.push_back(v);
+	}
+}
