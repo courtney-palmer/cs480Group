@@ -3,11 +3,15 @@
 
 #include <vector>
 #include "graphics_headers.h"
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <assimp/color4.h>
 
 class Object
 {
   public:
-    Object(bool moon, float baseSc, float baseOS, float baseSS);
+    Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv);
     ~Object();
     void Update(unsigned int dt, glm::mat4 orbitOrigin);
     void Render();
@@ -24,6 +28,10 @@ class Object
     bool reversedSpin; //determines if the spin is reversed
 
   private:
+    unsigned int meshNumber;
+    Assimp::Importer importer;
+    const aiScene* scene;
+    
     glm::mat4 model;
     std::vector<Vertex> Vertices;
     std::vector<unsigned int> Indices;

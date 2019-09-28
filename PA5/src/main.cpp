@@ -1,10 +1,10 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <iostream>
 
-// #include <assimp/Importer.hpp>
-// #include <assimp/scene.h>
-// #include <assimp/postprocess.h>
-// #include <assimp/color4.h>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <assimp/color4.h>
 
 #include "engine.h"
 

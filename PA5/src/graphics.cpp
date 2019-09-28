@@ -45,8 +45,9 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   }
 
   // Create the objects
-  planet = new Object(false, 1.0f, 2000.0f, 1000.0f);
-  moon = new Object(true, 0.5f, 800.0f, 700.0f);
+  
+  planet = new Object(false, 1.0f, 2000.0f, 1000.0f, argv);
+  //moon = new Object(true, 0.5f, 800.0f, 700.0f, argv);
 
   // Set up the shaders
   m_shader = new Shader();
@@ -112,7 +113,7 @@ void Graphics::Update(unsigned int dt)
 {
   // Update the object
   planet->Update(dt, glm::mat4(1.0f));
-  moon->Update(dt, planet->GetPosition());
+  // moon->Update(dt, planet->GetPosition());
 }
 
 void Graphics::Render()
@@ -131,8 +132,8 @@ void Graphics::Render()
   // Render the object
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(planet->GetModel()));
   planet->Render();
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(moon->GetModel()));
-  moon->Render();
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(moon->GetModel()));
+  // moon->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();

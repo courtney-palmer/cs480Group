@@ -20,8 +20,8 @@ class Graphics
     void Render();
 
 	Object *planet;
-	Object *moon;
-
+	// Object *moon;
+  
   private:
     std::string ErrorString(GLenum error);
 
