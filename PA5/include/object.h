@@ -31,9 +31,10 @@ class Object
     unsigned int meshNumber;
     Assimp::Importer importer;
     const aiScene* scene;
-    
     glm::mat4 model;
     std::vector<Vertex> Vertices;
+    //std::vector<glm::vec2> uvs;
+    //std::vector<glm::vec3> normals;
     std::vector<unsigned int> Indices;
     GLuint VB;
     GLuint IB;

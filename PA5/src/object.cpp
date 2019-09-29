@@ -27,77 +27,85 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
     f 3 7 4
     f 5 1 8
   */
+  /*
+    //Origional set of vertices
+    Vertices = {
+      {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 0.0f}},
+      {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
+      {{-1.0f, -1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
+      {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 1.0f}},
+      {{1.0f, 1.0f, -1.0f}, {1.0f, 1.0f, 0.0f}},
+      {{1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 1.0f}},
+      {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 1.0f}},
+      {{-1.0f, 1.0f, -1.0f}, {1.0f, 1.0f, 1.0f}}
+    };
 
-  // Vertices = {
-  //   {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 0.0f}},
-  //   {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
-  //   {{-1.0f, -1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
-  //   {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 1.0f}},
-  //   {{1.0f, 1.0f, -1.0f}, {1.0f, 1.0f, 0.0f}},
-  //   {{1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 1.0f}},
-  //   {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 1.0f}},
-  //   {{-1.0f, 1.0f, -1.0f}, {1.0f, 1.0f, 1.0f}}
-  // };
-
-  // Indices = {
-  //   2, 3, 4,
-  //   8, 7, 6,
-  //   1, 5, 6,
-  //   2, 6, 7,
-  //   7, 8, 4,
-  //   1, 4, 8,
-  //   1, 2, 4,
-  //   5, 8, 6,
-  //   2, 1, 6,
-  //   3, 2, 7,
-  //   3, 7, 4,
-  //   5, 1, 8
-  // };
+    Indices = {
+      2, 3, 4,
+      8, 7, 6,
+      1, 5, 6,
+      2, 6, 7,
+      7, 8, 4,
+      1, 4, 8,
+      1, 2, 4,
+      5, 8, 6,
+      2, 1, 6,
+      3, 2, 7,
+      3, 7, 4,
+      5, 1, 8
+    };
+  */
 
   // The index works at a 0th index
   for(unsigned int i = 0; i < Indices.size(); i++)
   {
     Indices[i] = Indices[i] - 1;
   }
+
  ///////////// -- ADDING ASSIMP STUFF -- /////////////////
-  std::string s;
+ std::string s;
 	int i = 0;
-	while(!(strcmp(argv[i], "-o") == 0)) //go through arguments until you find -o flag
+	while(!(strcmp(argv[i], "-o") == 0)){ //go through arguments until you find -o flag
 		i++;
-	i++; //next argument is the file name we want
-	std::string fileName(argv[i]);
-  // std::cout << "Object File Name: " << std::endl;
-  // std::cin >> filename;
+  }
+  i++; //next argument is the file name we want
+  std::string fileName(argv[i]);
+  std::cout << "Filename: " << fileName << std::endl;
+
+  // commented out because struct is not currently being used
+  // -courtney
+  // struct Vertex{
+  //   GLfloat position[3];
+  //   GLfloat color[3];
+  // } v;
+
+  int faceNumber;
+  aiMesh *mesh;
+
   scene = importer.ReadFile("../Assets/model/" + fileName, aiProcess_Triangulate);
   meshNumber = scene->mNumMeshes; //hold numberof meshes in the scene
-  std::cout << "number of meshes is: " << meshNumber << std::endl;
+  std::cout << "Number of meshes: " << meshNumber << std::endl;
   aiColor3D color (0.0f, 0.0f, 0.0f);
 
-	// std::vector<unsigned short> & indices,
-	// std::vector<glm::vec3> & vertices,
-	// std::vector<glm::vec2> & uvs,
-	// std::vector<glm::vec3> & normals
-  // int numVerts = meshNums * 3;
-
   for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++){ //handles multiple meshes
+    mesh = scene->mMeshes[meshNums]; //holds current mesh
     scene ->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, color); 
-    // vertexArray.reserve(numVerts);
-    // for(unsigned int i=0; i<numVerts; i++){
-    //   aiVector3D pos = meshNums;
-    //   vertices.push_back(glm::vec3(pos.x, pos.y, pos.z));
-    // }
-    // uvs.reserve(numVerts);
-    // for(unsigned int i=0; i<numVerts; i++){
-    //   aiVector3D UVW = mesh->mTextureCoords[0][i];;
-    //   uvs.push_back(glm::vec3(UVW.x, UVW.y));
-    // }
-    // normals.reserve(numVerts);
-    // for(unsigned int i=0; i<numVerts; i++){
-    //   aiVector3D n = mesh->mNormals[i];
-    //   normals.push_back(glm::vec3(n.x, n.y, n.z));
-    // }
+    faceNumber = mesh->mNumFaces; //holds the number of faces in the current mesh
+    std::cout << "Number of Faces: " << faceNumber << std::endl;
+    const aiFace& face = mesh->mFaces[meshNums]; // current face we are reading
+    int indiceNumder = face.mNumIndices;
+    std::cout  << "Number of Indices (per face): " << indiceNumder << std::endl;
+
+    for(int f = 0; f < faceNumber; f++){ // loop through faces
+      for (int i = 0; i < indiceNumder; i++){ // loop through each index
+        // HERE IS WHERE WE SHOULD BE SAVING OUR INDICES
+
+      }
+      //std::cout << std::endl;
+    }
   } 
   ///////////// -- END OF  ASSIMP STUFF -- /////////////////
+
 
   isMoon = moon;
   angleOrbit = 0.0f;

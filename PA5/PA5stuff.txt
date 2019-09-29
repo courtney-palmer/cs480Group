@@ -17,7 +17,7 @@ unsigned int mNumIndices;
 Object.h:
 
 private:
-	std::vector<Vertex> vertices;
+	std::vector<Vertex> vertices;  //already added
 	//std::vector<glm::vec2> uvs;
 	//std::vector<glm::vec3> normals;
 
