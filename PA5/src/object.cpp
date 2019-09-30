@@ -57,10 +57,10 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
   */
 
   // The index works at a 0th index
-  for(unsigned int i = 0; i < Indices.size(); i++)
-  {
-    Indices[i] = Indices[i] - 1;
-  }
+  // for(unsigned int i = 0; i < Indices.size(); i++)
+  // {
+  //   Indices[i] = Indices[i] - 1;
+  // }
 
  ///////////// -- ADDING ASSIMP STUFF -- /////////////////
  std::string s;
