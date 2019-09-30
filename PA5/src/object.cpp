@@ -85,14 +85,44 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
   scene = importer.ReadFile("../Assets/model/" + fileName, aiProcess_Triangulate);
   meshNumber = scene->mNumMeshes; //hold numberof meshes in the scene
   std::cout << "Number of meshes: " << meshNumber << std::endl;
-  aiColor3D color (0.0f, 0.0f, 0.0f);
+  
+  aiColor3D color (0.0f, 0.0f, 0.0f); //unsure how to utilize aiColor3d type. 
 
-  for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++){ //handles multiple meshes
+  // NOTES: The following for loop captures Vertices (position, color) and captures
+  // indices. We still need to seperate out the 3 indices
+
+  for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++){ //loop through each mesh found
     mesh = scene->mMeshes[meshNums]; //holds current mesh
-    scene ->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, color); 
+    scene->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, color); 
+    
+    int verticeNumbers = mesh->mNumVertices;
+    std::cout << "Number of Vertices is:" << verticeNumbers << std::endl;
+
+    for(int v = 0; v < verticeNumbers; v++){ // loop through and save vertice position and set color
+      aiVector3D vertVect = mesh->mVertices[v]; // get vurrent vertice vector
+      glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z); 
+      glm::vec3 tempColor = {1.0f, 0.0f, 0.0f}; // eventually want to use the aiColor3D type
+      Vertex *tempVertex = new Vertex(tempPos, tempColor); 
+     
+      Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
+    }
+
     faceNumber = mesh->mNumFaces; //holds the number of faces in the current mesh
     std::cout << "Number of Faces: " << faceNumber << std::endl;
+
+    for(int f = 0; f < faceNumber; f++){ //traverse each face, save the 3 indices
+      aiFace* face = &mesh->mFaces[f];  		// get the current face
+
+      Indices.push_back(face->mIndices[0]);  // push back face indices onto Indices
+      Indices.push_back(face->mIndices[1]);
+      Indices.push_back(face->mIndices[2]);
+
+    }
+
+/*
+   //old way to traverse face indics
     const aiFace& face = mesh->mFaces[meshNums]; // current face we are reading
+    
     int indiceNumder = face.mNumIndices;
     std::cout  << "Number of Indices (per face): " << indiceNumder << std::endl;
 
@@ -103,6 +133,7 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
       }
       //std::cout << std::endl;
     }
+   */ 
   } 
   ///////////// -- END OF  ASSIMP STUFF -- /////////////////
 

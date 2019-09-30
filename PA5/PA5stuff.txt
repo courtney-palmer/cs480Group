@@ -1,17 +1,22 @@
+General Flowchart:
+	1 aiScene = many aiMeshes
+	1 aiMesh = many mFaces, many mVertices
+	1 mFace = 3 indices
+
 List of variables each assimp object contains:
 
 aiScene:
-unsigned int mNumMeshes;
-aiMesh **mMeshes; //aiMeshes
+	unsigned int mNumMeshes;	//number of meshes in one scene
+	aiMesh **mMeshes; 			//array of aiMeshes of size mNumMeshes
 
 aiMesh:
-unsigned int mNumFaces;
-aiFace *mFaces; //aiFaces
-aiVector3D *mVertices;
+	unsigned int mNumFaces; 	//number of primitives in one mesh
+	aiFace *mFaces; 			//pointer to an array of aiFaces of size mNumFaces
+	aiVector3D *mVertices;		//array of vertex positions
 
 mFaces:
-unsigned int *mIndices; 
-unsigned int mNumIndices;
+	unsigned int *mIndices; 	//pointer to an array of indices
+	unsigned int mNumIndices;	//number of indices in a face
 
 //////////////////////////////things to add//////////////////////////////////////////
 Object.h:
