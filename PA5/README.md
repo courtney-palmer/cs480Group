@@ -15,7 +15,7 @@ make
 ## Command Line Instructions
 Use this line in the terminal to run the program:
 ```bash
-./PA5 -v shader-v.txt -f shader-f.txt
+./PA5 -v shader-v.txt -f shader-f.txt -o dragon.obj
 ```
 
 ## Keyboard/Mouse Instructions
@@ -41,4 +41,4 @@ Decrease size - L<br/>
 Increase orbit speed - ;<br/>
 Decrease orbit speed - K<br/>
 Increase spin speed - Y<br/>
-Decrease spin speed - Urrrrrrrr
+Decrease spin speed - U
