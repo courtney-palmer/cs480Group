@@ -201,3 +201,16 @@ void Object::SetSpinSpeed(bool scalar)
       spinSpeedMult -= 0.25f;
   }
 }
+
+void Object::GetModelInfo() {
+
+  // Display Vertex position and color information
+  for(int i = 0; i < Vertices.size(); i++) {
+    
+  }
+
+  // Display Indices in groups of threes aka for each face
+  for(int i = 0; i < Indices.size(); i++) {
+
+  }
+}
