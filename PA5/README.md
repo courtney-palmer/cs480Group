@@ -1,14 +1,17 @@
 # PA5: Assimp
+
 ##Project Description
+In Project 5, we load models and display them onto the window. 
 
-
-## Makefile Instructions 
+## Cmake & Makefile Instructions
+Currently using makefile to generate a makefile.
 The makefile works as expected and must be updated with new files added in.
+
 
 ```bash
 mkdir build
 cd build
-cp ../makefile .
+cmake ..
 make
 ```
 

@@ -2,6 +2,7 @@
 #define GRAPHICS_H
 
 #define GLM_ENABLE_EXPERIMENTAL
+
 #include <iostream>
 using namespace std;
 
@@ -19,8 +20,7 @@ class Graphics
     void Update(unsigned int dt);
     void Render();
 
-	Object *planet;
-	// Object *moon;
+    Object *planet;
   
   private:
     std::string ErrorString(GLenum error);
@@ -32,7 +32,6 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
 
-    //Object *planet;
 };
 
 #endif /* GRAPHICS_H */

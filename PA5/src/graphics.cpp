@@ -26,7 +26,7 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
     //Check for error
     if (status != GLEW_OK)
     {
-      std::cerr << "GLEW Error: " << glewGetErrorString(status) << "\n";
+      cerr << "GLEW Error: " << glewGetErrorString(status) << "\n";
       return false;
     }
   #endif
@@ -47,8 +47,7 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   // Create the objects
   
   planet = new Object(false, 1.0f, 2000.0f, 1000.0f, argv);
-  //moon = new Object(true, 0.5f, 800.0f, 700.0f, argv);
-
+  
   // Set up the shaders
   m_shader = new Shader();
   if(!m_shader->Initialize())
@@ -140,11 +139,11 @@ void Graphics::Render()
   if ( error != GL_NO_ERROR )
   {
     string val = ErrorString( error );
-    std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
+    cout << "Error initializing OpenGL! " << error << ", " << val << endl;
   }
 }
 
-std::string Graphics::ErrorString(GLenum error)
+string Graphics::ErrorString(GLenum error)
 {
   if(error == GL_INVALID_ENUM)
   {

@@ -2,66 +2,7 @@
 
 Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
 {  
-  /*
-    # Blender File for a Cube
-    o Cube
-    v 1.000000 -1.000000 -1.000000
-    v 1.000000 -1.000000 1.000000
-    v -1.000000 -1.000000 1.000000
-    v -1.000000 -1.000000 -1.000000
-    v 1.000000 1.000000 -0.999999
-    v 0.999999 1.000000 1.000001
-    v -1.000000 1.000000 1.000000
-    v -1.000000 1.000000 -1.000000
-    s off
-    f 2 3 4
-    f 8 7 6
-    f 1 5 6
-    f 2 6 7
-    f 7 8 4
-    f 1 4 8
-    f 1 2 4
-    f 5 8 6
-    f 2 1 6
-    f 3 2 7
-    f 3 7 4
-    f 5 1 8
-  */
-  /*
-    //Origional set of vertices
-    Vertices = {
-      {{1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 0.0f}},
-      {{1.0f, -1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
-      {{-1.0f, -1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
-      {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f, 1.0f}},
-      {{1.0f, 1.0f, -1.0f}, {1.0f, 1.0f, 0.0f}},
-      {{1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 1.0f}},
-      {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 1.0f}},
-      {{-1.0f, 1.0f, -1.0f}, {1.0f, 1.0f, 1.0f}}
-    };
-
-    Indices = {
-      2, 3, 4,
-      8, 7, 6,
-      1, 5, 6,
-      2, 6, 7,
-      7, 8, 4,
-      1, 4, 8,
-      1, 2, 4,
-      5, 8, 6,
-      2, 1, 6,
-      3, 2, 7,
-      3, 7, 4,
-      5, 1, 8
-    };
-  */
-
-  // The index works at a 0th index
-  // for(unsigned int i = 0; i < Indices.size(); i++)
-  // {
-  //   Indices[i] = Indices[i] - 1;
-  // }
-
+  // LOAD MODEL
  ///////////// -- ADDING ASSIMP STUFF -- /////////////////
  std::string s;
 	int i = 0;
@@ -71,13 +12,6 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
   i++; //next argument is the file name we want
   std::string fileName(argv[i]);
   std::cout << "Filename: " << fileName << std::endl;
-
-  // commented out because struct is not currently being used
-  // -courtney
-  // struct Vertex{
-  //   GLfloat position[3];
-  //   GLfloat color[3];
-  // } v;
 
   int faceNumber;
   aiMesh *mesh;
@@ -90,11 +24,14 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
 
   // NOTES: The following for loop captures Vertices (position, color) and captures
   // indices. We still need to seperate out the 3 indices
+  // The 3 indices seem to represent the 3 vertex for each face - ash
 
+  // Retrieve Info from Meshes
   for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++){ //loop through each mesh found
     mesh = scene->mMeshes[meshNums]; //holds current mesh
     scene->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, color); 
-    
+
+    // Get VERTICES from MESH
     int verticeNumbers = mesh->mNumVertices;
     std::cout << "Number of Vertices for mesh " << meshNums << " is: " << verticeNumbers << std::endl;
 
@@ -107,6 +44,7 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
       Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
     }
 
+    // Get INDICES from MESH
     faceNumber = mesh->mNumFaces; //holds the number of faces in the current mesh
     std::cout << "Number of Faces for mesh " << meshNums << " is: " << faceNumber << std::endl;
 
@@ -116,27 +54,10 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
       Indices.push_back(face->mIndices[0]);  // push back face indices onto Indices
       Indices.push_back(face->mIndices[1]);
       Indices.push_back(face->mIndices[2]);
-
     }
 
-/*
-   //old way to traverse face indics
-    const aiFace& face = mesh->mFaces[meshNums]; // current face we are reading
-    
-    int indiceNumder = face.mNumIndices;
-    std::cout  << "Number of Indices (per face): " << indiceNumder << std::endl;
-
-    for(int f = 0; f < faceNumber; f++){ // loop through faces
-      for (int i = 0; i < indiceNumder; i++){ // loop through each index
-        // HERE IS WHERE WE SHOULD BE SAVING OUR INDICES
-
-      }
-      //std::cout << std::endl;
-    }
-   */ 
-  } 
+  } // End for loop "Retrieve Info from Meshes"
   ///////////// -- END OF  ASSIMP STUFF -- /////////////////
-
 
   isMoon = moon;
   angleOrbit = 0.0f;
@@ -160,6 +81,7 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
   maxSpeed = 3.0f;
   minSpeed = 0.25f;
 
+  
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
