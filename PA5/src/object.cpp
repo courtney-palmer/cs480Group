@@ -96,19 +96,19 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
     scene->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, color); 
     
     int verticeNumbers = mesh->mNumVertices;
-    std::cout << "Number of Vertices is:" << verticeNumbers << std::endl;
+    std::cout << "Number of Vertices for mesh " << meshNums << " is: " << verticeNumbers << std::endl;
 
     for(int v = 0; v < verticeNumbers; v++){ // loop through and save vertice position and set color
       aiVector3D vertVect = mesh->mVertices[v]; // get vurrent vertice vector
       glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z); 
-      glm::vec3 tempColor = {1.0f, 0.0f, 0.0f}; // eventually want to use the aiColor3D type
+      glm::vec3 tempColor = {1.0f, 1.0f, 1.0f}; // eventually want to use the aiColor3D type
       Vertex *tempVertex = new Vertex(tempPos, tempColor); 
      
       Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
     }
 
     faceNumber = mesh->mNumFaces; //holds the number of faces in the current mesh
-    std::cout << "Number of Faces: " << faceNumber << std::endl;
+    std::cout << "Number of Faces for mesh " << meshNums << " is: " << faceNumber << std::endl;
 
     for(int f = 0; f < faceNumber; f++){ //traverse each face, save the 3 indices
       aiFace* face = &mesh->mFaces[f];  		// get the current face
@@ -177,20 +177,20 @@ Object::~Object()
 
 void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
 {
-  // if(!pausedOrbit)
-  // {
-  //   if(reversedOrbit)
-  //     //angleOrbit -= dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
-  //  // else
-  //     //angleOrbit += dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
-  // }
-  // if(!pausedSpin)
-  // {
-  //   if(reversedSpin)
-  //     //angleSelf -= dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's orbit
-  // //  else
-  //     //angleSelf += dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's orbit
-  // }
+  if(!pausedOrbit)
+  {
+    if(reversedOrbit)
+      angleOrbit -= dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
+   else
+      angleOrbit += dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
+  }
+  if(!pausedSpin)
+  {
+    if(reversedSpin)
+      angleSelf -= dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's orbit
+   else
+      angleSelf += dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's orbit
+  }
 
   position = glm::translate(orbitOrigin, glm::vec3((5.0f * sin(angleOrbit)), 0.0f, (5.0f * cos(angleOrbit)))); //translates cube about the designated orbitOrigin
   glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angleSelf), glm::vec3(0.0, 1.0, 0.0)); //sets the cube's rotation about its center y-axis
