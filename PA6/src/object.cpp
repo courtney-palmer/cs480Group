@@ -58,7 +58,7 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
       for(int i = 0; i < 3; i++) {
         Indices.push_back(face->mIndices[i]);  // push back face indices onto Indices
         // load vertexs for face using mesh indices
-        aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get vurrent vertice vector
+        aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get current vertices vector
         glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z); 
         Vertex *tempVertex = new Vertex(tempPos, colorVert); 
         Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
@@ -138,13 +138,13 @@ void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
   if(!pausedSpin)
   {
     if(reversedSpin)
-      angleSelf -= dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's orbit
+      angleSelf -= dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
    else
-      angleSelf += dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's orbit
+      angleSelf += dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
   }
 
-  position = glm::translate(orbitOrigin, glm::vec3((5.0f * sin(angleOrbit)), 0.0f, (5.0f * cos(angleOrbit)))); //translates cube about the designated orbitOrigin
-  glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angleSelf), glm::vec3(0.0, 1.0, 0.0)); //sets the cube's rotation about its center y-axis
+  position = glm::translate(orbitOrigin, glm::vec3((5.0f * sin(angleOrbit)), 0.0f, (5.0f * cos(angleOrbit)))); //translates object about the designated orbitOrigin
+  glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angleSelf), glm::vec3(0.0, 1.0, 0.0)); //sets the object's rotation about its center y-axis
   glm::mat4 scaleMat = glm::scale(glm::vec3((scaleMult * baseScale), (scaleMult * baseScale), (scaleMult * baseScale))); //set the scale of the object
 
   model = position * rotSelf * scaleMat; //multiply matrices to apply effects to the model
@@ -192,14 +192,14 @@ void Object::SetScale(bool scalar)
 {
   if(scalar) //if increasing
   {
-    if(scaleMult + 0.25f > maxScale) //be sure not to go over the max limit
+    if(scaleMult + 0.25f > maxScale) //ensures we don't go over the max limit
       scaleMult = maxScale;
     else
       scaleMult += 0.25f;
   }
   else //if decreasing
   {
-    if(scaleMult - 0.25f < minScale) //be sure not to go under the min limit
+    if(scaleMult - 0.25f < minScale) //ensures we don't go under the min limit
       scaleMult = minScale;
     else
       scaleMult -= 0.25f;
@@ -210,14 +210,14 @@ void Object::SetOrbitSpeed(bool scalar)
 {
   if(scalar) //if increasing
   {
-    if(orbitSpeedMult + 0.25f > maxSpeed) //be sure not to go over the max limit
+    if(orbitSpeedMult + 0.25f > maxSpeed) //ensures we don't go over the max limit
       orbitSpeedMult = maxSpeed;
     else
       orbitSpeedMult += 0.25f;
   }
   else //if decreasing
   {
-    if(orbitSpeedMult - 0.25f < minSpeed) //be sure not to go under the min limit
+    if(orbitSpeedMult - 0.25f < minSpeed) //ensures we don't go under the min limit
       orbitSpeedMult = minSpeed;
     else
       orbitSpeedMult -= 0.25f;
@@ -228,14 +228,14 @@ void Object::SetSpinSpeed(bool scalar)
 {
   if(scalar) //if increasing
   {
-    if(spinSpeedMult + 0.25f > maxSpeed) //be sure not to go over the max limit
+    if(spinSpeedMult + 0.25f > maxSpeed) //ensures we don't go over the max limit
       spinSpeedMult = maxSpeed;
     else
       spinSpeedMult += 0.25f;
   }
   else //if decreasing
   {
-    if(spinSpeedMult - 0.25f < minSpeed) //be sure not to go under the min limit
+    if(spinSpeedMult - 0.25f < minSpeed) //ensures we don't go under the min limit
       spinSpeedMult = minSpeed;
     else
       spinSpeedMult -= 0.25f;
