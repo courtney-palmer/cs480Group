@@ -29,11 +29,12 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
 
     mesh = scene->mMeshes[meshNums]; //holds current mesh
 
-    scene->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, color); 
+ 
 
     meshData.push_back( meshInfo(mesh->mNumFaces*3, Indices.size())); // add 1 mesh to meshData vector & starting index
 
     aiColor4D colorVal (0.0f, 0.0f, 0.0f, 1.0f); //r, g, b, a, (a controls transparency)
+    scene->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, colorVal); 
     aiMaterial *mtrl; // define a material type (stores materials)
     mtrl = scene->mMaterials[mesh->mMaterialIndex]; //retrieve current mesh materials
     glm::vec3 colorVert (0.0f, 0.0f, 0.0f); // initialize a temporary color vertex
