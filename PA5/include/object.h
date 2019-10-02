@@ -39,6 +39,7 @@ class Object
     std::vector<unsigned int> Indices;
     GLuint VB;
     GLuint IB;
+    GLuint VAO; // Vertex array object to render multiple meshes?
 
     float angleOrbit; //the angle of the orbit
     float angleSelf; //the anlgle of the self rotation
