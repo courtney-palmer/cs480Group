@@ -1,6 +1,6 @@
 #include "object.h"
 
-Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
+Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
 {  
   // LOAD MODEL
   ///////////// -- ADDING ASSIMP STUFF -- /////////////////
@@ -15,9 +15,8 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
 
   aiMesh *mesh;
 
-
   scene = importer.ReadFile("../Assets/model/" + fileName, aiProcess_Triangulate);
-  meshNumber = scene->mNumMeshes; //hold numberof meshes in the scene
+  meshNumber = scene->mNumMeshes; //hold number of meshes in the scene
   std::cout << "Number of meshes: " << meshNumber << std::endl;
   
   // NOTES: The following for loop captures Vertices (position, color) and captures
@@ -28,9 +27,6 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
   for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++){ //loop through each mesh found
 
     mesh = scene->mMeshes[meshNums]; //holds current mesh
-
- 
-
     meshData.push_back( meshInfo(mesh->mNumFaces*3, Indices.size())); // add 1 mesh to meshData vector & starting index
 
     aiColor4D colorVal (0.0f, 0.0f, 0.0f, 1.0f); //r, g, b, a, (a controls transparency)
@@ -70,9 +66,26 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
 
   std::cout << "Total Vertices Stored in Object: " << Vertices.size() << std::endl
 	    << "Total Indices Stored: " << Indices.size() << std::endl;
-  ///////////// -- END OF  ASSIMP STUFF -- /////////////////
+  ///////////// -- END OF ASSIMP STUFF -- /////////////////
+  
+  // ADD TEXTURES
+  ///////////// -- IMAGE MAGICK -- /////////////////
+  //load texture from image
+  Magick::Blob blob;
+  Magick::Image *image;
+  image = new Magick::Image("image name here");
+  image->write(&blob, "RGBA");
+  
+  //generate texture in OpenGL
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAGS_FILTER, GL_LINEAR);
+  delete image;
 
-  isMoon = moon;
+  ///////////// -- END IMAGE MAGICK -- /////////////////
+
   angleOrbit = 0.0f;
   angleSelf = 0.0f;
 
