@@ -34,6 +34,7 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
     aiMaterial *mtrl; // define a material type (stores materials)
     mtrl = scene->mMaterials[mesh->mMaterialIndex]; //retrieve current mesh materials
     glm::vec3 colorVert (0.0f, 0.0f, 0.0f); // initialize a temporary color vertex
+	glm::vec2 textureVert (0.0f, 0.0f); //initialize a temporary texture vertex
 
     if(mtrl != NULL){
       if(AI_SUCCESS == aiGetMaterialColor(mtrl, AI_MATKEY_COLOR_DIFFUSE, &colorVal)){
@@ -55,8 +56,13 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
         Indices.push_back(face->mIndices[i]);  // push back face indices onto Indices
         // load vertexs for face using mesh indices
         aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get current vertices vector
-        glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z); 
-        Vertex *tempVertex = new Vertex(tempPos, colorVert); 
+        glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z);
+		if(mesh->HasTextureCoords(0)){
+			aiVector3D vert = mesh->mTextureCoords[0][i];
+			textureVert.x = vert.x;
+			textureVert.y = vert.y;
+		}
+        Vertex *tempVertex = new Vertex(tempPos, colorVert, textureVert); 
         Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
       }
 
