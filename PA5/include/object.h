@@ -18,7 +18,7 @@ class Object
 
     glm::mat4 GetModel();
     glm::mat4 GetPosition();
-    void GetModelInfo();
+    void DisplayModelInfo(const unsigned int maxDisplayLines = 10);
     void SetScale(bool scalar); //if scalar true, increase, else decrease
     void SetOrbitSpeed(bool scalar); //if scalar true, increase, else decrease
     void SetSpinSpeed(bool scalar); //if scalar true, increase, else decrease

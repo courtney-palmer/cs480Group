@@ -3,11 +3,11 @@
 Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
 {  
   // LOAD MODEL
- ///////////// -- ADDING ASSIMP STUFF -- /////////////////
- std::string s;
-	int i = 0;
-	while(!(strcmp(argv[i], "-o") == 0)){ //go through arguments until you find -o flag
-		i++;
+  ///////////// -- ADDING ASSIMP STUFF -- /////////////////
+  std::string s;
+  int i = 0;
+  while(!(strcmp(argv[i], "-o") == 0)){ //go through arguments until you find -o flag
+    i++;
   }
   i++; //next argument is the file name we want
   std::string fileName(argv[i]);
@@ -15,6 +15,7 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
 
   int faceNumber;
   aiMesh *mesh;
+
 
   scene = importer.ReadFile("../Assets/model/" + fileName, aiProcess_Triangulate);
   meshNumber = scene->mNumMeshes; //hold numberof meshes in the scene
@@ -26,37 +27,35 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
   // indices. We still need to seperate out the 3 indices
   // The 3 indices seem to represent the 3 vertex for each face - ash
 
-  // Retrieve Info from Meshes
+  // Retrieve Vertices(position & color) & Indices in each Mesh
   for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++){ //loop through each mesh found
     mesh = scene->mMeshes[meshNums]; //holds current mesh
     scene->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, color); 
 
-    // Get VERTICES from MESH
-    int verticeNumbers = mesh->mNumVertices;
-    std::cout << "Number of Vertices for mesh " << meshNums << " is: " << verticeNumbers << std::endl;
-
-    for(int v = 0; v < verticeNumbers; v++){ // loop through and save vertice position and set color
-      aiVector3D vertVect = mesh->mVertices[v]; // get vurrent vertice vector
-      glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z); 
-      glm::vec3 tempColor = {1.0f, 1.0f, 1.0f}; // eventually want to use the aiColor3D type
-      Vertex *tempVertex = new Vertex(tempPos, tempColor); 
-     
-      Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
-    }
-
-    // Get INDICES from MESH
+    // Get INDICES (and vertices) from MESH
     faceNumber = mesh->mNumFaces; //holds the number of faces in the current mesh
     std::cout << "Number of Faces for mesh " << meshNums << " is: " << faceNumber << std::endl;
 
     for(int f = 0; f < faceNumber; f++){ //traverse each face, save the 3 indices
       aiFace* face = &mesh->mFaces[f];  		// get the current face
 
-      Indices.push_back(face->mIndices[0]);  // push back face indices onto Indices
-      Indices.push_back(face->mIndices[1]);
-      Indices.push_back(face->mIndices[2]);
-    }
+      // Use index value to load vertex values from mVertices
+      for(int i = 0; i < 3; i++) {
+	Indices.push_back(face->mIndices[i]);  // push back face indices onto Indices
+	// load vertexs for face using mesh indices
+	aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get vurrent vertice vector
+	glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z); 
+	glm::vec3 tempColor = {1.0f, 1.0f, 1.0f}; // eventually want to use the aiColor3D type
+	Vertex *tempVertex = new Vertex(tempPos, tempColor); 
+	Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
+      }
+
+    } // End for : "Get INDICES from Mesh
 
   } // End for loop "Retrieve Info from Meshes"
+
+  std::cout << "Total Vertices Stored in Object: " << Vertices.size() << std::endl
+	    << "Total Indices Stored: " << Indices.size() << std::endl;
   ///////////// -- END OF  ASSIMP STUFF -- /////////////////
 
   isMoon = moon;
@@ -72,7 +71,7 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
   baseScale = baseSc;
   scaleMult = 1.0f; //scales up/down 0.25 w/ each keypress
   maxScale = 3.0f;
-  minScale = 0.25f;
+  minScale = 0.25f; 
 
   baseOrbitSpeed = baseOS;
   baseSpinSpeed = baseSS;
@@ -81,9 +80,11 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
   maxSpeed = 3.0f;
   minSpeed = 0.25f;
 
+  //DisplayModelInfo();
   
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
+  //glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
 
   glGenBuffers(1, &IB);
@@ -202,15 +203,24 @@ void Object::SetSpinSpeed(bool scalar)
   }
 }
 
-void Object::GetModelInfo() {
-
+void Object::DisplayModelInfo(const unsigned int maxDisplayLines) {
+  unsigned int displayLines = (Indices.size() < maxDisplayLines) ? Indices.size() : maxDisplayLines;
   // Display Vertex position and color information
-  for(int i = 0; i < Vertices.size(); i++) {
-    
+  for(int i = 0; i < displayLines; i++) {
+    std::cout << "Vertex " << i << ": "
+	      << Vertices[i].vertex.x << " "
+	      << Vertices[i].vertex.y << " "
+	      << Vertices[i].vertex.z << std::endl
+	      << "Color: " 
+	      << Vertices[i].color.x << " "
+	      << Vertices[i].color.y << " "
+	      << Vertices[i].color.z << std::endl;
   }
 
   // Display Indices in groups of threes aka for each face
-  for(int i = 0; i < Indices.size(); i++) {
-
+  for(int i = 0; i < displayLines; i++) {
+    std::cout << i << ":" << Indices[i] << " ";
+    if( (i%3) == 0 )
+      std::cout << std::endl;
   }
 }
