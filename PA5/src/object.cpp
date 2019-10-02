@@ -13,7 +13,6 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
   std::string fileName(argv[i]);
   std::cout << "Filename: " << fileName << std::endl;
 
-  int faceNumber;
   aiMesh *mesh;
 
 
@@ -21,8 +20,6 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
   meshNumber = scene->mNumMeshes; //hold numberof meshes in the scene
   std::cout << "Number of meshes: " << meshNumber << std::endl;
   
-  aiColor3D color (0.0f, 0.0f, 0.0f); //unsure how to utilize aiColor3d type. 
-
   // NOTES: The following for loop captures Vertices (position, color) and captures
   // indices. We still need to seperate out the 3 indices
   // The 3 indices seem to represent the 3 vertex for each face - ash
@@ -30,28 +27,37 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
   // Retrieve Vertices(position & color) & Indices in each Mesh
   for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++){ //loop through each mesh found
     mesh = scene->mMeshes[meshNums]; //holds current mesh
-    scene->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, color); 
+    aiColor4D colorVal (0.0f, 0.0f, 0.0f, 1.0f); //r, g, b, a, (a controls transparency)
+    aiMaterial *mtrl; // define a material type (stores materials)
+    mtrl = scene->mMaterials[mesh->mMaterialIndex]; //retrieve current mesh materials
+    glm::vec3 colorVert (0.0f, 0.0f, 0.0f); // initialize a temporary color vertex
 
+    if(mtrl != NULL){
+      if(AI_SUCCESS == aiGetMaterialColor(mtrl, AI_MATKEY_COLOR_DIFFUSE, &colorVal)){
+        colorVert.x = colorVal.r;
+        colorVert.y = colorVal.g;
+        colorVert.z = colorVal.b;
+      }
+      std::cout << "colors for mesh " << meshNums << " is: " << colorVert.x << " "<< colorVert.y << " " << colorVert.z << std::endl;
+    }
+  
     // Get INDICES (and vertices) from MESH
-    faceNumber = mesh->mNumFaces; //holds the number of faces in the current mesh
+    int faceNumber = mesh->mNumFaces; //holds the number of faces in the current mesh
     std::cout << "Number of Faces for mesh " << meshNums << " is: " << faceNumber << std::endl;
 
     for(int f = 0; f < faceNumber; f++){ //traverse each face, save the 3 indices
-      aiFace* face = &mesh->mFaces[f];  		// get the current face
-
+      aiFace* face = &mesh->mFaces[f]; // get the current face
       // Use index value to load vertex values from mVertices
       for(int i = 0; i < 3; i++) {
-	Indices.push_back(face->mIndices[i]);  // push back face indices onto Indices
-	// load vertexs for face using mesh indices
-	aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get vurrent vertice vector
-	glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z); 
-	glm::vec3 tempColor = {1.0f, 1.0f, 1.0f}; // eventually want to use the aiColor3D type
-	Vertex *tempVertex = new Vertex(tempPos, tempColor); 
-	Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
+        Indices.push_back(face->mIndices[i]);  // push back face indices onto Indices
+        // load vertexs for face using mesh indices
+        aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get vurrent vertice vector
+        glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z); 
+        Vertex *tempVertex = new Vertex(tempPos, colorVert); 
+        Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
       }
-
     } // End for : "Get INDICES from Mesh
-
+  std::cout << std::endl;
   } // End for loop "Retrieve Info from Meshes"
 
   std::cout << "Total Vertices Stored in Object: " << Vertices.size() << std::endl
@@ -210,11 +216,11 @@ void Object::DisplayModelInfo(const unsigned int maxDisplayLines) {
     std::cout << "Vertex " << i << ": "
 	      << Vertices[i].vertex.x << " "
 	      << Vertices[i].vertex.y << " "
-	      << Vertices[i].vertex.z << std::endl
-	      << "Color: " 
-	      << Vertices[i].color.x << " "
-	      << Vertices[i].color.y << " "
-	      << Vertices[i].color.z << std::endl;
+	      << Vertices[i].vertex.z << std::endl;
+	      // << "Color: " 
+	      // << Vertices[i].color.x << " "
+	      // << Vertices[i].color.y << " "
+	      // << Vertices[i].color.z << std::endl;
   }
 
   // Display Indices in groups of threes aka for each face
