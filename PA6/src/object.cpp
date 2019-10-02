@@ -177,9 +177,11 @@ void Object::Render()
 {
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
+  glEnableVertexAttribArray(2);
   
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color));
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,texture));
 
   // as far as we know, glBindBuffer initializes the buffer
   //glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -187,18 +189,20 @@ void Object::Render()
 
   //glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
 
+  //bind texture - this might need to go in the for loop somewhere, will experiment
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, texture);
   
   // Draw Each Mesh
-  for(int i = 0; i < meshData.size(); i++) {
-    
+  for(int i = 0; i < meshData.size(); i++) {    
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * meshData[i].meshSize, &Vertices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * meshData[i].meshSize, &Indices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
     glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
   }
-  
 
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(2);
 }
 
 void Object::SetScale(bool scalar)
