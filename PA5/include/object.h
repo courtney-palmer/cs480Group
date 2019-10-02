@@ -33,13 +33,20 @@ class Object
     Assimp::Importer importer;
     const aiScene* scene;
     glm::mat4 model;
+
+    struct meshInfo {
+      unsigned int meshSize, meshStartIndex;
+    meshInfo(unsigned int a, unsigned int b) : meshSize(a), meshStartIndex(b) {}
+    };
+    std::vector<meshInfo> meshData;
     std::vector<Vertex> Vertices;
     //std::vector<glm::vec2> uvs;
     //std::vector<glm::vec3> normals;
     std::vector<unsigned int> Indices;
     GLuint VB;
     GLuint IB;
-    GLuint VAO; // Vertex array object to render multiple meshes?
+    
+    
 
     float angleOrbit; //the angle of the orbit
     float angleSelf; //the anlgle of the self rotation

@@ -29,8 +29,11 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
 
   // Retrieve Vertices(position & color) & Indices in each Mesh
   for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++){ //loop through each mesh found
+
     mesh = scene->mMeshes[meshNums]; //holds current mesh
     scene->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, color); 
+
+    meshData.push_back( meshInfo(mesh->mNumFaces*3, Indices.size())); // add 1 mesh to meshData vector & starting index
 
     // Get INDICES (and vertices) from MESH
     faceNumber = mesh->mNumFaces; //holds the number of faces in the current mesh
@@ -49,7 +52,7 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
 	Vertex *tempVertex = new Vertex(tempPos, tempColor); 
 	Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
       }
-
+      
     } // End for : "Get INDICES from Mesh
 
   } // End for loop "Retrieve Info from Meshes"
@@ -97,7 +100,12 @@ Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
   // Statement loads only the platform into buffer
   //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6, &Indices[300000], GL_STATIC_DRAW);
   
-
+  // display mesh info for debugging purposes
+  for(int i = 0; i < meshData.size(); i++) {
+    std::cout << "Mesh " << i << ": " << std::endl
+	      << "Mesh Indices: " << meshData[i].meshSize << ", "
+	      << "Mesh Start Index " << meshData[i].meshStartIndex << std::endl;
+  }
   
 }
 
@@ -155,15 +163,15 @@ void Object::Render()
 
   //glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
 
-  // Draw mesh1?
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
-  glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
-
-  // Draw mesh2?
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 6, &Vertices[300000], GL_STATIC_DRAW);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6, &Indices[300000], GL_STATIC_DRAW);
-  glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+  
+  // Draw Each Mesh
+  for(int i = 0; i < meshData.size(); i++) {
+    
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * meshData[i].meshSize, &Vertices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * meshData[i].meshSize, &Indices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
+    glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+  }
+  
 
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
