@@ -79,7 +79,7 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
   //load texture from image
   Magick::Blob blob;
   Magick::Image *image;
-  image = new Magick::Image("image name here");
+  image = new Magick::Image("../Assets/model/granite.jpg");
   image->write(&blob, "RGBA");
   
   //generate texture in OpenGL
@@ -87,7 +87,7 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
   glBindTexture(GL_TEXTURE_2D, texture);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAGS_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   delete image;
 
   ///////////// -- END IMAGE MAGICK -- /////////////////
