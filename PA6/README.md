@@ -23,7 +23,7 @@ First, make sure that the files were built using standard cmake procedures [desc
 
 To run the program, navigate to your executable build folder and open a terminal. Then, run
 ```
-./PA6 -v shader-v.txt -f shader-f.txt -o dragon.obj
+./PA6 -v shader-v.txt -f shader-f.txt -o dragon.obj -t checker.jpg granite.jpg
 ```
 NOTE: <br/><br/>
        shader-v.txt and shader-f.txt are provided files in the Assets->Shaders folder. You can also use any vertex shader and fragment shader file when running the program. If new shader files are used, they must be added within Assets->Shaders prior to running the program. The shader-v and shader-f may go in any order, however, the -v flag must immediately precede the specefied vertex shader file and the -f flag must immediately preced the fragment shader file. <br/><br/>
