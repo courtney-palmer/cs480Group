@@ -86,18 +86,18 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
   // ADD TEXTURES
   ///////////// -- IMAGE MAGICK -- /////////////////
   //load texture from image
-  Magick::Blob blob;
-  Magick::Image *image;
-  image = new Magick::Image("image name here");
-  image->write(&blob, "RGBA");
+  // Magick::Blob blob;
+  // Magick::Image *image;
+  // image = new Magick::Image("image name here");
+  // image->write(&blob, "RGBA");
   
   //generate texture in OpenGL
-  glGenTextures(1, &texture);
-  glBindTexture(GL_TEXTURE_2D, texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAGS_FILTER, GL_LINEAR);
-  delete image;
+  // glGenTextures(1, &texture);
+  // glBindTexture(GL_TEXTURE_2D, texture);
+  // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+  // glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  // glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAGS_FILTER, GL_LINEAR);
+  // delete image;
 
   ///////////// -- END IMAGE MAGICK -- /////////////////
 
