@@ -36,3 +36,5 @@ dragon.obj, dragon.mtl <br/>
 
 ## Extra Credit 
 
+## References
+All textures were provided by http://planetpixelemporium.com/planets.html
