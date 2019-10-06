@@ -2,18 +2,9 @@
 
 Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
 {
-
-
-   ///////////// --IMAGE MAGIK STUFF -- /////////////////
-  //  Magick::Blob blob;
-  //  Magick::Image *image;
-  //  image = new Magick::Image("checker.jpg");
-  //  image->write(&blob, "RGBA");
-
-
   // LOAD MODEL
   ///////////// -- ADDING ASSIMP STUFF -- /////////////////
-  std::string s;
+  //std::string s;
   int i = 0;
   while(!(strcmp(argv[i], "-o") == 0)){ //go through arguments until you find -o flag
     i++;
@@ -38,21 +29,21 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
     mesh = scene->mMeshes[meshNums]; //holds current mesh
     meshData.push_back( meshInfo(mesh->mNumFaces*3, Indices.size())); // add 1 mesh to meshData vector & starting index
 
-    aiColor4D colorVal (0.0f, 0.0f, 0.0f, 1.0f); //r, g, b, a, (a controls transparency)
-    scene->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, colorVal); 
-    aiMaterial *mtrl; // define a material type (stores materials)
-    mtrl = scene->mMaterials[mesh->mMaterialIndex]; //retrieve current mesh materials
+    //aiColor4D colorVal (0.0f, 0.0f, 0.0f, 1.0f); //r, g, b, a, (a controls transparency)
+    //scene->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, colorVal); 
+    //aiMaterial *mtrl; // define a material type (stores materials)
+    //mtrl = scene->mMaterials[mesh->mMaterialIndex]; //retrieve current mesh materials
     glm::vec3 colorVert (0.0f, 0.0f, 0.0f); // initialize a temporary color vertex
-	glm::vec2 textureVert (0.0f, 0.0f); //initialize a temporary texture vertex
+	  glm::vec2 textureVert (0.0f, 0.0f); //initialize a temporary texture vertex
 
-    if(mtrl != NULL){
+    /*if(mtrl != NULL){
       if(AI_SUCCESS == aiGetMaterialColor(mtrl, AI_MATKEY_COLOR_DIFFUSE, &colorVal)){
         colorVert.x = colorVal.r;
         colorVert.y = colorVal.g;
         colorVert.z = colorVal.b;
       }
       std::cout << "colors for mesh " << meshNums << " is: " << colorVert.x << " "<< colorVert.y << " " << colorVert.z << std::endl;
-    }  
+    }  */
 
     // Get INDICES (and vertices) from MESH
     int faceNumber = mesh->mNumFaces; //holds the number of faces in the current mesh
@@ -82,24 +73,42 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
   std::cout << "Total Vertices Stored in Object: " << Vertices.size() << std::endl
 	    << "Total Indices Stored: " << Indices.size() << std::endl;
   ///////////// -- END OF ASSIMP STUFF -- /////////////////
-  
-  // ADD TEXTURES
+
+    // ADD TEXTURES
   ///////////// -- IMAGE MAGICK -- /////////////////
-  //load texture from image
-  Magick::Blob blob;
-  Magick::Image *image;
-  image = new Magick::Image("../Assets/model/granite.jpg");
-  image->write(&blob, "RGBA");
-  
-  //generate texture in OpenGL
-  glGenTextures(1, &texture);
-  glBindTexture(GL_TEXTURE_2D, texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  delete image;
+
+  i = 0;
+  while(!(strcmp(argv[i], "-t") == 0)){ //go through arguments until you find -t flag
+    i++;
+  }
+  texture = new GLuint[meshNumber];
+  for(int j = 0; j < meshNumber; j++)
+  {
+    i++; //next argument is the file name we want
+    std::string textureName(argv[i]);
+    std::cout << "TextureName: " << textureName << std::endl;
+
+    //load textures from images
+    Magick::Blob blob;
+    Magick::Image *image;
+    image = new Magick::Image("../Assets/model/" + textureName);
+    image->write(&blob, "RGBA");
+
+    std::cout << "Image loaded" << std::endl;
+    
+    //generate texture in OpenGL
+    glGenTextures(j+1, &texture[j]);
+    glBindTexture(GL_TEXTURE_2D, texture[j]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    delete image;
+  }
+
+  std::cout << "textures loaded" << std::endl;
 
   ///////////// -- END IMAGE MAGICK -- /////////////////
+
 
   angleOrbit = 0.0f;
   angleSelf = 0.0f;
@@ -130,7 +139,6 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
 
   // Statement loads only the platform into buffer
   //glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 6, &Vertices[300000], GL_STATIC_DRAW);
-  
 
   glGenBuffers(1, &IB);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
@@ -203,16 +211,15 @@ void Object::Render()
   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
 
   //glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
-
-  //bind texture - this might need to go in the for loop somewhere, will experiment
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, texture);
   
   // Draw Each Mesh
   for(int i = 0; i < meshData.size(); i++) {    
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * meshData[i].meshSize, &Vertices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * meshData[i].meshSize, &Indices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
     glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+    //bind texture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture[i]);
   }
 
   glDisableVertexAttribArray(0);

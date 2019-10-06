@@ -38,7 +38,8 @@ class Object
     std::vector<unsigned int> Indices;
     GLuint VB;
     GLuint IB;
-    GLuint texture; 
+    GLuint *texture;
+    //std::vector<string> textureList;
 
     float angleOrbit; //the angle of the orbit
     float angleSelf; //the anlgle of the self rotation
