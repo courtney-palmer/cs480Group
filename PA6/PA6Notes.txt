@@ -1,0 +1,71 @@
+The following notes were taken by Courtney
+=========================================
+From 15-Assimp-Textures Slides
+=========================================
+    const aiScene *myScene = importer.ReadFile(yourObjFile, aiProcess_Triangulate);
+        - myScene will be used to get the texture mapping coordinates
+
+    struct Vertex {                             struct Vertex {
+        GLfloat position[3];                        GLfloat position[3];
+        GLfloat color[3];      change to -->        GLfloat uv[2];
+    };                                          };
+
+    UV represents the coordinates of a picture (in the range of 0-1.0). 
+        - Picture coordinates link to the color at position (u, v) on the picture
+
+    aiMesh object
+        aiVector3D *mTextureCoords; //mIndices will offsed this value
+
+    //CHECK IF TEXTURE COORDS EXIST
+    mesh->HasTextureCoords(0); //check if mesh has texture coordinates
+    
+    //GET TEXTURE COORDS
+    aiVector3D uv = mesh->mTextureCoords[0][face.mIndices[k]]; //k is the offset
+    vert[i].uv[0] = uv.x; // could also use pointers
+    vert[i].uv[1] = uv.y; // here for offset in vertex objects
+
+    //IMAGE LIBRARIES
+    modify libs section in makefile to include correct libraries
+
+    //MODIFY THE SHADERS
+        Vertex Shader
+            vec3 color attribute ---> vec2 uv attribute
+            varying vec3 color ---> varying vec2 uv
+        Fragment Shader
+            varying vec3 color ---> varying vec2 uv
+            Declare
+                uniform sampler2D gSampler;
+            in main
+                gl_FragColor = texture2D(gSampler, uv.xy)
+
+    //MORE THINGS
+    global GLint locationOfNewVaryingVecTwo //(found in shader)
+                                            // same as loc_position and loc_color
+    //TO GENERATE TEXTURES
+    initialize() func
+        GLuint aTexture;
+        glGenTextures(1, &aTexture);
+        
+        //BINDING TEXTURES
+        glActiveTexture(GL_TEXTURE0);   //Parameter will not change.
+        glBindTexture(GL_TEXTURE_2D, aTexture); //Second parameter is different if aTexture is an array of textures. 
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    
+    render() func 
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, aTexture);
+        glEnableVertexAttribArray(); //call on glint location
+        glVertexAttribPointer(); //describes the format of the texture data to the gpu
+
+
+=========================================
+Other References
+=========================================
+https://open.gl/textures
+
+=========================================
+OpenGL Textures Slides
+=========================================

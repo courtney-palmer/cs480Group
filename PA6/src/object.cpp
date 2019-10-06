@@ -1,7 +1,16 @@
 #include "object.h"
 
 Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
-{  
+{
+
+
+   ///////////// --IMAGE MAGIK STUFF -- /////////////////
+  //  Magick::Blob blob;
+  //  Magick::Image *image;
+  //  image = new Magick::Image("checker.jpg");
+  //  image->write(&blob, "RGBA");
+
+
   // LOAD MODEL
   ///////////// -- ADDING ASSIMP STUFF -- /////////////////
   std::string s;
