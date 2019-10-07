@@ -20,7 +20,9 @@ class Graphics
     void Update(unsigned int dt);
     void Render();
 
-    Object *planet;
+    //Object *planet;
+    vector<Object> planets;
+    bool loadConfig();
   
   private:
     std::string ErrorString(GLenum error);

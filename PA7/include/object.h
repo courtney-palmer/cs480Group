@@ -23,10 +23,24 @@ class Object
     void SetOrbitSpeed(bool scalar); //if scalar true, increase, else decrease
     void SetSpinSpeed(bool scalar); //if scalar true, increase, else decrease
 
+    bool loadModel(std::string objFileName);
+    bool loadTexture(std::string textureFileName);
+
   private:
     unsigned int meshNumber;
     Assimp::Importer importer;
     const aiScene* scene;
+
+    /* config info
+       scale - scaleMult
+       speed - orbitSpeedMult
+       spinSpeed - spinSpeedMult
+       orbitDistance - *needVar
+       model - *need var - .obj file name
+       mtl - name of mtl used
+       prob to do:
+       move vertex & index & texture loading into dedicated function for loading file info
+     */
     glm::mat4 model;
 
     struct meshInfo {
@@ -57,7 +71,7 @@ class Object
     float maxSpeed; //the maximum multiplier of the object's orbit/spin speed
     float minSpeed; //the minimum multiplier of the object's orbit/spin speed
 	
-	bool pausedOrbit; //determines if the orbit is paused
+    bool pausedOrbit; //determines if the orbit is paused
     bool pausedSpin; //determines if the spin is paused
     bool reversedOrbit; //determines if the orbit is reversed
     bool reversedSpin; //determines if the spin is reversed

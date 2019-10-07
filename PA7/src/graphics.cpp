@@ -142,6 +142,11 @@ void Graphics::Render()
   }
 }
 
+bool Graphics::loadConfig() {
+  cout << "Load Configuration File" << endl;
+  return true;
+}
+
 string Graphics::ErrorString(GLenum error)
 {
   if(error == GL_INVALID_ENUM)

@@ -13,12 +13,15 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
   std::string fileName(argv[i]);
   std::cout << "Filename: " << fileName << std::endl;
 
-  aiMesh *mesh;
-
+  // Get scene info from Assimp & meshnumber to start processing
   scene = importer.ReadFile("../Assets/model/" + fileName, aiProcess_Triangulate);
   meshNumber = scene->mNumMeshes; //hold number of meshes in the scene
   std::cout << "Number of meshes: " << meshNumber << std::endl;
+  
+  if( loadModel(fileName) ) { // if loaded successfully
 
+  }
+  
   // ADD TEXTURES
   ///////////// -- IMAGE MAGICK -- /////////////////
   texture = new GLuint[meshNumber];
@@ -53,11 +56,9 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
   std::cout << "textures loaded" << std::endl;
 
   ///////////// -- END IMAGE MAGICK -- /////////////////
-  
-  // NOTES: The following for loop captures Vertices (position, color) and captures
-  // indices. We still need to seperate out the 3 indices
-  // The 3 indices seem to represent the 3 vertex for each face - ash
 
+  aiMesh *mesh; // holds meshes temporarily for use
+  
   // Retrieve Vertices(position & color) & Indices in each Mesh
   for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++){ //loop through each mesh found
 
@@ -110,6 +111,7 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
 	    << "Total Indices Stored: " << Indices.size() << std::endl;
   ///////////// -- END OF ASSIMP STUFF -- /////////////////
 
+  
   angleOrbit = 0.0f;
   angleSelf = 0.0f;
 
@@ -146,13 +148,15 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
 
   // Statement loads only the platform into buffer
   //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6, &Indices[300000], GL_STATIC_DRAW);
-  
+
+  /*
   // display mesh info for debugging purposes
   for(int i = 0; i < meshData.size(); i++) {
     std::cout << "Mesh " << i << ": " << std::endl
 	      << "Mesh Indices: " << meshData[i].meshSize << ", "
 	      << "Mesh Start Index " << meshData[i].meshStartIndex << std::endl;
   }
+  */
   
 }
 
@@ -160,6 +164,13 @@ Object::~Object()
 {
   Vertices.clear();
   Indices.clear();
+}
+
+bool Object::loadModel(std::string objFileName) {
+  return true;
+}
+bool loadTexture(std::string textureFileName) {
+  return true;
 }
 
 void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
