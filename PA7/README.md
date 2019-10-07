@@ -35,3 +35,4 @@ A config file is stored in the PA7 folder. This file stores information about th
 
 ## References
 All textures were provided by http://planetpixelemporium.com/planets.html
+Planet info was provided by https://nssdc.gsfc.nasa.gov/planetary/factsheet/planet_table_ratio.html and altered for use in this program.
