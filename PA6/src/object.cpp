@@ -18,6 +18,41 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
   scene = importer.ReadFile("../Assets/model/" + fileName, aiProcess_Triangulate);
   meshNumber = scene->mNumMeshes; //hold number of meshes in the scene
   std::cout << "Number of meshes: " << meshNumber << std::endl;
+
+  // ADD TEXTURES
+  ///////////// -- IMAGE MAGICK -- /////////////////
+  texture = new GLuint[meshNumber];
+  i = 0;
+  while(!(strcmp(argv[i], "-t") == 0)){ //go through arguments until you find -t flag
+    i++;
+  }
+ 
+  for(int j = 0; j < meshNumber; j++)
+  {
+    i++; //next argument is the file name we want
+    std::string textureName(argv[i]);
+    std::cout << "TextureName: " << textureName << std::endl;
+
+    //load textures from images
+    Magick::Blob blob;
+    Magick::Image *image;
+    image = new Magick::Image("../Assets/model/" + textureName);
+    image->write(&blob, "RGBA");
+
+    std::cout << "Image loaded" << std::endl;
+    
+    //generate texture in OpenGL
+    glGenTextures(j+1, &texture[j]);
+    glBindTexture(GL_TEXTURE_2D, texture[j]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    delete image;
+  }
+
+  std::cout << "textures loaded" << std::endl;
+
+  ///////////// -- END IMAGE MAGICK -- /////////////////
   
   // NOTES: The following for loop captures Vertices (position, color) and captures
   // indices. We still need to seperate out the 3 indices
@@ -73,42 +108,6 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
   std::cout << "Total Vertices Stored in Object: " << Vertices.size() << std::endl
 	    << "Total Indices Stored: " << Indices.size() << std::endl;
   ///////////// -- END OF ASSIMP STUFF -- /////////////////
-
-    // ADD TEXTURES
-  ///////////// -- IMAGE MAGICK -- /////////////////
-
-  i = 0;
-  while(!(strcmp(argv[i], "-t") == 0)){ //go through arguments until you find -t flag
-    i++;
-  }
-  texture = new GLuint[meshNumber];
-  for(int j = 0; j < meshNumber; j++)
-  {
-    i++; //next argument is the file name we want
-    std::string textureName(argv[i]);
-    std::cout << "TextureName: " << textureName << std::endl;
-
-    //load textures from images
-    Magick::Blob blob;
-    Magick::Image *image;
-    image = new Magick::Image("../Assets/model/" + textureName);
-    image->write(&blob, "RGBA");
-
-    std::cout << "Image loaded" << std::endl;
-    
-    //generate texture in OpenGL
-    glGenTextures(j+1, &texture[j]);
-    glBindTexture(GL_TEXTURE_2D, texture[j]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    delete image;
-  }
-
-  std::cout << "textures loaded" << std::endl;
-
-  ///////////// -- END IMAGE MAGICK -- /////////////////
-
 
   angleOrbit = 0.0f;
   angleSelf = 0.0f;
