@@ -6,7 +6,7 @@ Courtney Palmer<br/><br/>
 Christine Vaughan
 
 ## Project Description
-In Project 6, we use Assimp to load textures onto models. 
+In Project 6, we use Assimp to load textures onto models. This project uses Image Magick to load textures from images.
 
 ## Cmake Instructions
 The building of the project is done using CMake, installation with apt-get or brew may be necessary. Later use with CMake and Shader files will be require the copy of a directory where those files are stored (ex. shaders). To do this in the ```add_custom_target``` function place 

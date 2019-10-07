@@ -1,4 +1,4 @@
-# PA6: Assimp Texture Loading
+# PA7: Solar System
 
 ## Group Members
 Ashanti Cudiamat<br/><br/>
