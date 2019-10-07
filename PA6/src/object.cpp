@@ -42,7 +42,7 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
     std::cout << "Image loaded" << std::endl;
     
     //generate texture in OpenGL
-    glGenTextures(j+1, &texture[j]);
+    glGenTextures(1, &texture[j]);
     glBindTexture(GL_TEXTURE_2D, texture[j]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -64,21 +64,21 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
     mesh = scene->mMeshes[meshNums]; //holds current mesh
     meshData.push_back( meshInfo(mesh->mNumFaces*3, Indices.size())); // add 1 mesh to meshData vector & starting index
 
-    //aiColor4D colorVal (0.0f, 0.0f, 0.0f, 1.0f); //r, g, b, a, (a controls transparency)
-    //scene->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, colorVal); 
-    //aiMaterial *mtrl; // define a material type (stores materials)
-    //mtrl = scene->mMaterials[mesh->mMaterialIndex]; //retrieve current mesh materials
+    aiColor4D colorVal (0.0f, 0.0f, 0.0f, 1.0f); //r, g, b, a, (a controls transparency)
+    scene->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, colorVal); 
+    aiMaterial *mtrl; // define a material type (stores materials)
+    mtrl = scene->mMaterials[mesh->mMaterialIndex]; //retrieve current mesh materials
     glm::vec3 colorVert (0.0f, 0.0f, 0.0f); // initialize a temporary color vertex
 	  glm::vec2 textureVert (0.0f, 0.0f); //initialize a temporary texture vertex
 
-    /*if(mtrl != NULL){
+    if(mtrl != NULL){
       if(AI_SUCCESS == aiGetMaterialColor(mtrl, AI_MATKEY_COLOR_DIFFUSE, &colorVal)){
         colorVert.x = colorVal.r;
         colorVert.y = colorVal.g;
         colorVert.z = colorVal.b;
       }
       std::cout << "colors for mesh " << meshNums << " is: " << colorVert.x << " "<< colorVert.y << " " << colorVert.z << std::endl;
-    }  */
+    }
 
     // Get INDICES (and vertices) from MESH
     int faceNumber = mesh->mNumFaces; //holds the number of faces in the current mesh
@@ -89,14 +89,15 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
       // Use index value to load vertex values from mVertices
       for(int i = 0; i < 3; i++) {
         Indices.push_back(face->mIndices[i]);  // push back face indices onto Indices
+        if(mesh->HasTextureCoords(0)){
+          aiVector3D vert = mesh->mTextureCoords[0][face->mIndices[i]];
+          textureVert.x = vert.x;
+          textureVert.y = vert.y;
+      }
         // load vertexs for face using mesh indices
         aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get current vertices vector
         glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z);
-		if(mesh->HasTextureCoords(0)){
-			aiVector3D vert = mesh->mTextureCoords[0][i];
-			textureVert.x = vert.x;
-			textureVert.y = vert.y;
-		}
+
         Vertex *tempVertex = new Vertex(tempPos, colorVert, textureVert); 
         Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
       }
