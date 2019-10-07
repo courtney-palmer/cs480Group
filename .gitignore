@@ -27,3 +27,6 @@
 *.app
 build/
 Build/
+
+# Misc
+*~

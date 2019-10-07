@@ -45,8 +45,7 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   }
 
   // Create the objects
-  
-  planet = new Object(1.0f, 2000.0f, 1000.0f, argv);
+  //planet = new Object(1.0f, 2000.0f, 1000.0f, argv);
   
   // Set up the shaders
   m_shader = new Shader();
@@ -111,7 +110,7 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
 void Graphics::Update(unsigned int dt)
 {
   // Update the object
-  planet->Update(dt, glm::mat4(1.0f));
+  // planet->Update(dt, glm::mat4(1.0f));
   // moon->Update(dt, planet->GetPosition());
 }
 
@@ -129,8 +128,8 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
 
   // Render the object
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(planet->GetModel()));
-  planet->Render();
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(planet->GetModel()));
+  // planet->Render();
   // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(moon->GetModel()));
   // moon->Render();
 
