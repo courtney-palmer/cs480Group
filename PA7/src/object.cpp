@@ -2,29 +2,21 @@
 
 Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
 {
-  // LOAD MODEL
-  ///////////// -- ADDING ASSIMP STUFF -- /////////////////
-  //std::string s;
+  // LOAD MODEL :: ASSIMP STUFF
   int i = 0;
   while(!(strcmp(argv[i], "-o") == 0)){ //go through arguments until you find -o flag
     i++;
   }
-  i++; //next argument is the file name we want
+  i++; //next aurgument is the file name we want
   std::string fileName(argv[i]);
   std::cout << "Filename: " << fileName << std::endl;
 
-  // Get scene info from Assimp & meshnumber to start processing
-  scene = importer.ReadFile("../Assets/model/" + fileName, aiProcess_Triangulate);
-  meshNumber = scene->mNumMeshes; //hold number of meshes in the scene
-  std::cout << "Number of meshes: " << meshNumber << std::endl;
-  
+  // LOAD MODEL
   if( loadModel(fileName) ) { // if loaded successfully
-
+    std::cout << fileName << " model Loaded." << std::endl;
   }
-  
-  // ADD TEXTURES
-  ///////////// -- IMAGE MAGICK -- /////////////////
-  texture = new GLuint[meshNumber];
+
+  // LOAD TEXTURES
   i = 0;
   while(!(strcmp(argv[i], "-t") == 0)){ //go through arguments until you find -t flag
     i++;
@@ -33,29 +25,107 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
   for(int j = 0; j < meshNumber; j++)
   {
     i++; //next argument is the file name we want
-    std::string textureName(argv[i]);
-    std::cout << "TextureName: " << textureName << std::endl;
-
-    //load textures from images
-    Magick::Blob blob;
-    Magick::Image *image;
-    image = new Magick::Image("../Assets/model/" + textureName);
-    image->write(&blob, "RGBA");
-
-    std::cout << "Image loaded" << std::endl;
-    
-    //generate texture in OpenGL
-    glGenTextures(1, &texture[j]);
-    glBindTexture(GL_TEXTURE_2D, texture[j]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    delete image;
+    if ( loadTexture(argv[i]) ) {
+      std::cout << argv[i] << " texture Loaded." << std::endl;
+    }   
   }
 
-  std::cout << "textures loaded" << std::endl;
+  // Buffer for vertexes
+  glGenBuffers(1, &VB);
+  glBindBuffer(GL_ARRAY_BUFFER, VB);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
 
-  ///////////// -- END IMAGE MAGICK -- /////////////////
+  // Buffer for indices
+  glGenBuffers(1, &IB);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+
+  // Statement loads only the platform into buffer
+  //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6, &Indices[300000], GL_STATIC_DRAW);
+
+  // Object Attribute Instantiation
+  angleOrbit = 0.0f;
+  angleSelf = 0.0f;
+
+  pausedOrbit = false;
+  pausedSpin = false;
+  reversedOrbit = false;
+  reversedSpin = false;
+  position = glm::mat4(1.0f);
+
+  baseScale = baseSc;
+  scaleMult = 1.0f; //scales up/down 0.25 w/ each keypress
+  maxScale = 3.0f;
+  minScale = 0.25f; 
+
+  baseOrbitSpeed = baseOS;
+  baseSpinSpeed = baseSS;
+  orbitSpeedMult = 1.0f;  //scales up/down 0.25 w/ each keypress
+  spinSpeedMult = 1.0f;  //scales up/down 0.25 w/ each keypress
+  maxSpeed = 3.0f;
+  minSpeed = 0.25f;
+  
+}
+
+Object::Object(float baseSc, float baseOS, float baseSS,
+       std::string objname, std::string texturename) {
+
+  // LOAD MODEL
+  if( loadModel(objname) ) { // if loaded successfully
+    std::cout << objname << " model Loaded." << std::endl;
+  }
+
+  // LOAD TEXTURES : Note: meshNumber should be updated before trying to load textures?
+  if ( loadTexture(texturename) ) {
+    std::cout << texturename << " texture Loaded." << std::endl;
+  }   
+
+  // Buffer for vertexes
+  glGenBuffers(1, &VB);
+  glBindBuffer(GL_ARRAY_BUFFER, VB);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
+
+  // Buffer for indices
+  glGenBuffers(1, &IB);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+  
+  // Object Attribute Instantiation
+  angleOrbit = 0.0f;
+  angleSelf = 0.0f;
+
+  pausedOrbit = false;
+  pausedSpin = false;
+  reversedOrbit = false;
+  reversedSpin = false;
+  position = glm::mat4(1.0f);
+
+  baseScale = baseSc;
+  scaleMult = 1.0f; //scales up/down 0.25 w/ each keypress
+  maxScale = 3.0f;
+  minScale = 0.25f; 
+
+  baseOrbitSpeed = baseOS;
+  baseSpinSpeed = baseSS;
+  orbitSpeedMult = 1.0f;  //scales up/down 0.25 w/ each keypress
+  spinSpeedMult = 1.0f;  //scales up/down 0.25 w/ each keypress
+  maxSpeed = 3.0f;
+  minSpeed = 0.25f;
+  
+}
+
+Object::~Object()
+{
+  Vertices.clear();
+  Indices.clear();
+}
+
+bool Object::loadModel(std::string objFileName) {
+
+  // reload scene and meshNumber if needed
+  scene = importer.ReadFile("../Assets/Models/" + objFileName, aiProcess_Triangulate);
+  meshNumber = scene->mNumMeshes; //hold number of meshes in the scene
+  std::cout << "Number of meshes: " << meshNumber << std::endl;
 
   aiMesh *mesh; // holds meshes temporarily for use
   
@@ -109,67 +179,34 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
 
   std::cout << "Total Vertices Stored in Object: " << Vertices.size() << std::endl
 	    << "Total Indices Stored: " << Indices.size() << std::endl;
-  ///////////// -- END OF ASSIMP STUFF -- /////////////////
-
-  
-  angleOrbit = 0.0f;
-  angleSelf = 0.0f;
-
-  pausedOrbit = false;
-  pausedSpin = false;
-  reversedOrbit = false;
-  reversedSpin = false;
-  position = glm::mat4(1.0f);
-
-  baseScale = baseSc;
-  scaleMult = 1.0f; //scales up/down 0.25 w/ each keypress
-  maxScale = 3.0f;
-  minScale = 0.25f; 
-
-  baseOrbitSpeed = baseOS;
-  baseSpinSpeed = baseSS;
-  orbitSpeedMult = 1.0f;  //scales up/down 0.25 w/ each keypress
-  spinSpeedMult = 1.0f;  //scales up/down 0.25 w/ each keypress
-  maxSpeed = 3.0f;
-  minSpeed = 0.25f;
-
-  //DisplayModelInfo();
-  
-  glGenBuffers(1, &VB);
-  glBindBuffer(GL_ARRAY_BUFFER, VB);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
-
-  // Statement loads only the platform into buffer
-  //glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 6, &Vertices[300000], GL_STATIC_DRAW);
-
-  glGenBuffers(1, &IB);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
-
-  // Statement loads only the platform into buffer
-  //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6, &Indices[300000], GL_STATIC_DRAW);
-
-  /*
-  // display mesh info for debugging purposes
-  for(int i = 0; i < meshData.size(); i++) {
-    std::cout << "Mesh " << i << ": " << std::endl
-	      << "Mesh Indices: " << meshData[i].meshSize << ", "
-	      << "Mesh Start Index " << meshData[i].meshStartIndex << std::endl;
-  }
-  */
-  
-}
-
-Object::~Object()
-{
-  Vertices.clear();
-  Indices.clear();
-}
-
-bool Object::loadModel(std::string objFileName) {
+    
   return true;
 }
-bool loadTexture(std::string textureFileName) {
+bool Object::loadTexture(std::string textFileName) {
+
+  // ADD TEXTURES
+  ///////////// -- IMAGE MAGICK -- /////////////////
+  //texture = new GLuint[meshNumber];
+  textureNames.push_back(textFileName);
+  texture = new GLuint[meshNumber];
+  unsigned int index = textureNames.size() - 1;
+
+  //load textures from images
+  Magick::Blob blob;
+  Magick::Image *image;
+  image = new Magick::Image("../Assets/Textures/" + textFileName);
+  image->write(&blob, "RGBA");
+
+  std::cout << "Image loaded" << std::endl;
+    
+  //generate texture in OpenGL
+  glGenTextures(1, &texture[index]);
+  glBindTexture(GL_TEXTURE_2D, texture[index]);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  delete image;
+  ///////////// -- END IMAGE MAGICK -- /////////////////
   return true;
 }
 
@@ -224,13 +261,17 @@ void Object::Render()
   //glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
   
   // Draw Each Mesh
-  for(int i = 0; i < meshData.size(); i++) {    
+  for(int i = 0; i < meshData.size(); i++) {
+
+    // Load vertices -> load indices -> draw model
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * meshData[i].meshSize, &Vertices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * meshData[i].meshSize, &Indices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
-    glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+
     //bind texture
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture[i]);
+
+    glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
   }
 
   glDisableVertexAttribArray(0);

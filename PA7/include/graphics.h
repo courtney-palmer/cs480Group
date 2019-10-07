@@ -4,6 +4,7 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 #include "graphics_headers.h"
@@ -20,7 +21,7 @@ class Graphics
     void Update(unsigned int dt);
     void Render();
 
-    //Object *planet;
+    Object *planet;
     vector<Object> planets;
     bool loadConfig();
   

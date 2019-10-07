@@ -45,7 +45,9 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   }
 
   // Create the objects
+  loadConfig();
   //planet = new Object(1.0f, 2000.0f, 1000.0f, argv);
+  planet = new Object(1.0f, 2000.0f, 1000.0f, "sphere.obj", "sunmap.jpg");
   
   // Set up the shaders
   m_shader = new Shader();
@@ -110,7 +112,7 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
 void Graphics::Update(unsigned int dt)
 {
   // Update the object
-  // planet->Update(dt, glm::mat4(1.0f));
+  planet->Update(dt, glm::mat4(1.0f));
   // moon->Update(dt, planet->GetPosition());
 }
 
@@ -128,8 +130,8 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
 
   // Render the object
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(planet->GetModel()));
-  // planet->Render();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(planet->GetModel()));
+  planet->Render();
   // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(moon->GetModel()));
   // moon->Render();
 
@@ -143,7 +145,35 @@ void Graphics::Render()
 }
 
 bool Graphics::loadConfig() {
-  cout << "Load Configuration File" << endl;
+
+  // Open .config File
+  std::ifstream configFile("../config.txt");
+  if(!configFile.is_open()) {
+    cout << "Failed to open config." << endl;
+    return false;
+  }
+
+  // Skip the first two lines
+  std::string line;
+  int skipLinesTo = 2;
+  int i = 1; 
+  while(!configFile.eof() && i <= skipLinesTo) {
+    i++;
+    getline(configFile, line);
+  }
+
+  // Now process data in config file, by storing it into planets
+  // Clear planets first, just in case
+  planets.clear();
+  while(!configFile.eof()) {
+    // store config file line data into data values
+    getline(configFile, line);
+
+    // initialize new planet
+    //planets.push_back();
+  }
+
+  configFile.close();
   return true;
 }
 

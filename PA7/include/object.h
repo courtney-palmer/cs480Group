@@ -12,6 +12,8 @@ class Object
 {
   public:
     Object(float baseSc, float baseOS, float baseSS, char** argv);
+    Object(float baseSc, float baseOS, float baseSS,
+	   std::string objname, std::string texturename);
     ~Object();
     void Update(unsigned int dt, glm::mat4 orbitOrigin);
     void Render();
@@ -24,9 +26,11 @@ class Object
     void SetSpinSpeed(bool scalar); //if scalar true, increase, else decrease
 
     bool loadModel(std::string objFileName);
-    bool loadTexture(std::string textureFileName);
+    bool loadTexture(std::string textFileName);
 
   private:
+    std::vector<std::string> textureNames;
+
     unsigned int meshNumber;
     Assimp::Importer importer;
     const aiScene* scene;
@@ -43,10 +47,6 @@ class Object
      */
     glm::mat4 model;
 
-    struct meshInfo {
-      unsigned int meshSize, meshStartIndex;
-    meshInfo(unsigned int a, unsigned int b) : meshSize(a), meshStartIndex(b) {}
-    };
     std::vector<meshInfo> meshData;
     std::vector<Vertex> Vertices;
     std::vector<unsigned int> Indices;

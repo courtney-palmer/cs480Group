@@ -1,15 +1,14 @@
-Config File for Solar System (all values relative to earth):
-Body	Texture				Scale	OrbSped	RotSped	OrbRad
+# Config File for Solar System (all values relative to earth):
+# Body    Model	        Texture		Scale	OrbSped	RotSped	OrbRad
+Sun	sphere.obj	sunmap.jpg	10.0f	0.000f	0.400f	0.000f
+Mercury	sphere.obj	mercurymap.jpg	0.3f	1.590f	0.150f	0.387f
+Venus	sphere.obj	venusmap.jpg	0.9f	1.180f	0.180f	0.723f
+Earth	sphere.obj	earthmap1k.jpg	1.0f	1.000f	1.000f	1.000f
+Mars	sphere.obj	marsmap.jpg	0.5f	0.808f	0.971f	1.520f
+Jupiter	sphere.obj	jupitermap.jpg	8.0f	0.439f	2.415f	5.200f
+Saturn	sphere.obj	saturnmap.jpg	7.0f	0.325f	2.252f	9.580f
+Uranus  sphere.obj	uranusmap.jpg	4.0f	0.228f	1.393f	19.200f
+Neptune sphere.obj	neptunemap.jpg	3.0f	0.182f	1.490f	30.050f
+Pluto	sphere.obj 	plutomap1k.jpg	0.1f	0.157f	0.556f	39.480f
 
-Sun	/Assets/Textures/sunmap.jpg	10.0f	0.000f	0.400f	0.000f
-Mercury	/Assets/Textures/mercurymap.jpg	0.3f	1.590f	0.150f	0.387f
-Venus	/Assets/Textures/venusmap.jpg	0.9f	1.180f	0.180f	0.723f
-Earth	/Assets/Textures/earthmap1k.jpg	1.0f	1.000f	1.000f	1.000f
-Mars	/Assets/Textures/marsmap.jpg	0.5f	0.808f	0.971f	1.520f
-Ju[iter	/Assets/Textures/jupitermap.jpg	8.0f	0.439f	2.415f	5.200f
-Saturn	/Assets/Textures/saturnmap.jpg	7.0f	0.325f	2.252f	9.580f
-Uranus	/Assets/Textures/uranusmap.jpg	4.0f	0.228f	1.393f	19.200f
-Neptune	/Assets/Textures/neptunemap	3.0f	0.182f	1.490f	30.050f
-Pluto	/Assets/Textures/plutomap1k.jpg	0.1f	0.157f	0.556f	39.480f
-
-EMoon	/Assets/Textures/moonmap1k.jpg	0.2f	0.034f	0.300f	0.100f
+EMoon	sphere.obj 	moonmap1k.jpg	0.2f	0.034f	0.300f	0.100f
