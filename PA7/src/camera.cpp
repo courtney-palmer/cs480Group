@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "window.h"
 
 Camera::Camera()
 {
@@ -9,6 +10,13 @@ Camera::~Camera()
 {
 
 }
+
+
+void Camera::processInput(Window *window){
+ 
+
+}
+
 
 bool Camera::Initialize(int w, int h)
 {

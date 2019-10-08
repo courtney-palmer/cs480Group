@@ -23,11 +23,9 @@ class Graphics
 
     vector<Object> planets;
     bool loadConfig();
-  
+    Camera *m_camera;
   private:
     std::string ErrorString(GLenum error);
-
-    Camera *m_camera;
     Shader *m_shader;
 
     GLint m_projectionMatrix;

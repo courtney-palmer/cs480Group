@@ -14,11 +14,12 @@ class Camera
     glm::mat4 GetView();
 
     void Update();
-    //void processInput(GLFWwindow *window);
+    void processInput(Window *window);
     glm::vec3 cameraPos;
     glm::vec3 cameraFront;
     glm::vec3 cameraUp;
-
+    float cameraSpeed = 500.0f;
+    
   private:
     glm::mat4 projection;
     glm::mat4 view;
