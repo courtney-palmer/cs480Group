@@ -46,8 +46,7 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
 
   // Create the objects
   loadConfig();
-  //planet = new Object(1.0f, 2000.0f, 1000.0f, argv);
-  planet = new Object(1.0f, 2000.0f, 1000.0f, "sphere.obj", "sunmap.jpg");
+  //std::cout << "number of planets: " << planets.size() << std::endl;
   
   // Set up the shaders
   m_shader = new Shader();
@@ -112,8 +111,9 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
 void Graphics::Update(unsigned int dt)
 {
   // Update the object
-  planet->Update(dt, glm::mat4(1.0f));
-  // moon->Update(dt, planet->GetPosition());
+  for(int i = 0; i < planets.size() ; i++) {
+    planets[i].Update(dt);
+  }
 }
 
 void Graphics::Render()
@@ -129,11 +129,11 @@ void Graphics::Render()
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
 
-  // Render the object
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(planet->GetModel()));
-  planet->Render();
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(moon->GetModel()));
-  // moon->Render();
+  // Render the objects  
+  for(int i = 0; i < planets.size(); i++) {
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(planets[i].GetModel()));
+    planets[i].Render();
+  }
 
   // Get any errors from OpenGL
   auto error = glGetError();
@@ -147,7 +147,7 @@ void Graphics::Render()
 bool Graphics::loadConfig() {
 
   // Open .config File
-  std::ifstream configFile("../config.txt");
+  std::fstream configFile("../config.txt");
   if(!configFile.is_open()) {
     cout << "Failed to open config." << endl;
     return false;
@@ -165,13 +165,42 @@ bool Graphics::loadConfig() {
   // Now process data in config file, by storing it into planets
   // Clear planets first, just in case
   planets.clear();
+
+  // Data to get per line
+  string key, modelfile, texturefile, origin;
+  float scale, speed, rotationSpeed, orbitRadius;
+
   while(!configFile.eof()) {
     // store config file line data into data values
-    getline(configFile, line);
+    
+    configFile >> key >> modelfile >> texturefile;
+    configFile >> scale >> speed >> rotationSpeed >> orbitRadius >> origin;
 
+    if(configFile.eof())
+      break;
+    /*
+    cout << "keyname: " << key << " " << modelfile << " " << texturefile << endl
+	 << "scale: " << scale << endl
+	 << "speed: " << speed << endl
+	 << "rotation speed: " << rotationSpeed << endl
+	 << "orbit radius: " << orbitRadius << endl
+	 << "origin: " << origin << endl << endl;
+    */
+
+    Object* originPlanet = NULL;
+    // Find origin planet within vector to instantiate new moon if the planet is within the vector already
+    for(int i = 0; i < planets.size(); i++) {
+      if(planets[i].getKey() == origin) {
+	originPlanet = &planets[i];
+	break;
+      }
+    }
+    
     // initialize new planet
-    //planets.push_back();
+    planets.push_back( Object(modelfile, texturefile, key, originPlanet,
+			      scale, speed, rotationSpeed, orbitRadius) );
   }
+  
 
   configFile.close();
   return true;

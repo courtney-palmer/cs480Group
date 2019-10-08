@@ -111,7 +111,60 @@ Object::Object(float baseSc, float baseOS, float baseSS,
   spinSpeedMult = 1.0f;  //scales up/down 0.25 w/ each keypress
   maxSpeed = 3.0f;
   minSpeed = 0.25f;
+}
+
+Object::Object(std::string objname, std::string texturename,
+	       std::string key, Object* og,
+	       float scale, float speed, float rotSpeed, float orbRadius) {
+  // LOAD MODEL
+  if( loadModel(objname) ) { // if loaded successfully
+    //std::cout << objname << " model Loaded." << std::endl;
+  }
+  // LOAD TEXTURES : Note: meshNumber should be updated before trying to load textures?
+  if ( loadTexture(texturename) ) {
+    //std::cout << texturename << " texture Loaded." << std::endl;
+  }   
+
+  // Buffer for vertexes
+  glGenBuffers(1, &VB);
+  glBindBuffer(GL_ARRAY_BUFFER, VB);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
+  // Buffer for indices
+  glGenBuffers(1, &IB);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
   
+  // Object Attribute Instantiation
+  angleOrbit = 0.0f;
+  angleSelf = 0.0f;
+
+  pausedOrbit = false;
+  pausedSpin = false;
+  reversedOrbit = false;
+  reversedSpin = false;
+  position = glm::mat4(1.0f);
+
+  baseScale = 1.0f;
+  // scaled down to 1/8 scale
+  //scaleMult = scale * 0.25;
+  scaleMult = 0.25;
+
+  maxScale = 3.0f;
+  minScale = 0.25f; 
+
+  baseOrbitSpeed = 1.0f;
+  baseSpinSpeed = 1.0f;
+  // scaled down to see the actual planets
+  orbitSpeedMult = speed * 0.001;
+
+  spinSpeedMult = rotSpeed * 0.005;
+  maxSpeed = 3.0f;
+  minSpeed = 0.25f;
+
+  orbitDistance = orbRadius;
+  origin = og;
+
+  keyname = key;
 }
 
 Object::~Object()
@@ -125,7 +178,6 @@ bool Object::loadModel(std::string objFileName) {
   // reload scene and meshNumber if needed
   scene = importer.ReadFile("../Assets/Models/" + objFileName, aiProcess_Triangulate);
   meshNumber = scene->mNumMeshes; //hold number of meshes in the scene
-  std::cout << "Number of meshes: " << meshNumber << std::endl;
 
   aiMesh *mesh; // holds meshes temporarily for use
   
@@ -148,12 +200,10 @@ bool Object::loadModel(std::string objFileName) {
         colorVert.y = colorVal.g;
         colorVert.z = colorVal.b;
       }
-      std::cout << "colors for mesh " << meshNums << " is: " << colorVert.x << " "<< colorVert.y << " " << colorVert.z << std::endl;
     }
 
     // Get INDICES (and vertices) from MESH
     int faceNumber = mesh->mNumFaces; //holds the number of faces in the current mesh
-    std::cout << "Number of Faces for mesh " << meshNums << " is: " << faceNumber << std::endl;
 
     for(int f = 0; f < faceNumber; f++){ //traverse each face, save the 3 indices
       aiFace* face = &mesh->mFaces[f]; // get the current face
@@ -174,11 +224,7 @@ bool Object::loadModel(std::string objFileName) {
       }
 
     } // End for : "Get INDICES from Mesh
-  std::cout << std::endl;
   } // End for loop "Retrieve Info from Meshes"
-
-  std::cout << "Total Vertices Stored in Object: " << Vertices.size() << std::endl
-	    << "Total Indices Stored: " << Indices.size() << std::endl;
     
   return true;
 }
@@ -197,8 +243,6 @@ bool Object::loadTexture(std::string textFileName) {
   image = new Magick::Image("../Assets/Textures/" + textFileName);
   image->write(&blob, "RGBA");
 
-  std::cout << "Image loaded" << std::endl;
-    
   //generate texture in OpenGL
   glGenTextures(1, &texture[index]);
   glBindTexture(GL_TEXTURE_2D, texture[index]);
@@ -234,6 +278,42 @@ void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
   model = position * rotSelf * scaleMat; //multiply matrices to apply effects to the model
 }
 
+void Object::Update(unsigned int dt)
+{
+  if(!pausedOrbit)
+  {
+    if(reversedOrbit)
+      angleOrbit -= dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
+   else
+      angleOrbit += dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
+  }
+  if(!pausedSpin)
+  {
+    if(reversedSpin)
+      angleSelf -= dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
+   else
+      angleSelf += dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
+  }
+
+  glm::mat4 orbitOrigin;
+  if(origin == NULL) {
+    orbitOrigin = glm::mat4(1.0f);
+  }
+  else {
+    //orbitOrigin = origin->GetPosition(); it's not quite getting the position correctly
+    orbitOrigin = glm::mat4(1.0f);
+  }
+
+  position = glm::translate(orbitOrigin, glm::vec3((orbitDistance * sin(angleOrbit)), 0.0f, (orbitDistance * cos(angleOrbit)))); //translates object about the designated orbitOrigin
+
+  glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angleSelf), glm::vec3(0.0, 1.0, 0.0)); //sets the object's rotation about its center y-axis
+
+  glm::mat4 scaleMat = glm::scale(glm::vec3((scaleMult * baseScale), (scaleMult * baseScale), (scaleMult * baseScale))); //set the scale of the object
+
+  //model = position * rotSelf * scaleMat; //multiply matrices to apply effects to the model
+  model = position * scaleMat;
+}
+
 glm::mat4 Object::GetModel()
 {
   return model;
@@ -242,6 +322,10 @@ glm::mat4 Object::GetModel()
 glm::mat4 Object::GetPosition()
 {
   return position;
+}
+
+std::string Object::getKey() {
+  return keyname;
 }
 
 void Object::Render()

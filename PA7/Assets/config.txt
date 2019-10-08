@@ -1,7 +1,0 @@
-bodyname sun
-scale 15
-orbit_distance 0
-speed 0
-model sphere.obj
-material mtl_sun
-origin na
