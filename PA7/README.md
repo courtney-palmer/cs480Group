@@ -34,11 +34,11 @@ A config file is stored in the PA7 folder. This file stores information about th
 ## Extra Credit 
 
 ## Controls
-'0' - '9' | Switch Planet Focus
-'q'       | Solar System Zoomed in
-'w'       | Solar System Reset
-'e'       | Solar System Zoom out
+'0' - '9' | Switch Planet Focus<br/>
+'q'       | Solar System Zoomed in<br/>
+'w'       | Solar System Reset<br/>
+'e'       | Solar System Zoom out<br/>
 
 ## References
-All textures were provided by http://planetpixelemporium.com/planets.html
+All textures were provided by http://planetpixelemporium.com/planets.html <br/>
 Planet info was provided by https://nssdc.gsfc.nasa.gov/planetary/factsheet/planet_table_ratio.html and altered for use in this program.
