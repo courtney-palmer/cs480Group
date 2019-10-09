@@ -18,12 +18,19 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height, int argc, char **argv);
-    void Update(unsigned int dt);
+    void Update(unsigned int dt, int currentCase);
     void Render();
 
     vector<Object> planets;
     bool loadConfig();
     Camera *m_camera;
+    glm::vec3 planetVecCoords(vector<Object> planets, std::string objectName);
+    //loop through our vector of planets, return the model we are asking for
+    Object getObject(vector<Object> planets, std::string objectName);
+    int currentCase;
+    void checkCameraImputs(int currentCase);
+
+
   private:
     std::string ErrorString(GLenum error);
     Shader *m_shader;

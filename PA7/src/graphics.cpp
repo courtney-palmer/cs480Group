@@ -108,12 +108,105 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   return true;
 }
 
-void Graphics::Update(unsigned int dt)
+Object Graphics::getObject(vector<Object> planets, std::string objectName){
+  for(int i = 0; i < planets.size(); i++) {
+      if(planets[i].getKey() == objectName){
+        return planets[i];
+      }
+  }
+}
+
+glm::vec3 Graphics::planetVecCoords(vector<Object> planets, std::string objectName){
+  Object tempObject = getObject(planets, objectName);
+  glm::mat4 tempModel = tempObject.GetModel();
+  glm::vec3 tempVec(tempModel[3]);
+  return tempVec;
+}
+
+void Graphics::checkCameraImputs(int currentCase){
+  switch(currentCase){
+    case 1:{
+      std::string planetName = "Sun";
+      glm::vec3 planetVec = planetVecCoords(planets, planetName);
+      m_camera->Update(0.0f ,8.0f , 0.0f, planetVec.x, planetVec.y, planetVec.z, 0.0f, 1.0f, 0.0f);
+    }
+      break;
+    case 2:{
+      std::string planetName = "Mercury";
+      glm::vec3 planetVec = planetVecCoords(planets, planetName);
+      m_camera->Update(0.0f ,8.0f , 0.0f, planetVec.x, planetVec.y, planetVec.z, 0.0f, 1.0f, 0.0f);
+    }
+      break;
+    case 3:{
+      std::string planetName = "Venus";
+      glm::vec3 planetVec = planetVecCoords(planets, planetName);
+      m_camera->Update(0.0f ,8.0f , 0.0f, planetVec.x, planetVec.y, planetVec.z, 0.0f, 1.0f, 0.0f);
+    }
+      break;
+    case 4:{
+      std::string planetName = "Earth";
+      glm::vec3 planetVec = planetVecCoords(planets, planetName);
+      m_camera->Update(0.0f ,8.0f , 0.0f, planetVec.x, planetVec.y, planetVec.z, 0.0f, 1.0f, 0.0f);
+    }
+      break;
+    case 5:{
+      std::string planetName = "Mars";
+      glm::vec3 planetVec = planetVecCoords(planets, planetName);
+      m_camera->Update(0.0f ,8.0f , 0.0f, planetVec.x, planetVec.y, planetVec.z, 0.0f, 1.0f, 0.0f);
+    }
+      break;
+    case 6:{
+      std::string planetName = "Jupiter";
+      glm::vec3 planetVec = planetVecCoords(planets, planetName);
+      m_camera->Update(0.0f ,8.0f , 0.0f, planetVec.x, planetVec.y, planetVec.z, 0.0f, 1.0f, 0.0f);
+    }
+      break;
+    case 7:{
+      std::string planetName = "Saturn";
+      glm::vec3 planetVec = planetVecCoords(planets, planetName);
+      m_camera->Update(0.0f ,8.0f , 0.0f, planetVec.x, planetVec.y, planetVec.z, 0.0f, 1.0f, 0.0f);
+    }
+      break;
+    case 8:{
+      std::string planetName = "Uranus";
+      glm::vec3 planetVec = planetVecCoords(planets, planetName);
+      m_camera->Update(0.0f ,8.0f , 0.0f, planetVec.x, planetVec.y, planetVec.z, 0.0f, 1.0f, 0.0f);
+    }
+      break;
+    case 9:{
+      std::string planetName = "Neptune";
+      glm::vec3 planetVec = planetVecCoords(planets, planetName);
+      m_camera->Update(0.0f ,8.0f , 0.0f, planetVec.x, planetVec.y, planetVec.z, 0.0f, 1.0f, 0.0f);
+    }
+      break;
+    case 0:{
+      std::string planetName = "Pluto";
+      glm::vec3 planetVec = planetVecCoords(planets, planetName);
+      m_camera->Update(0.0f ,8.0f , 0.0f, planetVec.x, planetVec.y, planetVec.z, 0.0f, 1.0f, 0.0f);
+    }
+      break;
+    case 10:{ // minus key
+      m_camera->Update(0.0f ,8.0f ,-16.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+    }
+      break;
+    case 11:{ // q
+      m_camera->Update(0.0f ,8.0f ,-32.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+    }
+      break;
+    case 12:{ // w
+      m_camera->Update(0.0f ,8.0f ,-48.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+    }
+      break;
+  }
+}
+
+void Graphics::Update(unsigned int dt, int currentCase)
 {
   // Update the object
   for(int i = 0; i < planets.size() ; i++) {
     planets[i].Update(dt);
   }
+  checkCameraImputs(currentCase);
 }
 
 void Graphics::Render()

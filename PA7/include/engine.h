@@ -20,7 +20,6 @@ class Engine
     void Keyboard();
     unsigned int getDT();
     long long GetCurrentTimeMillis();
-  
   private:
     // Window related variables
     Window *m_window;    

@@ -67,7 +67,7 @@ void Engine::Run()
     }
 
     // Update and render the graphics
-    m_graphics->Update(m_DT);
+    m_graphics->Update(m_DT, m_graphics->currentCase);
     m_graphics->Render();
 
     // Swap to the Window
@@ -90,24 +90,57 @@ void Engine::Keyboard()
 		m_running = false; //quit the program
     break;
 
-    case SDLK_w:
-      m_graphics->m_camera->cameraPos += m_graphics->m_camera->cameraSpeed * m_graphics->m_camera->cameraFront;
-      std::cout << "W" << std::endl;
+    case SDLK_1:
+      m_graphics->currentCase = 1;
       break;
-    case SDLK_s:
-      m_graphics->m_camera->cameraPos -= m_graphics->m_camera->cameraSpeed * m_graphics->m_camera->cameraFront;
-      std::cout << "S" << std::endl;     
+    
+    case SDLK_2:
+      m_graphics->currentCase = 2;
       break;
-    case SDLK_a:
-      m_graphics->m_camera->cameraPos -= glm::normalize(glm::cross(m_graphics->m_camera->cameraFront, m_graphics->m_camera->cameraUp)) * m_graphics->m_camera->cameraSpeed;
-      std::cout << "A" << std::endl;
+    
+    case SDLK_3:
+      m_graphics->currentCase = 3;
       break;
-    case SDLK_d:
-      m_graphics->m_camera->cameraPos += glm::normalize(glm::cross(m_graphics->m_camera->cameraFront, m_graphics->m_camera->cameraUp)) * m_graphics->m_camera->cameraSpeed;
-      std::cout << "D" << std::endl;
+    
+    case SDLK_4:
+       m_graphics->currentCase = 4;
       break;
 
-    std::cout << "camera pos is: " << m_graphics->m_camera->cameraPos.x << " "<< m_graphics->m_camera->cameraPos.y << " "<< m_graphics->m_camera->cameraPos.z << " " << std::endl;
+    case SDLK_5:
+       m_graphics->currentCase = 5;
+      break;
+
+    case SDLK_6:
+      m_graphics->currentCase = 6;
+      break;
+ 
+    case SDLK_7:
+      m_graphics->currentCase = 7;
+      break;
+ 
+    case SDLK_8:
+      m_graphics->currentCase = 8;
+      break;
+ 
+    case SDLK_9:
+      m_graphics->currentCase = 9;
+      break;
+ 
+    case SDLK_0:
+      m_graphics->currentCase = 0;
+      break;
+  
+    case SDLK_q:
+      m_graphics->currentCase = 10;
+      break;
+    
+    case SDLK_w:
+      m_graphics->currentCase = 11;
+      break;
+    case SDLK_e:
+      m_graphics->currentCase = 12;
+      break;
+
 
 		// //planets controls
 		// case SDLK_q:
