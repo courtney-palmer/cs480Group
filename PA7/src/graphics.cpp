@@ -271,14 +271,14 @@ bool Graphics::loadConfig() {
 
     if(configFile.eof())
       break;
-    /*
+  /*
     cout << "keyname: " << key << " " << modelfile << " " << texturefile << endl
 	 << "scale: " << scale << endl
 	 << "speed: " << speed << endl
 	 << "rotation speed: " << rotationSpeed << endl
 	 << "orbit radius: " << orbitRadius << endl
 	 << "origin: " << origin << endl << endl;
-    */
+  */
 
     Object* originPlanet = NULL;
     // Find origin planet within vector to instantiate new moon if the planet is within the vector already

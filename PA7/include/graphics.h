@@ -6,10 +6,9 @@
 #include <iostream>
 #include <fstream>
 using namespace std;
-
+#include "shader.h"
 #include "graphics_headers.h"
 #include "camera.h"
-#include "shader.h"
 #include "object.h"
 
 class Graphics
@@ -30,7 +29,8 @@ class Graphics
     int currentCase;
     void checkCameraImputs(int currentCase);
 
-
+    Object *skybox;
+    void renderSkyBox();
   private:
     std::string ErrorString(GLenum error);
     Shader *m_shader;
