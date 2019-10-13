@@ -1,0 +1,14 @@
+# Config File for Solar System (all values relative to earth):
+# Body    Model	        Texture             Scale   OrbSped	RotSped	OrbRad	OriginIndex
+Sun	sphere.obj	sunmap.jpg          10.0    0.000	4.000	0.000	-1
+Mercury	sphere.obj  	mercurymap.jpg	    0.3	    1.590	0.150	4.870	0
+Venus	sphere.obj  	venusmap.jpg	    0.9	    1.180	0.180	8.230	0
+Earth	sphere.obj  	earthmap1k.jpg	    1.0	    1.000	1.000	12.000	0
+Mars	sphere.obj  	marsmap.jpg	    0.5	    0.808	0.971	16.520	0
+Jupiter	sphere.obj  	jupitermap.jpg	    8.0	    0.439	2.415	20.200	0
+Saturn	sphere.obj  	saturnmap.jpg	    7.0	    0.325	2.252	24.580	0
+JRing   saturnRing.obj  saturnringcolor.jpg 7.0	    0.325	2.252	24.580	0
+Uranus  sphere.obj  	uranusmap.jpg	    4.0	    0.228	1.393	28.200	0
+Neptune sphere.obj  	neptunemap.jpg	    3.0	    0.182	1.490	32.050	0
+Pluto	sphere.obj  	plutomap1k.jpg	    0.1	    0.157	0.556	36.480	0
+EMoon	sphere.obj   	moonmap1k.jpg	    0.2	    0.034	0.300	2.000	3
