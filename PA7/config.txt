@@ -6,9 +6,12 @@ Venus	sphere.obj  	venusmap.jpg	    0.9	    1.180	0.180	7.230	Sun
 Earth	sphere.obj  	earthmap1k.jpg	    1.0	    1.000	1.000	10.000	Sun
 Mars	sphere.obj  	marsmap.jpg	        0.5	    0.808	0.971	12.520	Sun
 Jupiter	sphere.obj  	jupitermap.jpg	    8.0	    0.439	2.415	15.200	Sun
+JRing   jupiterRing.obj JupiterRing.png     8.0     0.439   2.415   15.200  Jupiter
 Saturn	sphere.obj  	saturnmap.jpg	    7.0	    0.325	2.252	17.580	Sun
-JRing   saturnRing.obj  saturnringcolor.jpg 7.0	    0.325	2.252	17.580	Sun
+SRing   saturnRing.obj  saturnringcolor.jpg 7.0	    0.325	2.252	17.580  Saturn
 Uranus  sphere.obj  	uranusmap.jpg	    4.0	    0.228	1.393	19.200	Sun
+URing   uranusRing.obj  uranusringcolour.jpg 4.0     0.228   1.393   19.2    Uranus
 Neptune sphere.obj  	neptunemap.jpg	    3.0	    0.182	1.490	30.050	Sun
+NRing   saturnRing.obj  JupiterRing.png     3.0     0.182   1.490   30.050  Neptune
 Pluto	sphere.obj  	plutomap1k.jpg	    0.1	    0.157	0.556	39.480	Sun
 EMoon	sphere.obj   	moonmap1k.jpg	    0.2	    0.034	0.300	1.000	Earth
