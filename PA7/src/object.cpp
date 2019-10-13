@@ -54,9 +54,9 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
   position = glm::mat4(1.0f);
 
   baseScale = baseSc;
-  scaleMult = 1.0f; //scales up/down 0.25 w/ each keypress
-  maxScale = 3.0f;
-  minScale = 0.25f; 
+  //scaleMult = 1.0f; //scales up/down 0.25 w/ each keypress
+  //maxScale = 3.0f;
+  //minScale = 0.25f; 
 
   baseOrbitSpeed = baseOS;
   baseSpinSpeed = baseSS;
@@ -101,9 +101,9 @@ Object::Object(float baseSc, float baseOS, float baseSS,
   position = glm::mat4(1.0f);
 
   baseScale = baseSc;
-  scaleMult = 1.0f; //scales up/down 0.25 w/ each keypress
-  maxScale = 3.0f;
-  minScale = 0.25f; 
+  // scaleMult = 1.0f; //scales up/down 0.25 w/ each keypress
+  // maxScale = 3.0f;
+  // minScale = 0.25f; 
 
   baseOrbitSpeed = baseOS;
   baseSpinSpeed = baseSS;
@@ -146,19 +146,16 @@ Object::Object(std::string objname, std::string texturename,
   position = glm::mat4(1.0f);
 
   baseScale = scale;
-  // scaled down to 1/8 scale
-  //scaleMult = scale * 0.25;
-  //scaleMult = 0.25;
-
-  maxScale = 3.0f;
-  minScale = 0.25f; 
+  //scaleMult = 1.0f; //scales up/down 0.25 w/ each keypress
+  //maxScale = 3.0f;
+  //minScale = 0.25f;
 
   baseOrbitSpeed = speed;
   baseSpinSpeed = rotSpeed;
   // scaled down to see the actual planets
-  orbitSpeedMult = 1.0;
+  orbitSpeedMult = 0.25f;
+  spinSpeedMult = 0.25f;
 
-  spinSpeedMult = 1.0;
   maxSpeed = 3.0f;
   minSpeed = 0.25f;
 
@@ -272,16 +269,16 @@ void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
   if(!pausedOrbit)
   {
     if(reversedOrbit)
-      angleOrbit -= dt * M_PI/1000 * baseOrbitSpeed; //the angle of the object's orbit
+      angleOrbit -= dt * M_PI/1000 * baseOrbitSpeed * orbitSpeedMult; //the angle of the object's orbit
    else
-      angleOrbit += dt * M_PI/1000 * baseOrbitSpeed; //the angle of the object's orbit
+      angleOrbit += dt * M_PI/1000 * baseOrbitSpeed * orbitSpeedMult; //the angle of the object's orbit
   }
   if(!pausedSpin)
   {
     if(reversedSpin)
-      angleSelf -= dt * M_PI/1000 * baseSpinSpeed; //the angle of the object's rotation
+      angleSelf -= dt * M_PI/1000 * baseSpinSpeed * spinSpeedMult; //the angle of the object's rotation
    else
-      angleSelf += dt * M_PI/1000 * baseSpinSpeed; //the angle of the object's rotation
+      angleSelf += dt * M_PI/1000 * baseSpinSpeed * spinSpeedMult; //the angle of the object's rotation
   }
 
   position = glm::translate(orbitOrigin, glm::vec3((orbitDistance * sin(angleOrbit)), 0.0f, (orbitDistance * cos(angleOrbit)))); //translates object about the designated orbitOrigin
@@ -382,23 +379,23 @@ void Object::Render()
   glDisableVertexAttribArray(2);
 }
 
-void Object::SetScale(bool scalar)
-{
-  if(scalar) //if increasing
-  {
-    if(scaleMult + 0.25f > maxScale) //ensures we don't go over the max limit
-      scaleMult = maxScale;
-    else
-      scaleMult += 0.25f;
-  }
-  else //if decreasing
-  {
-    if(scaleMult - 0.25f < minScale) //ensures we don't go under the min limit
-      scaleMult = minScale;
-    else
-      scaleMult -= 0.25f;
-  }
-}
+// void Object::SetScale(bool scalar)
+// {
+//   if(scalar) //if increasing
+//   {
+//     if(scaleMult + 0.25f > maxScale) //ensures we don't go over the max limit
+//       scaleMult = maxScale;
+//     else
+//       scaleMult += 0.25f;
+//   }
+//   else //if decreasing
+//   {
+//     if(scaleMult - 0.25f < minScale) //ensures we don't go under the min limit
+//       scaleMult = minScale;
+//     else
+//       scaleMult -= 0.25f;
+//   }
+// }
 
 void Object::SetOrbitSpeed(bool scalar)
 {
