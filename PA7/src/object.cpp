@@ -116,6 +116,7 @@ Object::Object(float baseSc, float baseOS, float baseSS,
 Object::Object(std::string objname, std::string texturename,
 	       std::string key, int og,
 	       float scale, float speed, float rotSpeed, float orbRadius) {
+  std::cout << "Initializing " << key << std::endl;
   // LOAD MODEL
   if( loadModel(objname) ) { // if loaded successfully
     //std::cout << objname << " model Loaded." << std::endl;
@@ -243,14 +244,26 @@ bool Object::loadTexture(std::string textFileName) {
   image = new Magick::Image("../Assets/Textures/" + textFileName);
   image->write(&blob, "RGBA");
 
-  //generate texture in OpenGL
-  glGenTextures(1, &texture[index]);
-  glBindTexture(GL_TEXTURE_2D, texture[index]);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  delete image;
-  ///////////// -- END IMAGE MAGICK -- /////////////////
+  if(textFileName.find("Ring") != std::string::npos ||
+     textFileName.find("ring") != std::string::npos) {
+    //std::cout << "Insert ring loading stuff" << std::endl;
+
+    
+    glGenTextures(1, &texture[index]);
+    glBindTexture(GL_TEXTURE_2D, texture[index]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    
+  } else {
+    //generate texture in OpenGL
+    glGenTextures(1, &texture[index]);
+    glBindTexture(GL_TEXTURE_2D, texture[index]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    delete image;
+  }
   return true;
 }
 
