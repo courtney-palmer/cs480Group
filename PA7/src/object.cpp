@@ -114,7 +114,7 @@ Object::Object(float baseSc, float baseOS, float baseSS,
 }
 
 Object::Object(std::string objname, std::string texturename,
-	       std::string key, Object* og,
+	       std::string key, int og,
 	       float scale, float speed, float rotSpeed, float orbRadius) {
   // LOAD MODEL
   if( loadModel(objname) ) { // if loaded successfully
@@ -152,12 +152,13 @@ Object::Object(std::string objname, std::string texturename,
   maxScale = 3.0f;
   minScale = 0.25f; 
 
-  baseOrbitSpeed = 1.0f;
-  baseSpinSpeed = 1.0f;
+  std::cout << "speed is " << speed << std::endl;
+  baseOrbitSpeed = speed;
+  baseSpinSpeed = rotSpeed;
   // scaled down to see the actual planets
-  orbitSpeedMult = speed * 0.001;
+  orbitSpeedMult = 1.0;
 
-  spinSpeedMult = rotSpeed * 0.005;
+  spinSpeedMult = 1.0;
   maxSpeed = 3.0f;
   minSpeed = 0.25f;
 
@@ -259,60 +260,62 @@ void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
   if(!pausedOrbit)
   {
     if(reversedOrbit)
-      angleOrbit -= dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
+      angleOrbit -= dt * M_PI/1000 * baseOrbitSpeed; //the angle of the object's orbit
    else
-      angleOrbit += dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
+      angleOrbit += dt * M_PI/1000 * baseOrbitSpeed; //the angle of the object's orbit
   }
   if(!pausedSpin)
   {
     if(reversedSpin)
-      angleSelf -= dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
+      angleSelf -= dt * M_PI/1000 * baseSpinSpeed; //the angle of the object's rotation
    else
-      angleSelf += dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
-  }
-
-  position = glm::translate(orbitOrigin, glm::vec3((5.0f * sin(angleOrbit)), 0.0f, (5.0f * cos(angleOrbit)))); //translates object about the designated orbitOrigin
-  glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angleSelf), glm::vec3(0.0, 1.0, 0.0)); //sets the object's rotation about its center y-axis
-  glm::mat4 scaleMat = glm::scale(glm::vec3((scaleMult * baseScale), (scaleMult * baseScale), (scaleMult * baseScale))); //set the scale of the object
-
-  model = position * rotSelf * scaleMat; //multiply matrices to apply effects to the model
-}
-
-void Object::Update(unsigned int dt)
-{
-  if(!pausedOrbit)
-  {
-    if(reversedOrbit)
-      angleOrbit -= dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
-   else
-      angleOrbit += dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
-  }
-  if(!pausedSpin)
-  {
-    if(reversedSpin)
-      angleSelf -= dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
-   else
-      angleSelf += dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
-  }
-
-  glm::mat4 orbitOrigin;
-  if(origin == NULL) {
-    orbitOrigin = glm::mat4(1.0f);
-  }
-  else {
-    //orbitOrigin = origin->GetPosition(); it's not quite getting the position correctly
-    orbitOrigin = glm::mat4(1.0f);
+      angleSelf += dt * M_PI/1000 * baseSpinSpeed; //the angle of the object's rotation
   }
 
   position = glm::translate(orbitOrigin, glm::vec3((orbitDistance * sin(angleOrbit)), 0.0f, (orbitDistance * cos(angleOrbit)))); //translates object about the designated orbitOrigin
 
   glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angleSelf), glm::vec3(0.0, 1.0, 0.0)); //sets the object's rotation about its center y-axis
 
-  glm::mat4 scaleMat = glm::scale(glm::vec3((scaleMult * baseScale), (scaleMult * baseScale), (scaleMult * baseScale))); //set the scale of the object
+  glm::mat4 scaleMat = glm::scale(glm::vec3(baseScale, baseScale, baseScale)); //set the scale of the object
 
-  //model = position * rotSelf * scaleMat; //multiply matrices to apply effects to the model
-  model = position * scaleMat;
+  model = position * rotSelf * scaleMat; //multiply matrices to apply effects to the model
 }
+
+// void Object::Update(unsigned int dt)
+// {
+//   if(!pausedOrbit)
+//   {
+//     if(reversedOrbit)
+//       angleOrbit -= dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
+//    else
+//       angleOrbit += dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
+//   }
+//   if(!pausedSpin)
+//   {
+//     if(reversedSpin)
+//       angleSelf -= dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
+//    else
+//       angleSelf += dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
+//   }
+
+//   glm::mat4 orbitOrigin;
+//   if(origin == NULL) {
+//     orbitOrigin = glm::mat4(1.0f);
+//   }
+//   else {
+//     orbitOrigin = origin->GetPosition(); //it's not quite getting the position correctly
+//     //orbitOrigin = glm::mat4(1.0f);
+//   }
+
+//   position = glm::translate(orbitOrigin, glm::vec3((orbitDistance * sin(angleOrbit)), 0.0f, (orbitDistance * cos(angleOrbit)))); //translates object about the designated orbitOrigin
+
+//   glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angleSelf), glm::vec3(0.0, 1.0, 0.0)); //sets the object's rotation about its center y-axis
+
+//   glm::mat4 scaleMat = glm::scale(glm::vec3(baseScale, baseScale, baseScale)); //set the scale of the object
+
+//   model = position * rotSelf * scaleMat; //multiply matrices to apply effects to the model
+//   //model = position * scaleMat;
+// }
 
 glm::mat4 Object::GetModel()
 {
@@ -326,6 +329,10 @@ glm::mat4 Object::GetPosition()
 
 std::string Object::getKey() {
   return keyname;
+}
+
+int Object::getOriginIndex() {
+  return origin;
 }
 
 void Object::Render()

@@ -204,7 +204,16 @@ void Graphics::Update(unsigned int dt, int currentCase)
 {
   // Update the object
   for(int i = 0; i < planets.size() ; i++) {
-    planets[i].Update(dt);
+    glm::mat4 orbitOrigin;
+    if(planets[i].getOriginIndex() == -1)
+    {
+      orbitOrigin = glm::mat4(1.0f);
+    }
+    else
+    {
+      orbitOrigin = planets[planets[i].getOriginIndex()].GetPosition();
+    }
+    planets[i].Update(dt, orbitOrigin);
   }
   checkCameraImputs(currentCase);
 }
@@ -260,8 +269,9 @@ bool Graphics::loadConfig() {
   planets.clear();
 
   // Data to get per line
-  string key, modelfile, texturefile, origin;
+  string key, modelfile, texturefile;
   float scale, speed, rotationSpeed, orbitRadius;
+  int origin;
 
   while(!configFile.eof()) {
     // store config file line data into data values
@@ -280,17 +290,17 @@ bool Graphics::loadConfig() {
 	 << "origin: " << origin << endl << endl;
   */
 
-    Object* originPlanet = NULL;
-    // Find origin planet within vector to instantiate new moon if the planet is within the vector already
-    for(int i = 0; i < planets.size(); i++) {
-      if(planets[i].getKey() == origin) {
-	originPlanet = &planets[i];
-	break;
-      }
-    }
+  //   Object* originPlanet = NULL;
+  //   // Find origin planet within vector to instantiate new moon if the planet is within the vector already
+  //   for(int i = 0; i < planets.size(); i++) {
+  //     if(planets[i].getKey() == origin) {
+	// originPlanet = &planets[i];
+	// break;
+  //     }
+  //   }
     
     // initialize new planet
-    planets.push_back( Object(modelfile, texturefile, key, originPlanet,
+    planets.push_back( Object(modelfile, texturefile, key, origin,
 			      scale, speed, rotationSpeed, orbitRadius) );
   }
   
