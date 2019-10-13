@@ -144,15 +144,14 @@ Object::Object(std::string objname, std::string texturename,
   reversedSpin = false;
   position = glm::mat4(1.0f);
 
-  baseScale = 1.0f;
+  baseScale = scale;
   // scaled down to 1/8 scale
   //scaleMult = scale * 0.25;
-  scaleMult = 0.25;
+  //scaleMult = 0.25;
 
   maxScale = 3.0f;
   minScale = 0.25f; 
 
-  std::cout << "speed is " << speed << std::endl;
   baseOrbitSpeed = speed;
   baseSpinSpeed = rotSpeed;
   // scaled down to see the actual planets
