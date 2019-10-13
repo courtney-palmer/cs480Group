@@ -32,7 +32,7 @@ class Object
     std::string getKey();
     int getOriginIndex();
     void DisplayModelInfo(const unsigned int maxDisplayLines = 10);
-    void SetScale(bool scalar); //if scalar true, increase, else decrease
+    //void SetScale(bool scalar); //if scalar true, increase, else decrease
     void SetOrbitSpeed(bool scalar); //if scalar true, increase, else decrease
     void SetSpinSpeed(bool scalar); //if scalar true, increase, else decrease
     
@@ -73,9 +73,9 @@ class Object
     glm::mat4 position; //holds the position of the object
 
     float baseScale; //the default scale of the object
-    float scaleMult; //the multiplier of the object's scale
-    float maxScale; //the maximum multiplier that the object can scale to
-    float minScale; //the minimum multiplier that the object can scale to
+    //float scaleMult; //the multiplier of the object's scale
+    //float maxScale; //the maximum multiplier that the object can scale to
+    //float minScale; //the minimum multiplier that the object can scale to
 
     float baseOrbitSpeed; //the default orbit speed of the object
     float baseSpinSpeed; //the default spin speed of the object
