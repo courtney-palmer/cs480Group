@@ -28,6 +28,8 @@ class Graphics
     Object getObject(vector<Object> planets, std::string objectName);
     int currentCase;
     void checkCameraImputs(int currentCase);
+    
+    void ChangeSimSpeed(bool scalar);
 
     Object *skybox;
     void renderSkyBox();

@@ -312,6 +312,15 @@ bool Graphics::loadConfig() {
   return true;
 }
 
+void Graphics::ChangeSimSpeed(bool scalar)
+{
+  for(int i = 0; i < planets.size(); i++)
+  {
+    planets[i].SetOrbitSpeed(scalar);
+    planets[i].SetSpinSpeed(scalar);
+  }
+}
+
 string Graphics::ErrorString(GLenum error)
 {
   if(error == GL_INVALID_ENUM)
