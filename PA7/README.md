@@ -27,17 +27,25 @@ To run the program, navigate to your executable build folder and open a terminal
 ```
 NOTE: <br/><br/>
        shader-v.txt and shader-f.txt are provided files in the Assets->Shaders folder. You can also use any vertex shader and fragment shader file when running the program. If new shader files are used, they must be added within Assets->Shaders prior to running the program. The shader-v and shader-f may go in any order, however, the -v flag must immediately precede the specefied vertex shader file and the -f flag must immediately preced the fragment shader file. <br/><br/>
-       There are several .obj and .mtl files provided within the Assets->Model folder. You may use any .obj and .mtl file as long as it has been placed inside the Assets->Model folder folder and specified when running the command. Make sure that the -o flag precedes the .obj file name prior to running the program.<br/><br/>
+       
+       There are several .obj and .mtl files provided within the Assets->Models folder. You may use any .obj and .mtl file as long as it has been placed inside the Assets->Models folder.The name of the desired .obj file must be added in the appropriate place in the config file to be added to the program.<br/><br/>
+
+       There are several textures provided within the Assets->Textures folder. You may use any image file as long as it has been placed inside the Assets->Textures folder.The name of the desired texture must be added in the appropriate place in the config file to be added to the program.<br/><br/>
        
 A config file is stored in the PA7 folder. This file stores information about the various bodies, including textures, scale factors, orbit speed, and rotation speed.
 
-## Extra Credit 
+## Extra Credit
+Simulation speed can be adjusted with up and down arrow keys.
+Program uses a configuration file, located in the PA7 folder.
+Rings are on Jupiter, Uranus, and Neptune.
 
 ## Controls
 '0' - '9' | Switch Planet Focus<br/>
 'q'       | Solar System Zoomed in<br/>
 'w'       | Solar System Reset<br/>
 'e'       | Solar System Zoom out<br/>
+'up'      | Speed up simulation<br/>
+'down'    | Slow down simulation
 
 ## References
 All textures were provided by http://planetpixelemporium.com/planets.html <br/>
