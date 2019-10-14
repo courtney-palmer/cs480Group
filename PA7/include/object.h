@@ -31,6 +31,7 @@ class Object
     glm::mat4 GetPosition();
     std::string getKey();
     int getOriginIndex();
+    float getOrbitRadius();
     void DisplayModelInfo(const unsigned int maxDisplayLines = 10);
     //void SetScale(bool scalar); //if scalar true, increase, else decrease
     void SetOrbitSpeed(bool scalar); //if scalar true, increase, else decrease

@@ -152,11 +152,11 @@ Object::Object(std::string objname, std::string texturename,
   baseOrbitSpeed = speed;
   baseSpinSpeed = rotSpeed;
   // scaled down to see the actual planets
-  orbitSpeedMult = 1.0f;
-  spinSpeedMult = 1.0f;
+  orbitSpeedMult = 0.5f;
+  spinSpeedMult = 0.5f;
 
-  maxSpeed = 3.0f;
-  minSpeed = 0.25f;
+  maxSpeed = 2.0f;
+  minSpeed = 0.1f;
 
   orbitDistance = orbRadius;
   origin = og;
@@ -343,6 +343,11 @@ int Object::getOriginIndex() {
   return origin;
 }
 
+float Object::getOrbitRadius()
+{
+  return orbitDistance;
+}
+
 void Object::Render()
 {
   glEnableVertexAttribArray(0);
@@ -400,17 +405,17 @@ void Object::SetOrbitSpeed(bool scalar)
 {
   if(scalar) //if increasing
   {
-    if(orbitSpeedMult + 0.25f > maxSpeed) //ensures we don't go over the max limit
+    if(orbitSpeedMult + 0.2f > maxSpeed) //ensures we don't go over the max limit
       orbitSpeedMult = maxSpeed;
     else
-      orbitSpeedMult += 0.25f;
+      orbitSpeedMult += 0.2f;
   }
   else //if decreasing
   {
-    if(orbitSpeedMult - 0.25f < minSpeed) //ensures we don't go under the min limit
+    if(orbitSpeedMult - 0.2f < minSpeed) //ensures we don't go under the min limit
       orbitSpeedMult = minSpeed;
     else
-      orbitSpeedMult -= 0.25f;
+      orbitSpeedMult -= 0.2f;
   }
 }
 
@@ -418,17 +423,17 @@ void Object::SetSpinSpeed(bool scalar)
 {
   if(scalar) //if increasing
   {
-    if(spinSpeedMult + 0.25f > maxSpeed) //ensures we don't go over the max limit
+    if(spinSpeedMult + 0.2f > maxSpeed) //ensures we don't go over the max limit
       spinSpeedMult = maxSpeed;
     else
-      spinSpeedMult += 0.25f;
+      spinSpeedMult += 0.2f;
   }
   else //if decreasing
   {
-    if(spinSpeedMult - 0.25f < minSpeed) //ensures we don't go under the min limit
+    if(spinSpeedMult - 0.2f < minSpeed) //ensures we don't go under the min limit
       spinSpeedMult = minSpeed;
     else
-      spinSpeedMult -= 0.25f;
+      spinSpeedMult -= 0.2f;
   }
 }
 
