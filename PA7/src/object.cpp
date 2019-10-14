@@ -116,7 +116,6 @@ Object::Object(float baseSc, float baseOS, float baseSS,
 Object::Object(std::string objname, std::string texturename,
 	       std::string key, int og,
 	       float scale, float speed, float rotSpeed, float orbRadius) {
-  std::cout << "Initializing " << key << std::endl;
   // LOAD MODEL
   if( loadModel(objname) ) { // if loaded successfully
     //std::cout << objname << " model Loaded." << std::endl;
@@ -153,8 +152,8 @@ Object::Object(std::string objname, std::string texturename,
   baseOrbitSpeed = speed;
   baseSpinSpeed = rotSpeed;
   // scaled down to see the actual planets
-  orbitSpeedMult = 0.25f;
-  spinSpeedMult = 0.25f;
+  orbitSpeedMult = 1.0f;
+  spinSpeedMult = 1.0f;
 
   maxSpeed = 3.0f;
   minSpeed = 0.25f;
