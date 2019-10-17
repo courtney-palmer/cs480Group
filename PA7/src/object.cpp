@@ -40,9 +40,6 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
 
-  // Statement loads only the platform into buffer
-  //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6, &Indices[300000], GL_STATIC_DRAW);
-
   // Object Attribute Instantiation
   angleOrbit = 0.0f;
   angleSelf = 0.0f;
@@ -227,6 +224,9 @@ bool Object::loadModel(std::string objFileName) {
 }
 bool Object::loadTexture(std::string textFileName) {
 
+  if(textFileName == std::string("NULL"))
+    return false;
+
   // ADD TEXTURES
   ///////////// -- IMAGE MAGICK -- /////////////////
   //texture = new GLuint[meshNumber];
@@ -236,14 +236,14 @@ bool Object::loadTexture(std::string textFileName) {
 
   //load textures from images
   Magick::Blob blob;
-  Magick::Image *image;
+  Magick::Image *image = NULL;
   image = new Magick::Image("../Assets/Textures/" + textFileName);
   image->write(&blob, "RGBA");
 
   if(textFileName.find("Ring") != std::string::npos ||
      textFileName.find("ring") != std::string::npos) {
-    //std::cout << "Insert ring loading stuff" << std::endl;
-
+    
+    // Insert custom texture or something?
     
     glGenTextures(1, &texture[index]);
     glBindTexture(GL_TEXTURE_2D, texture[index]);
