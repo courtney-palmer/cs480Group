@@ -223,10 +223,6 @@ void Graphics::Update(unsigned int dt, int currentCase)
 
 void Graphics::Render()
 {
-<<<<<<< HEAD
-=======
-
->>>>>>> 36378fc83576e1da3ea651fc713f22f3787120a7
   //clear the screen
   glClearColor(0.0, 0.0, 0.2, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -256,6 +252,7 @@ void Graphics::Render()
 bool Graphics::loadConfig() {
 
   // Open .config File
+  std::cout << "Started loading planets" << std::endl;
   std::fstream configFile("../config.txt");
   if(!configFile.is_open()) {
     cout << "Failed to open config." << endl;
@@ -313,6 +310,7 @@ bool Graphics::loadConfig() {
   
 
   configFile.close();
+  std::cout << "Planets Initialized" << std::endl;
   return true;
 }
 

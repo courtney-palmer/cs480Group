@@ -1,5 +1,4 @@
 # Config File for Solar System (all values relative to earth):
-
 # Body    Model	          Texture              Scale   OrbSped	RotSped	OrbRad	Origin
 Sun	  sphere.obj	  sunmap.jpg           8.0     0.000	4.000	0.000	-1
 Mercury	  sphere.obj  	  mercurymap.jpg       0.3     1.590	0.150	10.870	0
