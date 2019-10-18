@@ -11,6 +11,13 @@ Camera::~Camera()
 
 }
 
+/**
+    This function will change the speed of the simulation.
+    The simulation will speed up if scalar is true or slow down if scalar is false.
+    @param 
+    @pre none
+    @post 
+*/
 void Camera::Update(float posX, float posY, float posZ,
 		    float frontX, float frontY, float frontZ,
 		    float upX, float upY, float upZ) {

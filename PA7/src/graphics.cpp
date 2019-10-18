@@ -108,14 +108,14 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   return true;
 }
 
-	/**
+/**
     This function will loop through a given vector of objects and return an object based on a given name
     @param vector<Object> planets: this represents our vector of planets to be passed in.
     @param string objectName: this is the name of our planet, used to identify an object in our vector
     @pre none
     @post Will return an object corresponding to its name
     @return an object
-	*/
+*/
 Object Graphics::getObject(vector<Object> planets, std::string objectName){
   for(int i = 0; i < planets.size(); i++) {
       if(planets[i].getKey() == objectName){
@@ -125,14 +125,14 @@ Object Graphics::getObject(vector<Object> planets, std::string objectName){
 }
 
 
-	/**
+/**
     This function will format a position as a vector given an object type
     @param vector<Object> planets: this represents our vector of planets to be passed in.
     @param string objectName: this is the name of our planet, used to identify an object in our vector
     @pre none
     @post Will created a vector given an object
     @return a vector representing the object's current position
-	*/
+*/
 glm::vec3 Graphics::planetVecCoords(vector<Object> planets, std::string objectName){
   Object tempObject = getObject(planets, objectName);
   glm::mat4 tempModel = tempObject.GetModel();
@@ -140,12 +140,12 @@ glm::vec3 Graphics::planetVecCoords(vector<Object> planets, std::string objectNa
   return tempVec;
 }
 
-	/**
+/**
     This function will focus a camera position given the state of currentCase
     @param int currentCase: this is an int (set by keyboard input in engine.cpp). this is used to swich camera view
     @pre none
     @post Will change camera view based on the status of currentCase
-	*/
+*/
 void Graphics::checkCameraImputs(int currentCase){
   switch(currentCase){
     case 0:{
@@ -178,8 +178,6 @@ void Graphics::checkCameraImputs(int currentCase){
       m_camera->Update(planetVec.x, planetVec.y + 1.0f, planetVec.z - 3.0f,
 		       planetVec.x, planetVec.y , planetVec.z,
 		       0.0f, 1.0f, 0.0f);
-      // changed 2nd argument to tilt camera upwards a bit so the orbit path
-      // doesn't look like bullets shooting through the planets
     }
       break;
     case 4:{
@@ -196,11 +194,10 @@ void Graphics::checkCameraImputs(int currentCase){
       m_camera->Update(planetVec.x, planetVec.y + 5.0f, planetVec.z - 25.0f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
-
     }
       break;
     case 6:{
-      std::string planetName = "Saturn";
+      Std::string planetName = "Saturn";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
       m_camera->Update(planetVec.x, planetVec.y + 1.5f, planetVec.z - 16.0f,
 		       planetVec.x, planetVec.y, planetVec.z,
@@ -295,6 +292,11 @@ void Graphics::Render()
   }
 }
 
+/**
+    This function loads a config file from PA7 directory
+    @pre  none
+    @post planets : vector<Object> is filled with the planets as set in config.txt
+*/
 bool Graphics::loadConfig() {
 
   // Open .config File
@@ -330,27 +332,23 @@ bool Graphics::loadConfig() {
 
     if(configFile.eof())
       break;
-  /*
-    cout << "keyname: " << key << " " << modelfile << " " << texturefile << endl
-	 << "scale: " << scale << endl
-	 << "speed: " << speed << endl
-	 << "rotation speed: " << rotationSpeed << endl
-	 << "orbit radius: " << orbitRadius << endl
-	 << "origin: " << origin << endl << endl;
-  */
 
     // initialize new planet
     planets.push_back( Object(modelfile, texturefile, key, origin,
 			      scale, speed, rotationSpeed, orbitRadius) );
   }
   
-
   configFile.close();
   return true;
 }
 
-//This function will change the speed of the simulation.
-//The simulation will speed up if scalar is true or slow down if scalar is false.
+/**
+    This function will change the speed of the simulation.
+    The simulation will speed up if scalar is true or slow down if scalar is false.
+    @param bool scalar: stores value to determine if sim should speed up or slow down
+    @pre none
+    @post Will change camera view based on the status of currentCase
+*/
 void Graphics::ChangeSimSpeed(bool scalar)
 {
   for(int i = 0; i < planets.size(); i++)
