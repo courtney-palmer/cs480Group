@@ -186,15 +186,15 @@ void Graphics::checkCameraImputs(int currentCase){
     }
       break;
     case 10:{ // q
-      m_camera->Update(0.0f ,8.0f ,-16.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-    }
-      break;
-    case 11:{ // w
       m_camera->Update(0.0f ,8.0f ,-32.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
     }
       break;
+    case 11:{ // w
+      m_camera->Update(0.0f ,8.0f ,-64.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+    }
+      break;
     case 12:{ // e
-      m_camera->Update(0.0f ,8.0f ,-48.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+      m_camera->Update(0.0f ,8.0f ,-96.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
     }
       break;
     default:
