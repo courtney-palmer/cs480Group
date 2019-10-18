@@ -36,4 +36,3 @@ SaturPath path100x.obj	  NULL			0.9658	0.000	0.000	0.000	-1
 UranuPath path100x.obj	  NULL			1.402	0.000	0.000	0.000	-1
 NeptuPath path100x.obj	  NULL			2.6005	0.000	0.000	0.000	-1
 PlutoPath pathPluto.obj	  NULL			3.2064	0.000	0.000	0.000	-1
-

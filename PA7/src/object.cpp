@@ -1,5 +1,14 @@
 #include "object.h"
 
+/**
+    Constructor
+    @param float baseSc: Base scale of the model
+    @param float baseOS: Base orbit speed of the model
+    @param float baseSS: Base spin speed
+    @param char** argv: Pointer to string arguments passed from command line
+    @pre none
+    @post This will load the model passed in through argv into the object to be rendered
+*/
 Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
 {
   // LOAD MODEL :: ASSIMP STUFF
@@ -64,6 +73,16 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
   
 }
 
+/**
+    Constructor
+    @param float baseSc: Base scale of the model
+    @param float baseOS: Base orbit speed of the model
+    @param float baseSS: Base spin speed
+    @param std::string objname: String holding the name of the .obj file to be loaded
+    @param std::string texturename: String holding the name of the .jpg file to get the texture from
+    @pre none
+    @post This will load a .obj and .jpg for the object model and texture
+*/
 Object::Object(float baseSc, float baseOS, float baseSS,
        std::string objname, std::string texturename) {
 
@@ -110,6 +129,19 @@ Object::Object(float baseSc, float baseOS, float baseSS,
   minSpeed = 0.25f;
 }
 
+/**
+    Constructor
+    @param std::string objname: String holding the name of the .obj file to be loaded
+    @param std::string texturename: String holding the name of the .jpg file to get the texture from
+    @param std::string key: String that stores the name of the planetary body to be stored 
+    @param int og: Stores index of the point of origin aka the point the planetary body will revolve around
+    @param float scale: Scale of the planetary body
+    @param float speed: Speed of the orbit 
+    @param float rotSpeed: Speed that the planet spins
+    @param float orbRadius: Distance of the planet/moon from the point it's rotating
+    @pre none
+    @post This will load the object from given arguments
+*/
 Object::Object(std::string objname, std::string texturename,
 	       std::string key, int og,
 	       float scale, float speed, float rotSpeed, float orbRadius) {
@@ -172,6 +204,13 @@ Object::~Object()
   Indices.clear();
 }
 
+/**
+    This function loads in the .obj file information
+    @param std::string objFileName: File name of the .obj file
+    @pre none
+    @post Indices and Vertices will be filled
+    @return bool that indicates success of model loading
+*/
 bool Object::loadModel(std::string objFileName) {
 
   // reload scene and meshNumber if needed
@@ -227,6 +266,14 @@ bool Object::loadModel(std::string objFileName) {
     
   return true;
 }
+
+/**
+    This function loads a texture from a .jpg file using imageMagick
+    @param std::string textFileName: File name of the .mtl file
+    @pre none
+    @post Texture will be bound to the model
+    @return bool that indicates success of texture loading
+*/
 bool Object::loadTexture(std::string textFileName) {
 
   if(textFileName == std::string("NULL"))
@@ -268,6 +315,13 @@ bool Object::loadTexture(std::string textFileName) {
   return true;
 }
 
+/**
+    This function changes the location of the model to orbit around a certain point
+    @param unsigned int dt: This value changes depending on time elapsed
+    @param glm::mat4 orbitOrigin: This stores a matrix describing the point of origin for the current object
+    @pre none
+    @post model will be changed 
+*/
 void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
 {
   if(!pausedOrbit)
@@ -294,41 +348,6 @@ void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
   model = position * rotSelf * scaleMat; //multiply matrices to apply effects to the model
 }
 
-// void Object::Update(unsigned int dt)
-// {
-//   if(!pausedOrbit)
-//   {
-//     if(reversedOrbit)
-//       angleOrbit -= dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
-//    else
-//       angleOrbit += dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
-//   }
-//   if(!pausedSpin)
-//   {
-//     if(reversedSpin)
-//       angleSelf -= dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
-//    else
-//       angleSelf += dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
-//   }
-
-//   glm::mat4 orbitOrigin;
-//   if(origin == NULL) {
-//     orbitOrigin = glm::mat4(1.0f);
-//   }
-//   else {
-//     orbitOrigin = origin->GetPosition(); //it's not quite getting the position correctly
-//     //orbitOrigin = glm::mat4(1.0f);
-//   }
-
-//   position = glm::translate(orbitOrigin, glm::vec3((orbitDistance * sin(angleOrbit)), 0.0f, (orbitDistance * cos(angleOrbit)))); //translates object about the designated orbitOrigin
-
-//   glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angleSelf), glm::vec3(0.0, 1.0, 0.0)); //sets the object's rotation about its center y-axis
-
-//   glm::mat4 scaleMat = glm::scale(glm::vec3(baseScale, baseScale, baseScale)); //set the scale of the object
-
-//   model = position * rotSelf * scaleMat; //multiply matrices to apply effects to the model
-//   //model = position * scaleMat;
-// }
 
 glm::mat4 Object::GetModel()
 {
@@ -340,14 +359,32 @@ glm::mat4 Object::GetPosition()
   return position;
 }
 
+/**
+    Function returns key
+    @pre none
+    @post none
+    @return std::string key
+*/
 std::string Object::getKey() {
   return keyname;
 }
 
+/**
+    Function returns origin index
+    @pre none
+    @post none
+    @return int origin
+*/
 int Object::getOriginIndex() {
   return origin;
 }
 
+/**
+    Returns orbit radius
+    @pre none
+    @post none
+    @return float orbitDistance
+*/
 float Object::getOrbitRadius()
 {
   return orbitDistance;
@@ -362,12 +399,6 @@ void Object::Render()
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color));
   glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,texture));
-
-  // as far as we know, glBindBuffer initializes the buffer
-  //glBindBuffer(GL_ARRAY_BUFFER, VB);
-  //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-
-  //glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
   
   // Draw Each Mesh
   for(int i = 0; i < meshData.size(); i++) {
@@ -388,24 +419,12 @@ void Object::Render()
   glDisableVertexAttribArray(2);
 }
 
-// void Object::SetScale(bool scalar)
-// {
-//   if(scalar) //if increasing
-//   {
-//     if(scaleMult + 0.25f > maxScale) //ensures we don't go over the max limit
-//       scaleMult = maxScale;
-//     else
-//       scaleMult += 0.25f;
-//   }
-//   else //if decreasing
-//   {
-//     if(scaleMult - 0.25f < minScale) //ensures we don't go under the min limit
-//       scaleMult = minScale;
-//     else
-//       scaleMult -= 0.25f;
-//   }
-// }
-
+/**
+    Function changes the speed at which the planet orbits
+    @param bool scalar: true or false indicates if speed goes up or down
+    @pre none
+    @post orbitSpeedMult is changed
+*/
 void Object::SetOrbitSpeed(bool scalar)
 {
   if(scalar) //if increasing
@@ -424,6 +443,12 @@ void Object::SetOrbitSpeed(bool scalar)
   }
 }
 
+/**
+    Function changes the speed at which the planet spins
+    @param bool scalar: true or false indicates if spin speed goes up or down
+    @pre none
+    @post spinSpeedMult is changed
+*/
 void Object::SetSpinSpeed(bool scalar)
 {
   if(scalar) //if increasing
@@ -442,6 +467,12 @@ void Object::SetSpinSpeed(bool scalar)
   }
 }
 
+/**
+    Function displays model information from Vertices
+    @param const unsigned int maxDisplayLines: the number of lines to be output to terminal
+    @pre none
+    @post none
+*/
 void Object::DisplayModelInfo(const unsigned int maxDisplayLines) {
   unsigned int displayLines = (Indices.size() < maxDisplayLines) ? Indices.size() : maxDisplayLines;
   // Display Vertex position and color information
