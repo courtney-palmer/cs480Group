@@ -8,7 +8,7 @@ Mars	  sphere.obj  	marsmap.jpg	     0.5     0.808	0.971	24.520	0
 Jupiter	  sphere.obj  	jupitermap.jpg	     6.0     0.439	2.415	30.200	0
 JRing     jupiterRing.obj JupiterRing.png      2.0     0.439      2.415   30.200  0
 Saturn	  sphere.obj  	saturnmap.jpg	     5.0     0.325	2.252	34.580	0
-SRing     saturnRing.obj  saturnringcolor.jpg  2.0     0.325	2.252	34.580  0
+SRing     SRing.obj  saturnringcolor.jpg  5.0     0.325	2.252	34.580  0
 Uranus    sphere.obj  	uranusmap.jpg	     4.0     0.228	1.393	38.200	0
 URing     uranusRing.obj  uranusringcolour.jpg 2.0     0.228      1.393   38.200  0
 Neptune   sphere.obj  	neptunemap.jpg	     3.0     0.182	1.490	60.050	0
