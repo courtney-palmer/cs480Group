@@ -108,6 +108,14 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   return true;
 }
 
+	/**
+    This function will loop through a given vector of objects and return an object based on a given name
+    @param vector<Object> planets: this represents our vector of planets to be passed in.
+    @param string objectName: this is the name of our planet, used to identify an object in our vector
+    @pre none
+    @post Will return an object corresponding to its name
+    @return an object
+	*/
 Object Graphics::getObject(vector<Object> planets, std::string objectName){
   for(int i = 0; i < planets.size(); i++) {
       if(planets[i].getKey() == objectName){
@@ -116,6 +124,15 @@ Object Graphics::getObject(vector<Object> planets, std::string objectName){
   }
 }
 
+
+	/**
+    This function will format a position as a vector given an object type
+    @param vector<Object> planets: this represents our vector of planets to be passed in.
+    @param string objectName: this is the name of our planet, used to identify an object in our vector
+    @pre none
+    @post Will created a vector given an object
+    @return a vector representing the object's current position
+	*/
 glm::vec3 Graphics::planetVecCoords(vector<Object> planets, std::string objectName){
   Object tempObject = getObject(planets, objectName);
   glm::mat4 tempModel = tempObject.GetModel();
@@ -123,6 +140,12 @@ glm::vec3 Graphics::planetVecCoords(vector<Object> planets, std::string objectNa
   return tempVec;
 }
 
+	/**
+    This function will focus a camera position given the state of currentCase
+    @param int currentCase: this is an int (set by keyboard input in engine.cpp). this is used to swich camera view
+    @pre none
+    @post Will change camera view based on the status of currentCase
+	*/
 void Graphics::checkCameraImputs(int currentCase){
   switch(currentCase){
     case 0:{
