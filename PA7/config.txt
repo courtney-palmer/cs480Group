@@ -18,4 +18,4 @@ EMoon	  sphere.obj   	moonmap1k.jpg	     0.2     0.700	0.300	2.000	3
 Deimos    sphere.obj   	moonmap1k.jpg	     0.2     0.500	0.300	6.000	4
 Phobos    sphere.obj   	moonmap1k.jpg	     0.4     1.000	0.300	2.000	4
 Adrastea  sphere.obj   	moonmap1k.jpg	     0.5     1.800	0.300	12.000	5
-EarthPath path.obj NULL	     10.0     0.000	0.000	0.000	-1
+
