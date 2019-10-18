@@ -226,7 +226,7 @@ void Graphics::checkCameraImputs(int currentCase){
     case 9:{
       std::string planetName = "Pluto";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y + 0.5f, planetVec.z - 0.5f,
+      m_camera->Update(planetVec.x, planetVec.y + 0.5f, planetVec.z - 0.25f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
     }
