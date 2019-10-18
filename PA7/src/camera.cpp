@@ -12,11 +12,12 @@ Camera::~Camera()
 }
 
 /**
-    This function will change the speed of the simulation.
-    The simulation will speed up if scalar is true or slow down if scalar is false.
-    @param 
+    This function updates camera position given a set of 3 vertices
+    @param float posX, posY, posZ: represents the position vector for a camera object
+    @param float frontX, frontY, frontZ: represents the direction the camera is facing
+    @param float upX, upY, upZ: represents the up vectoc component of the camera
     @pre none
-    @post 
+    @post sets the view component given a set of 3 vectors
 */
 void Camera::Update(float posX, float posY, float posZ,
         float frontX, float frontY, float frontZ,
