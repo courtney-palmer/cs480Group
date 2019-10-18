@@ -10,10 +10,10 @@ Saturn	  sphere.obj  	  saturnmap.jpg	       5.0     0.325	2.252	96.580	0
 Uranus    sphere.obj  	  uranusmap.jpg	       4.0     0.228	1.393	61.200	0
 Neptune   sphere.obj  	  neptunemap.jpg       3.0     0.182	1.490	70.050	0
 Pluto	  sphere.obj   	  plutomap1k.jpg       0.1     0.157	0.556	88.480	0
-JRing     jupiterRing.obj JupiterRing.png      2.0     0.439    2.415   59.200  0
-SRing     SRing.obj       saturnringcolor.jpg  5.0     0.325	2.252	96.580  0
-URing     uranusRing.obj  uranusringcolour.jpg 2.0     0.228    1.393   61.200  0
-NRing     saturnRing.obj  JupiterRing.png      2.0     0.182    1.490   70.050  0
+JRing     jupRing.obj JupiterRing.png      6.0     0.439    2.415   59.200  0
+SRing     satRing.obj       saturnringcolor.jpg  5.0     0.325	2.252	96.580  0
+URing     uraRing.obj  uranusringcolour.jpg 5.0     0.228    1.393   61.200  0
+NRing     nepRing.obj  neptuneRingColor.png      2.0     0.182    1.490   70.050  0
 EMoon	  sphere.obj   	  moonmap1k.jpg	       0.2     0.700	0.300	2.000	3
 Deimos    sphere.obj   	  moonmap1k.jpg	       0.04    0.500	0.300	4.000	4
 Phobos    sphere.obj   	  moonmap1k.jpg	       0.08    1.000	0.300	2.000	4
