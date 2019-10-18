@@ -151,7 +151,7 @@ void Graphics::checkCameraImputs(int currentCase){
     case 0:{
       std::string planetName = "Sun";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y + 1.0f, planetVec.z - 17.0f, //the first 3 values will lock the camera onto the given planet (or sun), 
+      m_camera->Update(planetVec.x, planetVec.y + 1.0f, planetVec.z - 20.0f, //the first 3 values will lock the camera onto the given planet (or sun), 
 		       planetVec.x, planetVec.y, planetVec.z,                            //with an offset so the camera isn't inside the planet
 		       0.0f, 1.0f, 0.0f);
     }
@@ -236,15 +236,15 @@ void Graphics::checkCameraImputs(int currentCase){
     }
       break;
     case 11:{ // w
-      m_camera->Update(0.0f ,8.0f ,-64.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-    }
-      break;
-    case 12:{ // e
       m_camera->Update(0.0f ,8.0f ,-96.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
     }
       break;
+    case 12:{ // e
+      m_camera->Update(0.0f ,100.0f ,-220.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+    }
+      break;
   default: 
-      m_camera->Update(0.0f ,8.0f ,-32.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+      m_camera->Update(0.0f ,8.0f ,-96.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
       break;
   }
 }
