@@ -224,6 +224,7 @@ void Graphics::Update(unsigned int dt, int currentCase)
 void Graphics::Render()
 {
   //orbit path code adapted from https://stackoverflow.com/questions/22058426/opengl-gl-line-loop
+<<<<<<< HEAD
   // for(int i = 1; i < 10; i++) //render the orbital paths for planets
   // {
   //   glColor3f(1, 1, 1);
@@ -237,6 +238,21 @@ void Graphics::Render()
   //   glEnd();
   // }
 
+=======
+  /*for(int i = 1; i < 10; i++) //render the orbital paths for planets
+  {
+    glColor3f(1, 1, 1);
+    float radius = planets[i].getOrbitRadius();
+    glBegin(GL_POINTS);
+    for(int j = 0; j < 360; j++)
+    {
+      float angle = (2 * M_PI * j) / 360;
+      glVertex3f(radius * sin(angle), 0.0f, radius * cos(angle));
+    }
+    glEnd();
+  }
+  */
+>>>>>>> d08d27edf691205fdbdb5b5b247bdaa283da7b65
   //clear the screen
   glClearColor(0.0, 0.0, 0.2, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
