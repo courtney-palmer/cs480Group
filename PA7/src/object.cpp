@@ -118,9 +118,14 @@ Object::Object(std::string objname, std::string texturename,
     //std::cout << objname << " model Loaded." << std::endl;
   }
   // LOAD TEXTURES : Note: meshNumber should be updated before trying to load textures?
-  if ( loadTexture(texturename) ) {
-    //std::cout << texturename << " texture Loaded." << std::endl;
-  }   
+  if(texturename.find("path") == std::string::npos) {
+    if ( loadTexture(texturename) ) {
+      //std::cout << texturename << " texture Loaded." << std::endl;
+    }
+  }
+  else { // path found in the name?
+    //std::cout << texturename << " not loaded" << std::endl;
+  }
 
   // Buffer for vertexes
   glGenBuffers(1, &VB);
@@ -186,7 +191,7 @@ bool Object::loadModel(std::string objFileName) {
     aiMaterial *mtrl; // define a material type (stores materials)
     mtrl = scene->mMaterials[mesh->mMaterialIndex]; //retrieve current mesh materials
     glm::vec3 colorVert (0.0f, 0.0f, 0.0f); // initialize a temporary color vertex
-	  glm::vec2 textureVert (0.0f, 0.0f); //initialize a temporary texture vertex
+    glm::vec2 textureVert (0.0f, 0.0f); //initialize a temporary texture vertex
 
     if(mtrl != NULL){
       if(AI_SUCCESS == aiGetMaterialColor(mtrl, AI_MATKEY_COLOR_DIFFUSE, &colorVal)){

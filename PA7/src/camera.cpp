@@ -11,8 +11,12 @@ Camera::~Camera()
 
 }
 
-void Camera::Update(float posX, float posY, float posZ, float frontX, float frontY, float frontZ, float upX, float upY, float upZ){
-  view = glm::lookAt( glm::vec3(posX, posY, posZ), glm::vec3(frontX, frontY, frontZ), glm::vec3(upX, upY, upZ));
+void Camera::Update(float posX, float posY, float posZ,
+		    float frontX, float frontY, float frontZ,
+		    float upX, float upY, float upZ) {
+  view = glm::lookAt( glm::vec3(posX, posY, posZ),
+		      glm::vec3(frontX, frontY, frontZ),
+		      glm::vec3(upX, upY, upZ) );
 }
 
 bool Camera::Initialize(int w, int h)
