@@ -151,8 +151,8 @@ void Graphics::checkCameraImputs(int currentCase){
     case 0:{
       std::string planetName = "Sun";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y + 1.0f, planetVec.z - 17.0f,
-		       planetVec.x, planetVec.y, planetVec.z,
+      m_camera->Update(planetVec.x, planetVec.y + 1.0f, planetVec.z - 17.0f, //the first 3 values will lock the camera onto the given planet (or sun), 
+		       planetVec.x, planetVec.y, planetVec.z,                            //with an offset so the camera isn't inside the planet
 		       0.0f, 1.0f, 0.0f);
     }
       break;
@@ -260,7 +260,7 @@ void Graphics::Update(unsigned int dt, int currentCase)
     }
     else
     {
-      orbitOrigin = planets[planets[i].getOriginIndex()].GetPosition();
+      orbitOrigin = planets[planets[i].getOriginIndex()].GetPosition(); //get the index of the body the planet orbits, then get the position of that body
     }
     planets[i].Update(dt, orbitOrigin);
   }
@@ -349,6 +349,8 @@ bool Graphics::loadConfig() {
   return true;
 }
 
+//This function will change the speed of the simulation.
+//The simulation will speed up if scalar is true or slow down if scalar is false.
 void Graphics::ChangeSimSpeed(bool scalar)
 {
   for(int i = 0; i < planets.size(); i++)
