@@ -162,7 +162,7 @@ void Graphics::checkCameraImputs(int currentCase){
     case 4:{
       std::string planetName = "Mars";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 1.5f,
+      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 5.0f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
     }
@@ -170,15 +170,16 @@ void Graphics::checkCameraImputs(int currentCase){
     case 5:{
       std::string planetName = "Jupiter";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 13.0f,
+      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 25.0f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
+
     }
       break;
     case 6:{
       std::string planetName = "Saturn";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 11.0f,
+      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 16.0f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
     }
@@ -186,7 +187,7 @@ void Graphics::checkCameraImputs(int currentCase){
     case 7:{
       std::string planetName = "Uranus";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 10.0f,
+      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 12.0f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
     }
@@ -194,7 +195,7 @@ void Graphics::checkCameraImputs(int currentCase){
     case 8:{
       std::string planetName = "Neptune";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 8.0f,
+      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 10.0f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
     }
@@ -245,20 +246,6 @@ void Graphics::Update(unsigned int dt, int currentCase)
 
 void Graphics::Render()
 {
-  //orbit path code adapted from https://stackoverflow.com/questions/22058426/opengl-gl-line-loop
-  /*for(int i = 1; i < 10; i++) //render the orbital paths for planets
-  {
-    glColor3f(1, 1, 1);
-    float radius = planets[i].getOrbitRadius();
-    glBegin(GL_POINTS);
-    for(int j = 0; j < 360; j++)
-    {
-      float angle = (2 * M_PI * j) / 360;
-      glVertex3f(radius * sin(angle), 0.0f, radius * cos(angle));
-    }
-    glEnd();
-  }
-  */
   //clear the screen
   glClearColor(0.0, 0.0, 0.2, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -288,6 +275,7 @@ void Graphics::Render()
 bool Graphics::loadConfig() {
 
   // Open .config File
+  std::cout << "Started loading planets" << std::endl;
   std::fstream configFile("../config.txt");
   if(!configFile.is_open()) {
     cout << "Failed to open config." << endl;
@@ -329,15 +317,6 @@ bool Graphics::loadConfig() {
 	 << "origin: " << origin << endl << endl;
   */
 
-  //   Object* originPlanet = NULL;
-  //   // Find origin planet within vector to instantiate new moon if the planet is within the vector already
-  //   for(int i = 0; i < planets.size(); i++) {
-  //     if(planets[i].getKey() == origin) {
-	// originPlanet = &planets[i];
-	// break;
-  //     }
-  //   }
-    
     // initialize new planet
     planets.push_back( Object(modelfile, texturefile, key, origin,
 			      scale, speed, rotationSpeed, orbitRadius) );
@@ -345,6 +324,7 @@ bool Graphics::loadConfig() {
   
 
   configFile.close();
+  std::cout << "Planets Initialized" << std::endl;
   return true;
 }
 
