@@ -128,7 +128,7 @@ void Graphics::checkCameraImputs(int currentCase){
     case 0:{
       std::string planetName = "Sun";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 17.0f,
+      m_camera->Update(planetVec.x, planetVec.y + 1.0f, planetVec.z - 17.0f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
     }
@@ -136,7 +136,7 @@ void Graphics::checkCameraImputs(int currentCase){
     case 1:{
       std::string planetName = "Mercury";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 1.0f,
+      m_camera->Update(planetVec.x, planetVec.y + 1.0f, planetVec.z - 1.0f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
     }
@@ -144,7 +144,7 @@ void Graphics::checkCameraImputs(int currentCase){
     case 2:{
       std::string planetName = "Venus";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 3.0f,
+      m_camera->Update(planetVec.x, planetVec.y + 1.0f, planetVec.z - 3.0f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
     }
@@ -152,7 +152,7 @@ void Graphics::checkCameraImputs(int currentCase){
     case 3:{
       std::string planetName = "Earth";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y + 2.0f, planetVec.z - 3.0f,
+      m_camera->Update(planetVec.x, planetVec.y + 1.0f, planetVec.z - 3.0f,
 		       planetVec.x, planetVec.y , planetVec.z,
 		       0.0f, 1.0f, 0.0f);
       // changed 2nd argument to tilt camera upwards a bit so the orbit path
@@ -162,7 +162,7 @@ void Graphics::checkCameraImputs(int currentCase){
     case 4:{
       std::string planetName = "Mars";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 5.0f,
+      m_camera->Update(planetVec.x, planetVec.y + 1.0f, planetVec.z - 5.0f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
     }
@@ -170,7 +170,7 @@ void Graphics::checkCameraImputs(int currentCase){
     case 5:{
       std::string planetName = "Jupiter";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 25.0f,
+      m_camera->Update(planetVec.x, planetVec.y + 1.0f, planetVec.z - 25.0f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
 
@@ -179,7 +179,7 @@ void Graphics::checkCameraImputs(int currentCase){
     case 6:{
       std::string planetName = "Saturn";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 16.0f,
+      m_camera->Update(planetVec.x, planetVec.y + 1.0f, planetVec.z - 16.0f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
     }
@@ -187,7 +187,7 @@ void Graphics::checkCameraImputs(int currentCase){
     case 7:{
       std::string planetName = "Uranus";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 12.0f,
+      m_camera->Update(planetVec.x, planetVec.y + 1.0f, planetVec.z - 12.0f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
     }
@@ -195,7 +195,7 @@ void Graphics::checkCameraImputs(int currentCase){
     case 8:{
       std::string planetName = "Neptune";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 10.0f,
+      m_camera->Update(planetVec.x, planetVec.y + 1.0f, planetVec.z - 10.0f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
     }
@@ -203,7 +203,7 @@ void Graphics::checkCameraImputs(int currentCase){
     case 9:{
       std::string planetName = "Pluto";
       glm::vec3 planetVec = planetVecCoords(planets, planetName);
-      m_camera->Update(planetVec.x, planetVec.y, planetVec.z - 0.5f,
+      m_camera->Update(planetVec.x, planetVec.y + 0.5f, planetVec.z - 0.5f,
 		       planetVec.x, planetVec.y, planetVec.z,
 		       0.0f, 1.0f, 0.0f);
     }
