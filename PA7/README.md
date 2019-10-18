@@ -52,6 +52,3 @@ All textures were provided by http://planetpixelemporium.com/planets.html <br/>
 Planet info was provided by https://nssdc.gsfc.nasa.gov/planetary/factsheet/planet_table_ratio.html and altered for use in this program.
 Moon info provided by https://www.windows2universe.org/our_solar_system/moons_table.html  and altered for use in this program.
 
-
-## misc
-EarthPath path.obj NULL	     10.0     0.000	0.000	0.000	-1
