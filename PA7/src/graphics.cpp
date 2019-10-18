@@ -275,7 +275,6 @@ void Graphics::Render()
 bool Graphics::loadConfig() {
 
   // Open .config File
-  std::cout << "Started loading planets" << std::endl;
   std::fstream configFile("../config.txt");
   if(!configFile.is_open()) {
     cout << "Failed to open config." << endl;
@@ -324,7 +323,6 @@ bool Graphics::loadConfig() {
   
 
   configFile.close();
-  std::cout << "Planets Initialized" << std::endl;
   return true;
 }
 
