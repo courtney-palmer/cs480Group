@@ -26,7 +26,7 @@ class Graphics
     glm::vec3 planetVecCoords(vector<Object> planets, std::string objectName);
     //loop through our vector of planets, return the model we are asking for
     Object getObject(vector<Object> planets, std::string objectName);
-    int currentCase;
+    int currentCase = -1;
     void checkCameraImputs(int currentCase);
     
     void ChangeSimSpeed(bool scalar);
