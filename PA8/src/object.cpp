@@ -1,5 +1,5 @@
 #include "object.h"
-
+#include <btBulletDynamicsCommon.h>
 Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
 {
   // LOAD MODEL :: ASSIMP STUFF

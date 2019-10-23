@@ -10,6 +10,7 @@ using namespace std;
 #include "graphics_headers.h"
 #include "camera.h"
 #include "object.h"
+#include <btBulletDynamicsCommon.h>
 
 class Graphics
 {
@@ -19,6 +20,8 @@ class Graphics
     bool Initialize(int width, int height, int argc, char **argv);
     void Update(unsigned int dt, int currentCase);
     void Render();
+
+    btBroadphaseInterface* broadphase; //declare a broadphase
 
     vector<Object> planets;
     bool loadConfig();
@@ -30,9 +33,7 @@ class Graphics
     void checkCameraImputs(int currentCase);
     
     void ChangeSimSpeed(bool scalar);
-
-    Object *skybox;
-    void renderSkyBox();
+    
   private:
     std::string ErrorString(GLenum error);
     Shader *m_shader;
