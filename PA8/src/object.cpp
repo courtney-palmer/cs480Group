@@ -2,26 +2,21 @@
 
 Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
 {
-  // LOAD MODEL
-  ///////////// -- ADDING ASSIMP STUFF -- /////////////////
-  //std::string s;
+  // LOAD MODEL :: ASSIMP STUFF
   int i = 0;
   while(!(strcmp(argv[i], "-o") == 0)){ //go through arguments until you find -o flag
     i++;
   }
-  i++; //next argument is the file name we want
+  i++; //next aurgument is the file name we want
   std::string fileName(argv[i]);
   std::cout << "Filename: " << fileName << std::endl;
 
-  aiMesh *mesh;
+  // LOAD MODEL
+  if( loadModel(fileName) ) { // if loaded successfully
+    std::cout << fileName << " model Loaded." << std::endl;
+  }
 
-  scene = importer.ReadFile("../Assets/model/" + fileName, aiProcess_Triangulate);
-  meshNumber = scene->mNumMeshes; //hold number of meshes in the scene
-  std::cout << "Number of meshes: " << meshNumber << std::endl;
-
-  // ADD TEXTURES
-  ///////////// -- IMAGE MAGICK -- /////////////////
-  texture = new GLuint[meshNumber];
+  // LOAD TEXTURES
   i = 0;
   while(!(strcmp(argv[i], "-t") == 0)){ //go through arguments until you find -t flag
     i++;
@@ -30,34 +25,44 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
   for(int j = 0; j < meshNumber; j++)
   {
     i++; //next argument is the file name we want
-    std::string textureName(argv[i]);
-    std::cout << "TextureName: " << textureName << std::endl;
-
-    //load textures from images
-    Magick::Blob blob;
-    Magick::Image *image;
-    image = new Magick::Image("../Assets/model/" + textureName);
-    image->write(&blob, "RGBA");
-
-    std::cout << "Image loaded" << std::endl;
-    
-    //generate texture in OpenGL
-    glGenTextures(1, &texture[j]);
-    glBindTexture(GL_TEXTURE_2D, texture[j]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    delete image;
+    if ( loadTexture(argv[i]) ) {
+      std::cout << argv[i] << " texture Loaded." << std::endl;
+    }   
   }
 
-  std::cout << "textures loaded" << std::endl;
+  // Buffer for vertexes
+  glGenBuffers(1, &VB);
+  glBindBuffer(GL_ARRAY_BUFFER, VB);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
 
-  ///////////// -- END IMAGE MAGICK -- /////////////////
+  // Buffer for indices
+  glGenBuffers(1, &IB);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
   
-  // NOTES: The following for loop captures Vertices (position, color) and captures
-  // indices. We still need to seperate out the 3 indices
-  // The 3 indices seem to represent the 3 vertex for each face - ash
+}
 
+Object::~Object()
+{
+  Vertices.clear();
+  Indices.clear();
+}
+
+/**
+    This function loads in the .obj file information
+    @param std::string objFileName: File name of the .obj file
+    @pre none
+    @post Indices and Vertices will be filled
+    @return bool that indicates success of model loading
+*/
+bool Object::loadModel(std::string objFileName) {
+
+  // reload scene and meshNumber if needed
+  scene = importer.ReadFile("../Assets/Models/" + objFileName, aiProcess_Triangulate);
+  meshNumber = scene->mNumMeshes; //hold number of meshes in the scene
+
+  aiMesh *mesh; // holds meshes temporarily for use
+  
   // Retrieve Vertices(position & color) & Indices in each Mesh
   for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++){ //loop through each mesh found
 
@@ -69,7 +74,7 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
     aiMaterial *mtrl; // define a material type (stores materials)
     mtrl = scene->mMaterials[mesh->mMaterialIndex]; //retrieve current mesh materials
     glm::vec3 colorVert (0.0f, 0.0f, 0.0f); // initialize a temporary color vertex
-	  glm::vec2 textureVert (0.0f, 0.0f); //initialize a temporary texture vertex
+    glm::vec2 textureVert (0.0f, 0.0f); //initialize a temporary texture vertex
 
     if(mtrl != NULL){
       if(AI_SUCCESS == aiGetMaterialColor(mtrl, AI_MATKEY_COLOR_DIFFUSE, &colorVal)){
@@ -77,12 +82,10 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
         colorVert.y = colorVal.g;
         colorVert.z = colorVal.b;
       }
-      std::cout << "colors for mesh " << meshNums << " is: " << colorVert.x << " "<< colorVert.y << " " << colorVert.z << std::endl;
     }
 
     // Get INDICES (and vertices) from MESH
     int faceNumber = mesh->mNumFaces; //holds the number of faces in the current mesh
-    std::cout << "Number of Faces for mesh " << meshNums << " is: " << faceNumber << std::endl;
 
     for(int f = 0; f < faceNumber; f++){ //traverse each face, save the 3 indices
       aiFace* face = &mesh->mFaces[f]; // get the current face
@@ -103,87 +106,62 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
       }
 
     } // End for : "Get INDICES from Mesh
-  std::cout << std::endl;
   } // End for loop "Retrieve Info from Meshes"
-
-  std::cout << "Total Vertices Stored in Object: " << Vertices.size() << std::endl
-	    << "Total Indices Stored: " << Indices.size() << std::endl;
-  ///////////// -- END OF ASSIMP STUFF -- /////////////////
-
-  angleOrbit = 0.0f;
-  angleSelf = 0.0f;
-
-  pausedOrbit = false;
-  pausedSpin = false;
-  reversedOrbit = false;
-  reversedSpin = false;
-  position = glm::mat4(1.0f);
-
-  baseScale = baseSc;
-  scaleMult = 1.0f; //scales up/down 0.25 w/ each keypress
-  maxScale = 3.0f;
-  minScale = 0.25f; 
-
-  baseOrbitSpeed = baseOS;
-  baseSpinSpeed = baseSS;
-  orbitSpeedMult = 1.0f;  //scales up/down 0.25 w/ each keypress
-  spinSpeedMult = 1.0f;  //scales up/down 0.25 w/ each keypress
-  maxSpeed = 3.0f;
-  minSpeed = 0.25f;
-
-  //DisplayModelInfo();
-  
-  glGenBuffers(1, &VB);
-  glBindBuffer(GL_ARRAY_BUFFER, VB);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
-
-  // Statement loads only the platform into buffer
-  //glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 6, &Vertices[300000], GL_STATIC_DRAW);
-
-  glGenBuffers(1, &IB);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
-
-  // Statement loads only the platform into buffer
-  //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6, &Indices[300000], GL_STATIC_DRAW);
-  
-  // display mesh info for debugging purposes
-  for(int i = 0; i < meshData.size(); i++) {
-    std::cout << "Mesh " << i << ": " << std::endl
-	      << "Mesh Indices: " << meshData[i].meshSize << ", "
-	      << "Mesh Start Index " << meshData[i].meshStartIndex << std::endl;
-  }
-  
+    
+  return true;
 }
 
-Object::~Object()
-{
-  Vertices.clear();
-  Indices.clear();
+/**
+    This function loads a texture from a .jpg file using imageMagick
+    @param std::string textFileName: File name of the .mtl file
+    @pre none
+    @post Texture will be bound to the model
+    @return bool that indicates success of texture loading
+*/
+bool Object::loadTexture(std::string textFileName) {
+
+  if(textFileName == std::string("NULL"))
+    return false;
+
+  // ADD TEXTURES
+  ///////////// -- IMAGE MAGICK -- /////////////////
+  //texture = new GLuint[meshNumber];
+  textureNames.push_back(textFileName);
+  texture = new GLuint[meshNumber];
+  unsigned int index = textureNames.size() - 1;
+
+  //load textures from images
+  Magick::Blob blob;
+  Magick::Image *image = NULL;
+  image = new Magick::Image("../Assets/Textures/" + textFileName);
+  image->write(&blob, "RGBA");
+
+  if(textFileName.find("Ring") != std::string::npos ||
+     textFileName.find("ring") != std::string::npos) {
+    
+    // Insert custom texture or something?
+    
+    glGenTextures(1, &texture[index]);
+    glBindTexture(GL_TEXTURE_2D, texture[index]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    
+  } else {
+    //generate texture in OpenGL
+    glGenTextures(1, &texture[index]);
+    glBindTexture(GL_TEXTURE_2D, texture[index]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    delete image;
+  }
+  return true;
 }
 
 void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
 {
-  if(!pausedOrbit)
-  {
-    if(reversedOrbit)
-      angleOrbit -= dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
-   else
-      angleOrbit += dt * M_PI/(baseOrbitSpeed / orbitSpeedMult); //the angle of the object's orbit
-  }
-  if(!pausedSpin)
-  {
-    if(reversedSpin)
-      angleSelf -= dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
-   else
-      angleSelf += dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
-  }
-
-  position = glm::translate(orbitOrigin, glm::vec3((5.0f * sin(angleOrbit)), 0.0f, (5.0f * cos(angleOrbit)))); //translates object about the designated orbitOrigin
-  glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angleSelf), glm::vec3(0.0, 1.0, 0.0)); //sets the object's rotation about its center y-axis
-  glm::mat4 scaleMat = glm::scale(glm::vec3((scaleMult * baseScale), (scaleMult * baseScale), (scaleMult * baseScale))); //set the scale of the object
-
-  model = position * rotSelf * scaleMat; //multiply matrices to apply effects to the model
+  return;
 }
 
 glm::mat4 Object::GetModel()
