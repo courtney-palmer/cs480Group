@@ -38,12 +38,4 @@ struct Vertex
   Vertex(glm::vec3 v, glm::vec3 c, glm::vec2 t): vertex(v), color(c), texture(t) {}
 };
 
-struct meshInfo {
-  unsigned int meshSize, meshStartIndex;
-  meshInfo(unsigned int a, unsigned int b) : meshSize(a), meshStartIndex(b) {}
-};
-
-
-
-
 #endif /* GRAPHICS_HEADERS_H */
