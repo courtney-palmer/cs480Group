@@ -1,3 +1,0 @@
-
-////////////////////////// -- THINGS DONE -- //////////////////////////
-cmakelists.txt edited to include bullet stuff. 

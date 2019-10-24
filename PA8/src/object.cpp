@@ -1,10 +1,10 @@
 #include "object.h"
 
-Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
-{
+Object::Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv)
+{  
   // LOAD MODEL
   ///////////// -- ADDING ASSIMP STUFF -- /////////////////
-  //std::string s;
+  std::string s;
   int i = 0;
   while(!(strcmp(argv[i], "-o") == 0)){ //go through arguments until you find -o flag
     i++;
@@ -15,44 +15,10 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
 
   aiMesh *mesh;
 
+
   scene = importer.ReadFile("../Assets/Models/" + fileName, aiProcess_Triangulate);
-  meshNumber = scene->mNumMeshes; //hold number of meshes in the scene
+  meshNumber = scene->mNumMeshes; //hold numberof meshes in the scene
   std::cout << "Number of meshes: " << meshNumber << std::endl;
-
-  // ADD TEXTURES
-  ///////////// -- IMAGE MAGICK -- /////////////////
-  texture = new GLuint[meshNumber];
-  i = 0;
-  while(!(strcmp(argv[i], "-t") == 0)){ //go through arguments until you find -t flag
-    i++;
-  }
- 
-  for(int j = 0; j < meshNumber; j++)
-  {
-    i++; //next argument is the file name we want
-    std::string textureName(argv[i]);
-    std::cout << "TextureName: " << textureName << std::endl;
-
-    //load textures from images
-    Magick::Blob blob;
-    Magick::Image *image;
-    image = new Magick::Image("../Assets/Textures/" + textureName);
-    image->write(&blob, "RGBA");
-
-    std::cout << "Image loaded" << std::endl;
-    
-    //generate texture in OpenGL
-    glGenTextures(1, &texture[j]);
-    glBindTexture(GL_TEXTURE_2D, texture[j]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    delete image;
-  }
-
-  std::cout << "textures loaded" << std::endl;
-
-  ///////////// -- END IMAGE MAGICK -- /////////////////
   
   // NOTES: The following for loop captures Vertices (position, color) and captures
   // indices. We still need to seperate out the 3 indices
@@ -62,6 +28,9 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
   for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++){ //loop through each mesh found
 
     mesh = scene->mMeshes[meshNums]; //holds current mesh
+
+ 
+
     meshData.push_back( meshInfo(mesh->mNumFaces*3, Indices.size())); // add 1 mesh to meshData vector & starting index
 
     aiColor4D colorVal (0.0f, 0.0f, 0.0f, 1.0f); //r, g, b, a, (a controls transparency)
@@ -69,7 +38,6 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
     aiMaterial *mtrl; // define a material type (stores materials)
     mtrl = scene->mMaterials[mesh->mMaterialIndex]; //retrieve current mesh materials
     glm::vec3 colorVert (0.0f, 0.0f, 0.0f); // initialize a temporary color vertex
-	  glm::vec2 textureVert (0.0f, 0.0f); //initialize a temporary texture vertex
 
     if(mtrl != NULL){
       if(AI_SUCCESS == aiGetMaterialColor(mtrl, AI_MATKEY_COLOR_DIFFUSE, &colorVal)){
@@ -78,7 +46,7 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
         colorVert.z = colorVal.b;
       }
       std::cout << "colors for mesh " << meshNums << " is: " << colorVert.x << " "<< colorVert.y << " " << colorVert.z << std::endl;
-    }
+    }  
 
     // Get INDICES (and vertices) from MESH
     int faceNumber = mesh->mNumFaces; //holds the number of faces in the current mesh
@@ -89,16 +57,10 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
       // Use index value to load vertex values from mVertices
       for(int i = 0; i < 3; i++) {
         Indices.push_back(face->mIndices[i]);  // push back face indices onto Indices
-        if(mesh->HasTextureCoords(0)){
-          aiVector3D vert = mesh->mTextureCoords[0][face->mIndices[i]];
-          textureVert.x = vert.x;
-          textureVert.y = vert.y;
-      }
         // load vertexs for face using mesh indices
-        aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get current vertices vector
-        glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z);
-
-        Vertex *tempVertex = new Vertex(tempPos, colorVert, textureVert); 
+        aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get vurrent vertice vector
+        glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z); 
+        Vertex *tempVertex = new Vertex(tempPos, colorVert); 
         Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
       }
 
@@ -108,8 +70,9 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
 
   std::cout << "Total Vertices Stored in Object: " << Vertices.size() << std::endl
 	    << "Total Indices Stored: " << Indices.size() << std::endl;
-  ///////////// -- END OF ASSIMP STUFF -- /////////////////
+  ///////////// -- END OF  ASSIMP STUFF -- /////////////////
 
+  isMoon = moon;
   angleOrbit = 0.0f;
   angleSelf = 0.0f;
 
@@ -139,6 +102,7 @@ Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
 
   // Statement loads only the platform into buffer
   //glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 6, &Vertices[300000], GL_STATIC_DRAW);
+  
 
   glGenBuffers(1, &IB);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
@@ -174,13 +138,13 @@ void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
   if(!pausedSpin)
   {
     if(reversedSpin)
-      angleSelf -= dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
+      angleSelf -= dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's orbit
    else
-      angleSelf += dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's rotation
+      angleSelf += dt * M_PI/(baseSpinSpeed / spinSpeedMult); //the angle of the object's orbit
   }
 
-  position = glm::translate(orbitOrigin, glm::vec3((5.0f * sin(angleOrbit)), 0.0f, (5.0f * cos(angleOrbit)))); //translates object about the designated orbitOrigin
-  glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angleSelf), glm::vec3(0.0, 1.0, 0.0)); //sets the object's rotation about its center y-axis
+  position = glm::translate(orbitOrigin, glm::vec3((5.0f * sin(angleOrbit)), 0.0f, (5.0f * cos(angleOrbit)))); //translates cube about the designated orbitOrigin
+  glm::mat4 rotSelf = glm::rotate(glm::mat4(1.0f), (angleSelf), glm::vec3(0.0, 1.0, 0.0)); //sets the cube's rotation about its center y-axis
   glm::mat4 scaleMat = glm::scale(glm::vec3((scaleMult * baseScale), (scaleMult * baseScale), (scaleMult * baseScale))); //set the scale of the object
 
   model = position * rotSelf * scaleMat; //multiply matrices to apply effects to the model
@@ -200,45 +164,42 @@ void Object::Render()
 {
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
-  glEnableVertexAttribArray(2);
   
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color));
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,texture));
 
   // as far as we know, glBindBuffer initializes the buffer
   //glBindBuffer(GL_ARRAY_BUFFER, VB);
   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
 
   //glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+
   
   // Draw Each Mesh
-  for(int i = 0; i < meshData.size(); i++) {    
+  for(int i = 0; i < meshData.size(); i++) {
+    
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * meshData[i].meshSize, &Vertices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * meshData[i].meshSize, &Indices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
     glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
-    //bind texture
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture[i]);
   }
+  
 
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
-  glDisableVertexAttribArray(2);
 }
 
 void Object::SetScale(bool scalar)
 {
   if(scalar) //if increasing
   {
-    if(scaleMult + 0.25f > maxScale) //ensures we don't go over the max limit
+    if(scaleMult + 0.25f > maxScale) //be sure not to go over the max limit
       scaleMult = maxScale;
     else
       scaleMult += 0.25f;
   }
   else //if decreasing
   {
-    if(scaleMult - 0.25f < minScale) //ensures we don't go under the min limit
+    if(scaleMult - 0.25f < minScale) //be sure not to go under the min limit
       scaleMult = minScale;
     else
       scaleMult -= 0.25f;
@@ -249,14 +210,14 @@ void Object::SetOrbitSpeed(bool scalar)
 {
   if(scalar) //if increasing
   {
-    if(orbitSpeedMult + 0.25f > maxSpeed) //ensures we don't go over the max limit
+    if(orbitSpeedMult + 0.25f > maxSpeed) //be sure not to go over the max limit
       orbitSpeedMult = maxSpeed;
     else
       orbitSpeedMult += 0.25f;
   }
   else //if decreasing
   {
-    if(orbitSpeedMult - 0.25f < minSpeed) //ensures we don't go under the min limit
+    if(orbitSpeedMult - 0.25f < minSpeed) //be sure not to go under the min limit
       orbitSpeedMult = minSpeed;
     else
       orbitSpeedMult -= 0.25f;
@@ -267,14 +228,14 @@ void Object::SetSpinSpeed(bool scalar)
 {
   if(scalar) //if increasing
   {
-    if(spinSpeedMult + 0.25f > maxSpeed) //ensures we don't go over the max limit
+    if(spinSpeedMult + 0.25f > maxSpeed) //be sure not to go over the max limit
       spinSpeedMult = maxSpeed;
     else
       spinSpeedMult += 0.25f;
   }
   else //if decreasing
   {
-    if(spinSpeedMult - 0.25f < minSpeed) //ensures we don't go under the min limit
+    if(spinSpeedMult - 0.25f < minSpeed) //be sure not to go under the min limit
       spinSpeedMult = minSpeed;
     else
       spinSpeedMult -= 0.25f;

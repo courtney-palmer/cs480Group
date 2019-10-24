@@ -46,7 +46,7 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
 
   // Create the objects
   
-  planet = new Object(1.0f, 2000.0f, 1000.0f, argv);
+  planet = new Object(false, 1.0f, 2000.0f, 1000.0f, argv);
   
   // Set up the shaders
   m_shader = new Shader();

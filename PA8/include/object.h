@@ -11,7 +11,7 @@
 class Object
 {
   public:
-    Object(float baseSc, float baseOS, float baseSS, char** argv);
+    Object(bool moon, float baseSc, float baseOS, float baseSS, char** argv);
     ~Object();
     void Update(unsigned int dt, glm::mat4 orbitOrigin);
     void Render();
@@ -22,6 +22,11 @@ class Object
     void SetScale(bool scalar); //if scalar true, increase, else decrease
     void SetOrbitSpeed(bool scalar); //if scalar true, increase, else decrease
     void SetSpinSpeed(bool scalar); //if scalar true, increase, else decrease
+
+    bool pausedOrbit; //determines if the orbit is paused
+    bool pausedSpin; //determines if the spin is paused
+    bool reversedOrbit; //determines if the orbit is reversed
+    bool reversedSpin; //determines if the spin is reversed
 
   private:
     unsigned int meshNumber;
@@ -35,15 +40,19 @@ class Object
     };
     std::vector<meshInfo> meshData;
     std::vector<Vertex> Vertices;
+    //std::vector<glm::vec2> uvs;
+    //std::vector<glm::vec3> normals;
     std::vector<unsigned int> Indices;
     GLuint VB;
     GLuint IB;
-    GLuint *texture;
-    //std::vector<string> textureList;
+    
+    
 
     float angleOrbit; //the angle of the orbit
     float angleSelf; //the anlgle of the self rotation
     glm::mat4 position; //holds the position of the object
+
+    bool isMoon; //determines if the object is a moon
 
     float baseScale; //the default scale of the object
     float scaleMult; //the multiplier of the object's scale
@@ -56,11 +65,6 @@ class Object
     float spinSpeedMult; //the multiplier of the object's spin speed
     float maxSpeed; //the maximum multiplier of the object's orbit/spin speed
     float minSpeed; //the minimum multiplier of the object's orbit/spin speed
-	
-	bool pausedOrbit; //determines if the orbit is paused
-    bool pausedSpin; //determines if the spin is paused
-    bool reversedOrbit; //determines if the orbit is reversed
-    bool reversedSpin; //determines if the spin is reversed
 };
 
 #endif /* OBJECT_H */
