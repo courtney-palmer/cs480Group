@@ -75,7 +75,7 @@ void Engine::Run()
     }
 
     // Update and render the graphics
-    m_graphics->Update(m_DT, m_graphics->currentCase);
+    m_graphics->Update(m_DT);
     m_graphics->Render();
 
     // Swap to the Window
@@ -88,81 +88,6 @@ void Engine::Keyboard()
   if(m_event.type == SDL_QUIT)
   {
     m_running = false;
-  }
-  else if (m_event.type == SDL_KEYDOWN)
-  {
-    // handle key down events here
-    switch(m_event.key.keysym.sym)
-    {
-      case SDLK_ESCAPE:
-      m_running = false; //quit the program
-      break;
-
-      //controls for controlling the camera
-      case SDLK_1:
-        m_graphics->currentCase = 1;
-        break;
-      
-      case SDLK_2:
-        m_graphics->currentCase = 2;
-        break;
-      
-      case SDLK_3:
-        m_graphics->currentCase = 3;
-        break;
-      
-      case SDLK_4:
-        m_graphics->currentCase = 4;
-        break;
-
-      case SDLK_5:
-        m_graphics->currentCase = 5;
-        break;
-
-      case SDLK_6:
-        m_graphics->currentCase = 6;
-        break;
-  
-      case SDLK_7:
-        m_graphics->currentCase = 7;
-        break;
-  
-      case SDLK_8:
-        m_graphics->currentCase = 8;
-        break;
-  
-      case SDLK_9:
-        m_graphics->currentCase = 9;
-        break;
-  
-      case SDLK_0:
-        m_graphics->currentCase = 0;
-        break;
-    
-      case SDLK_q:
-        m_graphics->currentCase = 10;
-        break;
-      
-      case SDLK_w:
-        m_graphics->currentCase = 11;
-        break;
-
-      case SDLK_e:
-        m_graphics->currentCase = 12;
-        break;
-        
-      //controls for controlling simulation speed
-      case SDLK_UP:
-        m_graphics->ChangeSimSpeed(true);
-        break;
-
-      case SDLK_DOWN:
-        m_graphics->ChangeSimSpeed(false);
-        break;
-
-      default:
-        break;
-    }
   }
 }
 

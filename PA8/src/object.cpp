@@ -1,6 +1,6 @@
 #include "object.h"
 
-Object::Object(float baseSc, float baseOS, float baseSS, char** argv)
+Object::Object(char** argv)
 {
   // LOAD MODEL :: ASSIMP STUFF
   int i = 0;
@@ -159,7 +159,7 @@ bool Object::loadTexture(std::string textFileName) {
   return true;
 }
 
-void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
+void Object::Update(unsigned int dt)
 {
   return;
 }
@@ -167,11 +167,6 @@ void Object::Update(unsigned int dt, glm::mat4 orbitOrigin)
 glm::mat4 Object::GetModel()
 {
   return model;
-}
-
-glm::mat4 Object::GetPosition()
-{
-  return position;
 }
 
 void Object::Render()
@@ -203,80 +198,4 @@ void Object::Render()
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(2);
-}
-
-void Object::SetScale(bool scalar)
-{
-  if(scalar) //if increasing
-  {
-    if(scaleMult + 0.25f > maxScale) //ensures we don't go over the max limit
-      scaleMult = maxScale;
-    else
-      scaleMult += 0.25f;
-  }
-  else //if decreasing
-  {
-    if(scaleMult - 0.25f < minScale) //ensures we don't go under the min limit
-      scaleMult = minScale;
-    else
-      scaleMult -= 0.25f;
-  }
-}
-
-void Object::SetOrbitSpeed(bool scalar)
-{
-  if(scalar) //if increasing
-  {
-    if(orbitSpeedMult + 0.25f > maxSpeed) //ensures we don't go over the max limit
-      orbitSpeedMult = maxSpeed;
-    else
-      orbitSpeedMult += 0.25f;
-  }
-  else //if decreasing
-  {
-    if(orbitSpeedMult - 0.25f < minSpeed) //ensures we don't go under the min limit
-      orbitSpeedMult = minSpeed;
-    else
-      orbitSpeedMult -= 0.25f;
-  }
-}
-
-void Object::SetSpinSpeed(bool scalar)
-{
-  if(scalar) //if increasing
-  {
-    if(spinSpeedMult + 0.25f > maxSpeed) //ensures we don't go over the max limit
-      spinSpeedMult = maxSpeed;
-    else
-      spinSpeedMult += 0.25f;
-  }
-  else //if decreasing
-  {
-    if(spinSpeedMult - 0.25f < minSpeed) //ensures we don't go under the min limit
-      spinSpeedMult = minSpeed;
-    else
-      spinSpeedMult -= 0.25f;
-  }
-}
-
-void Object::DisplayModelInfo(const unsigned int maxDisplayLines) {
-  unsigned int displayLines = (Indices.size() < maxDisplayLines) ? Indices.size() : maxDisplayLines;
-  // Display Vertex position and color information
-  for(int i = 0; i < displayLines; i++) {
-    std::cout << "Vertex " << i << ": "
-	      << Vertices[i].vertex.x << " "
-	      << Vertices[i].vertex.y << " "
-	      << Vertices[i].vertex.z << std::endl;
-	      // << "Color: " 
-	      // << Vertices[i].color.x << " "
-	      // << Vertices[i].color.y << " "
-	      // << Vertices[i].color.z << std::endl;
-  }
-
-  // Display Indices in groups of threes aka for each face
-  for(int i = 0; i < displayLines; i++) {
-    std::cout << i << ":" << Indices[i] << " ";
-    if( (i%3) == 0 )
-      std::cout << std::endl;
-  }
 }

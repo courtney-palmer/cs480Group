@@ -8,6 +8,7 @@
 #include "window.h"
 #include "graphics.h"
 #include "camera.h"
+#include "physics.h"
 
 class Engine
 {

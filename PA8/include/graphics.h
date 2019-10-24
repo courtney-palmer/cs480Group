@@ -20,7 +20,7 @@ class Graphics
     void Update(unsigned int dt);
     void Render();
 
-    Object *planet;
+    Object *object;
   
   private:
     std::string ErrorString(GLenum error);

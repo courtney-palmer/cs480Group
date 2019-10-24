@@ -19,7 +19,7 @@ Physics::~Physics()
   collisionConfiguration = nullptr;
   delete dispatcher;
   dispatcher = nullptr;
-  delete solver
+  delete solver;
   solver = nullptr;
 }
 
@@ -31,11 +31,11 @@ bool Physics::Initialize()
   solver = new btSequentialImpulseConstraintSolver; //makes objects interact properly with each other and the world
   dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 
-  if (  broadphase = nullptr ||
-        collisionConfiguration = nullptr ||
-        dispatcher = nullptr ||
-        solver = nullptr ||
-        dynamicsWorld = nullptr) 
+  if (  broadphase == nullptr ||
+        collisionConfiguration == nullptr ||
+        dispatcher == nullptr ||
+        solver == nullptr ||
+        dynamicsWorld == nullptr) 
   {
     std::cerr << "Error creating physics program\n";
     return false;
