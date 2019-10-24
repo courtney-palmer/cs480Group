@@ -38,6 +38,10 @@ class Object
     GLuint VB;
     GLuint IB;
     GLuint *texture;
+    
+    float angle;
+    
+    //btCollisionShape *shape;
 };
 
 #endif /* OBJECT_H */

@@ -30,6 +30,10 @@ Object::Object(char** argv)
     }   
   }
 
+  angle = 0.0f;
+
+  //shape = new btBoxShape (const btVector3 &boxHalfExtents);
+
   // Buffer for vertexes
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -161,7 +165,9 @@ bool Object::loadTexture(std::string textFileName) {
 
 void Object::Update(unsigned int dt)
 {
-  return;
+  angle += dt * M_PI/1000;
+  std::cout << "Upate" << std::endl;
+  model = glm::rotate(glm::mat4(1.0f), (angle), glm::vec3(0.0, 1.0, 0.0));
 }
 
 glm::mat4 Object::GetModel()

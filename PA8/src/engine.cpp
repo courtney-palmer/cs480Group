@@ -35,7 +35,7 @@ bool Engine::Initialize(int argc, char **argv)
     printf("The window failed to initialize.\n");
     return false;
   }
-
+  std::cout << "Window loaded" << std::endl;
   // Start the graphics
   m_graphics = new Graphics();
   if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, argc, argv))
@@ -43,15 +43,15 @@ bool Engine::Initialize(int argc, char **argv)
     printf("The graphics failed to initialize.\n");
     return false;
   }
-
+std::cout << "Graphics loaded" << std::endl;
   // Start the physics
-  m_physics = new Physics();
-  if(!m_physics->Initialize())
-  {
-    printf("The physics failed to initialize.\n");
-    return false;
-  }
-
+//   m_physics = new Physics();
+//   if(!m_physics->Initialize())
+//   {
+//     printf("The physics failed to initialize.\n");
+//     return false;
+//   }
+// std::cout << "Physics loaded" << std::endl;
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
 
