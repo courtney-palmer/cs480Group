@@ -10,9 +10,6 @@ class Physics
     Physics();
     ~Physics();
     bool Initialize();
-    void Enable();
-    bool AddCollisionShape();
-    bool Finalize();
 
   private:
     btBroadphaseInterface *broadphase;
