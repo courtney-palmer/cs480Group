@@ -30,6 +30,7 @@ class Engine
     SDL_Event m_event;
 
     Graphics *m_graphics;
+    Physics *m_physics;
     unsigned int m_DT;
     long long m_currentTimeMillis;
     bool m_running;

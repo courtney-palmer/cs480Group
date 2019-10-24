@@ -44,6 +44,14 @@ bool Engine::Initialize(int argc, char **argv)
     return false;
   }
 
+  // Start the physics
+  m_physics = new Physics();
+  if(!m_physics->Initialize())
+  {
+    printf("The physics failed to initialize.\n");
+    return false;
+  }
+
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
 
