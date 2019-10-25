@@ -89,6 +89,19 @@ void Engine::Keyboard()
   {
     m_running = false;
   }
+  else if (m_event.type == SDL_KEYDOWN)
+  {
+    // handle key down events here
+    switch(m_event.key.keysym.sym)
+    {
+      case SDLK_ESCAPE:
+      m_running = false; //quit the program
+      break;
+
+      default:
+      break;
+    }
+  }
 }
 
 unsigned int Engine::getDT()

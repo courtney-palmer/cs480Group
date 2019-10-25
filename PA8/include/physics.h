@@ -10,6 +10,7 @@ class Physics
     Physics();
     ~Physics();
     bool Initialize();
+    //void AddShape(Shape s);
 
   private:
     btBroadphaseInterface *broadphase;

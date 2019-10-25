@@ -35,4 +35,12 @@ struct Vertex
   Vertex(glm::vec3 v, glm::vec3 c): vertex(v), color(c) {}
 };
 
+enum Shape
+{
+	box,
+	shpere,
+	plane,
+	cylinder
+};
+
 #endif /* GRAPHICS_HEADERS_H */
