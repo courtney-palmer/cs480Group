@@ -46,3 +46,24 @@ bool Physics::Initialize()
   return true;
 }
 
+void Physics::AddShape(btCollisionShape *shape, Shape s)
+{
+  /*switch(s)
+  {
+    case box:
+      shape = new btStaticPlaneShape (const btVector3 &planeNormal, btScalar planeConstant);
+      break;
+    case sphere:
+      shape = new btSphereShape (btScalar radius);
+      break;
+    case cylinder:
+      //shape = cylinder
+      break;
+    case plane:
+      shape = new btBoxShape (const btVector3 &boxHalfExtents);
+      break;
+    default:
+      break;
+  }*/
+}
+

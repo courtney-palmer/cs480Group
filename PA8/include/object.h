@@ -35,6 +35,9 @@ class Object
     std::vector<unsigned int> Indices;
     GLuint VB;
     GLuint IB;
+
+    btCollisionShape *shape;
+    Shape shapeType;
 };
 
 #endif /* OBJECT_H */

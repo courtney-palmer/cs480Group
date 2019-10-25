@@ -27,6 +27,9 @@
 
 #define INVALID_UNIFORM_LOCATION 0x7fffffff
 
+//Bullet
+#include <btBulletDynamicsCommon.h>
+
 struct Vertex
 {
   glm::vec3 vertex;
@@ -35,10 +38,10 @@ struct Vertex
   Vertex(glm::vec3 v, glm::vec3 c): vertex(v), color(c) {}
 };
 
-enum Shape
+enum Shape //for use with bullet
 {
 	box,
-	shpere,
+	sphere,
 	plane,
 	cylinder
 };

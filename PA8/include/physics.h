@@ -2,7 +2,6 @@
 #define PHYSICS_H
 
 #include "graphics_headers.h"
-#include <btBulletDynamicsCommon.h>
 
 class Physics
 {
@@ -10,7 +9,7 @@ class Physics
     Physics();
     ~Physics();
     bool Initialize();
-    //void AddShape(Shape s);
+    void AddShape(btCollisionShape *shape, Shape s);
 
   private:
     btBroadphaseInterface *broadphase;

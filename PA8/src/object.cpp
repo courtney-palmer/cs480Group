@@ -92,7 +92,26 @@ Object::Object(char** argv)
     std::cout << "Mesh " << i << ": " << std::endl
 	      << "Mesh Indices: " << meshData[i].meshSize << ", "
 	      << "Mesh Start Index " << meshData[i].meshStartIndex << std::endl;
-  }  
+  }
+
+  //////////////////// BULLET STUFF //////////////////////
+  /*i = 0;
+  while(!(strcmp(argv[i], "-s") == 0)) //go through arguments until you find -s flag
+    i++;
+  i++; //next argument is the name name we want
+/// ^^^actually let's make a config file ^^^///
+
+
+  if((strcmp(argv[i], "box") == 0)) //determine what type the shape is
+    shapeType = Shape.box;
+  if((strcmp(argv[i], "sphere") == 0)) //determine what type the shape is
+    shapeType = Shape.sphere;
+  if((strcmp(argv[i], "plane") == 0)) //determine what type the shape is
+    shapeType = Shape.box;
+  if((strcmp(argv[i], "cylinder") == 0)) //determine what type the shape is
+    shapeType = Shape.sphere;
+
+  AddShape(&shape, shapeType);*/
 }
 
 Object::~Object()
