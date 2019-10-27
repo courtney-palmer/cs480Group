@@ -10,6 +10,7 @@ using namespace std;
 #include "camera.h"
 #include "shader.h"
 #include "object.h"
+#include "physics.h"
 
 class Graphics
 {
@@ -18,7 +19,7 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height, int argc, char **argv);
-    void Update(unsigned int dt);
+    void Update(unsigned int dt, Physics &physics, Object &object);
     void Render();
 
     Object *object;

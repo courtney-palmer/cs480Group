@@ -19,6 +19,10 @@ class Physics
 		  bool dynamic = true);
 
     void OutputCollisionObjects() const;
+
+    void AddShape(Object* obj);
+    btDiscreteDynamicsWorld *dynamicsWorld;
+
   private:
 
     // This vector is parallel to the one in graphics?
@@ -28,7 +32,7 @@ class Physics
     btDefaultCollisionConfiguration *collisionConfiguration;
     btCollisionDispatcher *dispatcher;
     btSequentialImpulseConstraintSolver *solver;
-    btDiscreteDynamicsWorld *dynamicsWorld;
+    
 };
 
 #endif  /* PHYSICS_H */

@@ -18,13 +18,13 @@ class Object
 
     glm::mat4 GetModel();
 
-
+    glm::mat4 model;
+    
   private:
     unsigned int meshNumber;
     Assimp::Importer importer;
     const aiScene* scene;
 
-    glm::mat4 model;
     float angle;
 
     struct meshInfo {
@@ -42,7 +42,7 @@ class Object
     btCollisionObject *physicsObject; // Holds both world transform & shape, see shape
     btCollisionShape *shape; // Defines shape of collision object
     Shape shapeType;
-
+    btRigidBody *RBody;
     // for INLINE Getters & setters
     //btCollisionObject getCollisionObject() {return *physicsObject;}
     //btCollisionShape getCollisionShape() {return *shape;}
