@@ -11,14 +11,30 @@ Physics::Physics()
 
 Physics::~Physics()
 {
+  // Delete in reverse order, starting with the collision objects in dynamics world
+  for(int i = dynamicsWorld->getNumCollisionObjects()-1; i >= 0; i--) {
+    // delete motion state before deleting collisionObject
+    btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
+    btRigidBody* body = btRigidBody::upcast(obj);
+    if(body && body->getMotionState()) {
+      delete body->getMotionState();
+    }
+    dynamicsWorld->removeCollisionObject(obj);
+    delete obj;
+  }
+
   delete dynamicsWorld;
   dynamicsWorld = nullptr;
+
   delete broadphase;
   broadphase = nullptr;
+
   delete collisionConfiguration;
   collisionConfiguration = nullptr;
+
   delete dispatcher;
   dispatcher = nullptr;
+
   delete solver;
   solver = nullptr;
 }
@@ -53,52 +69,55 @@ bool Physics::Initialize()
 // Step through dynamics world simulation
 void Physics::Update() {
   dynamicsWorld->stepSimulation(1.0f/60.f, 10);
-
-  // Display rigidbody info for testing purposes
-  std::cout << "num Collision Objects: " << dynamicsWorld->getNumCollisionObjects() << std::endl;
-  btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[0];
-  btRigidBody* body = btRigidBody::upcast(obj);
-  btTransform trans;
-
-  if(body && body->getMotionState()) {
-    body->getMotionState()->getWorldTransform(trans);
-  }
-  else {
-    trans = obj->getWorldTransform();
-  }
-
-  std::cout << "World position of object: " << float(trans.getOrigin().getX()) << " "
-	    << trans.getOrigin().getY() << " "
-	    << trans.getOrigin().getZ() << std::endl;
+  
+  OutputCollisionObjects();
 }
 
 /* Add btCollisionObject given by newly initialized object to physics->dynamicsWorld;
-
+   dynamic default value is 1
  */
-void Physics::AddShape(Object* obj)
-{
-  std::cout << "Entered add shape function in physics.cpp" << std::endl;
 
+void Physics::AddShape(Object* obj, float x, float y, float z, bool dynamic)
+{
+  // btVector3 stores the initial starting position in xyz
   btDefaultMotionState *shapeMotionState = \
     new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
-					 btVector3(0, 10, 0)));
-  std::cout << "Created motion state" << std::endl;
+					 btVector3(x, y, z)));
+ 
+  btScalar mass = (dynamic) ? 1 : 0;
   
-  btScalar mass(0);
   btVector3 inertia(0, 0, 0);
-  std::cout << "Created inertia and mass " << std::endl;
+  
   obj->shape->calculateLocalInertia(mass, inertia);
-  //btCollisionShape* test = new btBoxShape(btVector3(1, 1, 1));
-  //test->calculateLocalInertia(mass, inertia);
-  std::cout << "Calculated local inertia" << std::endl;
-
+  
   btRigidBody::btRigidBodyConstructionInfo shapeRigidBodyCI(mass, shapeMotionState,
 							    obj->shape, inertia);
+  
   btRigidBody *rigidBody = new btRigidBody(shapeRigidBodyCI);
 
-  int COLLIDE_MASK = 4;
-  bool CollidesWith = true;
-  dynamicsWorld->addRigidBody(rigidBody, COLLIDE_MASK, CollidesWith);
-  std::cout << "Added shape" << std::endl;
+  //int COLLIDE_MASK = 4;
+  //bool CollidesWith = true;
+  //dynamicsWorld->addRigidBody(rigidBody, COLLIDE_MASK, CollidesWith);
+  dynamicsWorld->addRigidBody(rigidBody);
 }
 
+void Physics::OutputCollisionObjects() const {
+  int upper = dynamicsWorld->getNumCollisionObjects();
+  for(int i = 0; i < upper; i++) {
+    btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
+    btRigidBody* body = btRigidBody::upcast(obj);
+    btTransform trans;
+
+    if(body && body->getMotionState()) {
+      body->getMotionState()->getWorldTransform(trans);
+    }
+    else {
+      trans = obj->getWorldTransform();
+    }
+
+    std::cout << "World position of object " << i << ": " << float(trans.getOrigin().getX()) << " "
+	      << trans.getOrigin().getY() << " "
+	      << trans.getOrigin().getZ() << std::endl;
+  }
+  std::cout << std::endl;
+}

@@ -1,7 +1,38 @@
 #include "object.h"
 
+// optionally for adjusting size of collision shapes
+// make another constructor that will take in dimensional sizes along with the
+// parameters already defined below
+
 Object::Object(std::string objFileName, Shape colliShape)
-{  
+{
+
+    //////////////////// BULLET STUFF //////////////////////
+
+  // Make collision object that corresponds to the given model
+  // Add collision object to physics.dynamicsWorld
+
+  // wip, collision object does not correspond to given model currently
+  switch(colliShape) {
+  case box:
+    shape = new btBoxShape(btVector3(1,1,1));
+    break;
+  case sphere:
+    shape = new btSphereShape(btScalar(1));
+    break;
+  case plane:
+    shape = new btBoxShape(btVector3(1,0.1,1)); // WIP CHANGE TO PLANE SPECIFIC SHAPE
+    break;
+  case cylinder:
+    shape = new btCylinderShape(btVector3(1,1,1));
+    break;
+  case mesh:
+    // if mesh, the object cannot be a dynamic object, and it has to be
+    // initialized 
+    shape = new btTriangleMesh();
+    break;
+  }
+
   // LOAD MODEL
   ///////////// -- ADDING ASSIMP STUFF -- /////////////////
   const char *fileName;
@@ -49,6 +80,11 @@ Object::Object(std::string objFileName, Shape colliShape)
       // Use index value to load vertex values from mVertices
       for(int i = 0; i < 3; i++)
       {
+	// if collision shape is triangle mesh, load indices into there too
+	if(colliShape == mesh) {
+	  // load model info into bullet triangle mesh
+	}
+
         Indices.push_back(face->mIndices[i]);  // push back face indices onto Indices
         // load vertexs for face using mesh indices
         aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get vurrent vertice vector
@@ -82,23 +118,6 @@ Object::Object(std::string objFileName, Shape colliShape)
 	      << "Mesh Start Index " << meshData[i].meshStartIndex << std::endl;
   }
 
-  //////////////////// BULLET STUFF //////////////////////
-
-  // Make collision object that corresponds to the given model
-  // Add collision object to physics.dynamicsWorld
-
-  // wip, collision object does not correspond to given model currently
-  switch(colliShape) {
-  case box:
-    shape = new btBoxShape(btVector3(1,1,1));
-    break;
-  case sphere:
-    break;
-  case plane:
-    break;
-  case cylinder:
-    break;
-  }
 
   /*i = 0;
   while(!(strcmp(argv[i], "-s") == 0)) //go through arguments until you find -s flag
@@ -117,8 +136,6 @@ Object::Object(std::string objFileName, Shape colliShape)
     shapeType = Shape.sphere;
 
   AddShape(&shape, shapeType);*/
-
-  std::cout << "Object fully created probably." << std::endl;
 }
 
 Object::~Object()

@@ -60,7 +60,8 @@ std::cout << "Graphics loaded" << std::endl;
 
   // TESTING : load initialized graphics object into physics
   // Consider : create objects from engine and then assign graphics and physics to handle&update them?
-  m_physics->AddShape(m_graphics->object);
+  m_physics->AddShape(m_graphics->object, 0, 4, 0);
+  m_physics->AddShape(m_graphics->board, 0,0,0, false); // board starts at origin by default
 
   // No errors
   return true;

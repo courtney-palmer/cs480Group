@@ -22,6 +22,7 @@ class Graphics
     void Render();
 
     Object *object;
+    Object *board;
   
   private:
     std::string ErrorString(GLenum error);

@@ -13,8 +13,12 @@ class Physics
 
     void Update();
 
-    void AddShape(Object* obj);
+    // default : obj starts at origin as dynamic collision object
+    void AddShape(Object* obj,
+		  float x = 0, float y = 0, float z = 0,
+		  bool dynamic = true);
 
+    void OutputCollisionObjects() const;
   private:
 
     // This vector is parallel to the one in graphics?
