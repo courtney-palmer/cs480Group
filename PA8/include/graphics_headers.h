@@ -25,10 +25,10 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 
-#define INVALID_UNIFORM_LOCATION 0x7fffffff
-
 //Bullet
 #include <btBulletDynamicsCommon.h>
+
+#define INVALID_UNIFORM_LOCATION 0x7fffffff
 
 struct Vertex
 {

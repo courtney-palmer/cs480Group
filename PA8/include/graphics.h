@@ -13,6 +13,7 @@ using namespace std;
 
 class Graphics
 {
+  friend class Physics;
   public:
     Graphics();
     ~Graphics();

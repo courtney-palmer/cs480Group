@@ -11,12 +11,13 @@
 class Object
 {
   public:
-    Object(char** argv);
+  Object(std::string objFileName, Shape colliShape);
     ~Object();
     void Update(unsigned int dt);
     void Render();
 
     glm::mat4 GetModel();
+
 
   private:
     unsigned int meshNumber;
@@ -36,8 +37,15 @@ class Object
     GLuint VB;
     GLuint IB;
 
-    btCollisionShape *shape;
+ public: // PUblic for testing reasons currently
+    // Used for physics
+    btCollisionObject *physicsObject; // Holds both world transform & shape, see shape
+    btCollisionShape *shape; // Defines shape of collision object
     Shape shapeType;
+
+    // for INLINE Getters & setters
+    //btCollisionObject getCollisionObject() {return *physicsObject;}
+    //btCollisionShape getCollisionShape() {return *shape;}
 };
 
 #endif /* OBJECT_H */

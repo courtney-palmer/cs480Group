@@ -1,26 +1,21 @@
 #include "object.h"
 
-Object::Object(char** argv)
+Object::Object(std::string objFileName, Shape colliShape)
 {  
   // LOAD MODEL
   ///////////// -- ADDING ASSIMP STUFF -- /////////////////
-  std::string s;
-  int i = 0;
-  while(!(strcmp(argv[i], "-o") == 0)) //go through arguments until you find -o flag
-    i++;
-  i++; //next argument is the file name we want
-  std::string fileName(argv[i]);
+  const char *fileName;
+  fileName = objFileName.c_str();
+  std::string firstPath = "../Assets/Models/";
+  std::string fullFilePath = firstPath + fileName;
+
   std::cout << "Filename: " << fileName << std::endl;
 
   aiMesh *mesh;
-  scene = importer.ReadFile("../Assets/Models/" + fileName, aiProcess_Triangulate);
+  scene = importer.ReadFile(fullFilePath, aiProcess_Triangulate);
   meshNumber = scene->mNumMeshes; //hold numberof meshes in the scene
   std::cout << "Number of meshes: " << meshNumber << std::endl;
   
-  // NOTES: The following for loop captures Vertices (position, color) and captures
-  // indices. We still need to seperate out the 3 indices
-  // The 3 indices seem to represent the 3 vertex for each face - ash
-
   // Retrieve Vertices(position & color) & Indices in each Mesh
   for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++) //loop through each mesh found
   {
@@ -74,17 +69,10 @@ Object::Object(char** argv)
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
-
-  // Statement loads only the platform into buffer
-  //glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 6, &Vertices[300000], GL_STATIC_DRAW);
   
-
   glGenBuffers(1, &IB);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
-
-  // Statement loads only the platform into buffer
-  //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6, &Indices[300000], GL_STATIC_DRAW);
   
   // display mesh info for debugging purposes
   for(int i = 0; i < meshData.size(); i++) 
@@ -95,6 +83,23 @@ Object::Object(char** argv)
   }
 
   //////////////////// BULLET STUFF //////////////////////
+
+  // Make collision object that corresponds to the given model
+  // Add collision object to physics.dynamicsWorld
+
+  // wip, collision object does not correspond to given model currently
+  switch(colliShape) {
+  case box:
+    shape = new btBoxShape(btVector3(1,1,1));
+    break;
+  case sphere:
+    break;
+  case plane:
+    break;
+  case cylinder:
+    break;
+  }
+
   /*i = 0;
   while(!(strcmp(argv[i], "-s") == 0)) //go through arguments until you find -s flag
     i++;
@@ -112,6 +117,8 @@ Object::Object(char** argv)
     shapeType = Shape.sphere;
 
   AddShape(&shape, shapeType);*/
+
+  std::cout << "Object fully created probably." << std::endl;
 }
 
 Object::~Object()
@@ -122,9 +129,7 @@ Object::~Object()
 
 void Object::Update(unsigned int dt)
 {
-  angle += dt * M_PI/1000;
-
-  model = glm::rotate(glm::mat4(1.0f), (angle), glm::vec3(0.0, 1.0, 0.0));
+  model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
 }
 
 glm::mat4 Object::GetModel()

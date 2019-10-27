@@ -45,8 +45,7 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   }
 
   // Create the objects
-  
-  object = new Object(argv);
+  object = new Object("box.obj", box); // test object
   
   // Set up the shaders
   m_shader = new Shader();
@@ -130,8 +129,6 @@ void Graphics::Render()
   // Render the object
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(object->GetModel()));
   object->Render();
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(moon->GetModel()));
-  // moon->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();

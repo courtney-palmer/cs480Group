@@ -32,10 +32,11 @@ bool Engine::Initialize(int argc, char **argv)
   m_window = new Window();
   if(!m_window->Initialize(m_WINDOW_NAME, &m_WINDOW_WIDTH, &m_WINDOW_HEIGHT))
   {
-    printf("The window failed to initialize.\n");
+    printf("window failed to initialize.\n");
     return false;
   }
   std::cout << "Window loaded" << std::endl;
+  
   // Start the graphics
   m_graphics = new Graphics();
   if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, argc, argv))
@@ -44,16 +45,22 @@ bool Engine::Initialize(int argc, char **argv)
     return false;
   }
 std::cout << "Graphics loaded" << std::endl;
-  // Start the physics
-//   m_physics = new Physics();
-//   if(!m_physics->Initialize())
-//   {
-//     printf("The physics failed to initialize.\n");
-//     return false;
-//   }
-// std::cout << "Physics loaded" << std::endl;
+ 
+// Start the physics
+   m_physics = new Physics();
+   if(!m_physics->Initialize())
+   {
+     printf("The physics failed to initialize.\n");
+     return false;
+   }
+ std::cout << "Physics loaded" << std::endl;
+
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
+
+  // TESTING : load initialized graphics object into physics
+  // Consider : create objects from engine and then assign graphics and physics to handle&update them?
+  m_physics->AddShape(m_graphics->object);
 
   // No errors
   return true;
@@ -74,7 +81,10 @@ void Engine::Run()
       Keyboard();
     }
 
-    // Update and render the graphics
+    // Update physics
+    m_physics->Update();
+    
+    // Update and render the graphics according to the physics
     m_graphics->Update(m_DT);
     m_graphics->Render();
 
