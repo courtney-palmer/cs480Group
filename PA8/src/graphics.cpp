@@ -45,7 +45,7 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   }
 
   // Create the objects
-  object = new Object("box.obj", box); // test object
+  object = new Object("cubeTest.obj", box); // test object
   
   // Set up the shaders
   m_shader = new Shader();
@@ -107,19 +107,22 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   return true;
 }
 
-void Graphics::Update(unsigned int dt)
+void Graphics::Update(unsigned int dt, Physics &physics, Object &object)
 {
-  // Update the object
-  // btTransform trans;
-  // btScalar m[16];
-  // dynamicsWorld->stepSimulation(dt, 10);
+ // Update the object
+  btTransform trans;
+  btScalar m[16];
+  physics.dynamicsWorld->stepSimulation(dt, 10);
 
-  // object->RBody->getMotionState()->getWorldTransform(trans);
+  object.RBody->getMotionState()->getWorldTransform(trans);
 
-  // trans.getOpenGLMatrix(m);
-  // object->GetModel() = glm::make_mat4(m);
+  trans.getOpenGLMatrix(m);
+  for(int i = 0; i != 17; i++){
+    std::cout << m[i] << std::endl;
+  }
+  object.model = glm::make_mat4(m);
 
-  //object->Update(dt);
+  //object.Update(dt);
 }
 
 void Graphics::Render()

@@ -95,7 +95,7 @@ void Physics::AddShape(Object* obj)
   btRigidBody::btRigidBodyConstructionInfo shapeRigidBodyCI(mass, shapeMotionState,
 							    obj->shape, inertia);
   btRigidBody *rigidBody = new btRigidBody(shapeRigidBodyCI);
-
+  obj->RBody = rigidBody;
   int COLLIDE_MASK = 4;
   bool CollidesWith = true;
   dynamicsWorld->addRigidBody(rigidBody, COLLIDE_MASK, CollidesWith);

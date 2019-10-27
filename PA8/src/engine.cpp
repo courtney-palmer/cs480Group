@@ -85,7 +85,7 @@ void Engine::Run()
     m_physics->Update();
     
     // Update and render the graphics according to the physics
-    m_graphics->Update(m_DT);
+    m_graphics->Update(m_DT, *(m_physics), *(m_graphics->object));
     m_graphics->Render();
 
     // Swap to the Window
