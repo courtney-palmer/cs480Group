@@ -129,7 +129,7 @@ Object::~Object()
 
 void Object::Update(unsigned int dt)
 {
-  model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
+  //model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
 }
 
 glm::mat4 Object::GetModel()

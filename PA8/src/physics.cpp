@@ -80,11 +80,11 @@ void Physics::AddShape(Object* obj)
   std::cout << "Entered add shape function in physics.cpp" << std::endl;
 
   btDefaultMotionState *shapeMotionState = \
-    new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 0),
-					 btVector3(0, 0, 0)));
+    new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
+					 btVector3(0, 10, 0)));
   std::cout << "Created motion state" << std::endl;
   
-  btScalar mass(1);
+  btScalar mass(0);
   btVector3 inertia(0, 0, 0);
   std::cout << "Created inertia and mass " << std::endl;
   obj->shape->calculateLocalInertia(mass, inertia);

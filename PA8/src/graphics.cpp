@@ -110,7 +110,16 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
 void Graphics::Update(unsigned int dt)
 {
   // Update the object
-  object->Update(dt);
+  // btTransform trans;
+  // btScalar m[16];
+  // dynamicsWorld->stepSimulation(dt, 10);
+
+  // object->RBody->getMotionState()->getWorldTransform(trans);
+
+  // trans.getOpenGLMatrix(m);
+  // object->GetModel() = glm::make_mat4(m);
+
+  //object->Update(dt);
 }
 
 void Graphics::Render()
