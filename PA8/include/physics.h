@@ -20,7 +20,6 @@ class Physics
 
     void OutputCollisionObjects() const;
 
-    void AddShape(Object* obj);
     btDiscreteDynamicsWorld *dynamicsWorld;
 
   private:
