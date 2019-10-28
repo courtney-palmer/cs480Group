@@ -48,6 +48,13 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
 
   cube = new Object("cubeTest.obj", box); // test object
   board = new Object("box.obj", plane);
+  //declaring our box
+  // floor = new Object("cubeTest.obj", box);
+  // leftWall = new Object("cubeTest.obj", box);
+  // rightWall = new Object("cubeTest.obj", box);
+  // backWall = new Object("cubeTest.obj", box);
+  // frontWall = new Object("cubeTest.obj", box);
+
   ball = new Object("sphere.obj", sphere);
   cylinder = new Object("cylinder.obj", cylind);
 
@@ -152,9 +159,25 @@ void Graphics::Render()
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
 
-  // Render the object
+  // Render the objects
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(cube->GetModel()));
   cube->Render();
+
+  // Rendering a box
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(floor->GetModel()));
+  // floor->Render();
+
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(leftWall->GetModel()));
+  // leftWall->Render();
+
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(rightWall->GetModel()));
+  // rightWall->Render();
+
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(backWall->GetModel()));
+  // backWall->Render();
+
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(frontWall->GetModel()));
+  // frontWall->Render();
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(board->GetModel()));
   board->Render();

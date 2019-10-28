@@ -13,11 +13,10 @@ class Object
   public:
   Object(std::string objFileName, Shape colliShape);
     ~Object();
-    void Update(unsigned int dt);
+    void Update();
     void Render();
 
     glm::mat4 GetModel();
-
     glm::mat4 model;
     
   private:
@@ -36,6 +35,9 @@ class Object
     std::vector<unsigned int> Indices;
     GLuint VB;
     GLuint IB;
+
+    bool loadModel(std::string objFileName);
+    void showMeshData() const;
 
  public: // PUblic for testing reasons currently
     // Used for physics

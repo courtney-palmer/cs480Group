@@ -47,4 +47,26 @@ enum Shape //for use with bullet
 	mesh
 };
 
+struct ShapeInfo { // Goes along with shape
+  Shape shapeName;
+  // 0 - default size value
+  btScalar extents[3]; // stores up to 3 values for use of initializing primitives
+  
+  btVector3 getBtVector3() {
+    if(validify())
+      return btVector3(extents[0], extents[1], extents[2]);
+    else {
+      return btVector3(0,0,0);
+    } 
+  }
+  
+  bool validify() { // check extents values to make sure each are nonnegative values
+    return (extents[0] >= 0 &&
+	    extents[1] >= 0 &&
+	    extents[2] >= 0) ?  true : false;
+  }
+};
+
+
+
 #endif /* GRAPHICS_HEADERS_H */

@@ -4,6 +4,7 @@
 // make another constructor that will take in dimensional sizes along with the
 // parameters already defined below
 
+
 Object::Object(std::string objFileName, Shape colliShape)
 {
 
@@ -13,6 +14,7 @@ Object::Object(std::string objFileName, Shape colliShape)
   // Add collision object to physics.dynamicsWorld
 
   // wip, collision object does not correspond to given model currently
+  
   switch(colliShape) {
   case box:
     shape = new btBoxShape(btVector3(1,1,1));
@@ -35,7 +37,41 @@ Object::Object(std::string objFileName, Shape colliShape)
   }
 
   // LOAD MODEL
-  ///////////// -- ADDING ASSIMP STUFF -- /////////////////
+  if(loadModel(objFileName)) {
+    std::cout << "Model loaded." << std::endl;
+  }
+  
+  glGenBuffers(1, &VB);
+  glBindBuffer(GL_ARRAY_BUFFER, VB);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
+  
+  glGenBuffers(1, &IB);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+  
+  showMeshData();
+
+  /*i = 0;
+  while(!(strcmp(argv[i], "-s") == 0)) //go through arguments until you find -s flag
+    i++;
+  i++; //next argument is the name name we want
+/// ^^^actually let's make a config file ^^^///
+
+
+  if((strcmp(argv[i], "box") == 0)) //determine what type the shape is
+    shapeType = Shape.box;
+  if((strcmp(argv[i], "sphere") == 0)) //determine what type the shape is
+    shapeType = Shape.sphere;
+  if((strcmp(argv[i], "plane") == 0)) //determine what type the shape is
+    shapeType = Shape.box;
+  if((strcmp(argv[i], "cylinder") == 0)) //determine what type the shape is
+    shapeType = Shape.sphere;
+
+  AddShape(&shape, shapeType);*/
+}
+
+bool Object::loadModel(std::string objFileName) {
+    ///////////// -- ADDING ASSIMP STUFF -- /////////////////
   const char *fileName;
   fileName = objFileName.c_str();
   std::string firstPath = "../Assets/Models/";
@@ -100,52 +136,24 @@ Object::Object(std::string objFileName, Shape colliShape)
   std::cout << "Total Vertices Stored in Object: " << Vertices.size() << std::endl
 	    << "Total Indices Stored: " << Indices.size() << std::endl;
   ///////////// -- END OF  ASSIMP STUFF -- /////////////////
-
-  angle = 0.0f;
-  
-  glGenBuffers(1, &VB);
-  glBindBuffer(GL_ARRAY_BUFFER, VB);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
-  
-  glGenBuffers(1, &IB);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
-  
-  // display mesh info for debugging purposes
-  for(int i = 0; i < meshData.size(); i++) 
-  {
-    std::cout << "Mesh " << i << ": " << std::endl
-	      << "Mesh Indices: " << meshData[i].meshSize << ", "
-	      << "Mesh Start Index " << meshData[i].meshStartIndex << std::endl;
-  }
-
-
-  /*i = 0;
-  while(!(strcmp(argv[i], "-s") == 0)) //go through arguments until you find -s flag
-    i++;
-  i++; //next argument is the name name we want
-/// ^^^actually let's make a config file ^^^///
-
-
-  if((strcmp(argv[i], "box") == 0)) //determine what type the shape is
-    shapeType = Shape.box;
-  if((strcmp(argv[i], "sphere") == 0)) //determine what type the shape is
-    shapeType = Shape.sphere;
-  if((strcmp(argv[i], "plane") == 0)) //determine what type the shape is
-    shapeType = Shape.box;
-  if((strcmp(argv[i], "cylinder") == 0)) //determine what type the shape is
-    shapeType = Shape.sphere;
-
-  AddShape(&shape, shapeType);*/
+  return true;
 }
 
 Object::~Object()
 {
   Vertices.clear();
   Indices.clear();
+  delete scene;
+  delete shape;
+  delete RBody;
+  delete physicsObject;
 }
 
-void Object::Update(unsigned int dt)
+/*
+  model is set to identity matrix every update so the same transformation
+  is not consistently applied?
+ */
+void Object::Update()
 {
   model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 }
@@ -180,4 +188,14 @@ void Object::Render()
   }
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
+}
+
+void Object::showMeshData() const {
+// display mesh info for debugging purposes
+  for(int i = 0; i < meshData.size(); i++) 
+  {
+    std::cout << "Mesh " << i << ": " << std::endl
+	      << "Mesh Indices: " << meshData[i].meshSize << ", "
+	      << "Mesh Start Index " << meshData[i].meshStartIndex << std::endl;
+  }
 }

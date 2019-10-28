@@ -26,6 +26,9 @@ Engine::~Engine()
   m_graphics = NULL;
 }
 
+// default shape for use in initialize
+struct ShapeInfo ShapeInfo_default = {box, {1,1,1}};
+
 bool Engine::Initialize(int argc, char **argv)
 {
   // Start a window
@@ -62,6 +65,15 @@ bool Engine::Initialize(int argc, char **argv)
   // Consider : create objects from engine and then assign graphics and physics to handle&update them?
   m_physics->AddShape(m_graphics->board, 0, -11, 0, false); // board starts at origin by default
   m_physics->AddShape(m_graphics->cube, 0, 20, 0, true); //incorporating physics with initialized object
+  m_physics->AddShape(m_graphics->board, 0,-10,0, false); // board starts at origin by default
+  
+ // m_physics->AddShape(m_graphics->floor, 0, -10, 0, false);
+  // m_physics->AddShape(m_graphics->leftWall, 0, 0, 0, false);
+  // m_physics->AddShape(m_graphics->rightWall, 0, 0, 0, false);
+  // m_physics->AddShape(m_graphics->backWall, 0, 0, 0, false);
+  // m_physics->AddShape(m_graphics->frontWall, 0, 0, 0, false);
+  
+  
   m_physics->AddShape(m_graphics->cylinder, 0, 5, 0, false); //incorporating physics with initialized object
   m_physics->AddShape(m_graphics->ball, 0, -5, 0, true);
   
@@ -89,6 +101,12 @@ void Engine::Run()
     
     // Update and render the graphics according to the physics
     m_graphics->Update(m_DT, m_physics, m_graphics->board);
+    //m_graphics->Update(m_DT, m_physics, m_graphics->floor);
+    // m_graphics->Update(m_DT, m_physics, m_graphics->leftWall);
+    // m_graphics->Update(m_DT, m_physics, m_graphics->rightWall);
+    // m_graphics->Update(m_DT, m_physics, m_graphics->backWall);
+    // m_graphics->Update(m_DT, m_physics, m_graphics->frontWall);
+
     m_graphics->Update(m_DT, m_physics, m_graphics->cube);
     m_graphics->Update(m_DT, m_physics, m_graphics->ball);
     m_graphics->Update(m_DT, m_physics, m_graphics->cylinder);
