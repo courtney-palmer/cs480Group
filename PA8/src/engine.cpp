@@ -26,6 +26,9 @@ Engine::~Engine()
   m_graphics = NULL;
 }
 
+// default shape for use in initialize
+struct ShapeInfo ShapeInfo_default = {box, {1,1,1}};
+
 bool Engine::Initialize(int argc, char **argv)
 {
   // Start a window
@@ -60,6 +63,7 @@ bool Engine::Initialize(int argc, char **argv)
 
   // TESTING : load initialized graphics object into physics
   // Consider : create objects from engine and then assign graphics and physics to handle&update them?
+  m_physics->AddShape(m_graphics->board, 0, -11, 0, false); // board starts at origin by default
   m_physics->AddShape(m_graphics->cube, 0, 20, 0, true); //incorporating physics with initialized object
   m_physics->AddShape(m_graphics->board, 0,-10,0, false); // board starts at origin by default
   
@@ -71,7 +75,7 @@ bool Engine::Initialize(int argc, char **argv)
   
   
   m_physics->AddShape(m_graphics->cylinder, 0, 5, 0, false); //incorporating physics with initialized object
-  m_physics->AddShape(m_graphics->ball, 0, -5, 0, false);
+  m_physics->AddShape(m_graphics->ball, 0, -5, 0, true);
   
   // No errors
   return true;
@@ -131,32 +135,31 @@ void Engine::Keyboard()
       //////Input to move cube
 
       case SDLK_UP:
-      std::cout << "up" << std::endl;
+      m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
       m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 10));
       break;
 
       case SDLK_DOWN:
-      std::cout << "down" << std::endl;
+      m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
       m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, -10));
       break;
 
       case SDLK_LEFT:
-      std::cout << "left" << std::endl;
+      m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
       m_graphics->cube->RBody->setLinearVelocity(btVector3(10, 0, 0));
       break;
 
       case SDLK_RIGHT:
-      std::cout << "right" << std::endl;
+      m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
       m_graphics->cube->RBody->setLinearVelocity(btVector3(-10, 0, 0));
       break;
 
       case SDLK_SPACE:
-      std::cout << "space" << std::endl;
+      m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
       m_graphics->cube->RBody->applyCentralImpulse(btVector3(0, 10, 0));
       break;
 
       default:
-      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 0));
       break;
     }
   }
