@@ -22,7 +22,7 @@ Object::Object(std::string objFileName, Shape colliShape)
     break;
   case plane:
   //shape = new btStaticPlaneShape(btVector3(0, 1, 0), -10);
-    shape = new btBoxShape(btVector3(500, 1, 500)); // WIP CHANGE TO PLANE SPECIFIC SHAPE
+    shape = new btBoxShape(btVector3(100, 1, 100)); // WIP CHANGE TO PLANE SPECIFIC SHAPE
     break;
   case cylind:
     shape = new btCylinderShape(btVector3(1,1,1));
@@ -147,7 +147,7 @@ Object::~Object()
 
 void Object::Update(unsigned int dt)
 {
-  model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, 0.0));
+  model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
 glm::mat4 Object::GetModel()
