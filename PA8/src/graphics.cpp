@@ -46,12 +46,18 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
 
   // Create the objects
 
+<<<<<<< HEAD
   board = new Object("box.obj", box);
   //cylinder = new Object("cylinder.obj", cylind);
   cube = new Object("cubeTest.obj", box); // test object
   //ball = new Object("sphere.obj", sphere);
 
 
+=======
+  cube = new Object("cubeTest.obj", box); // test object
+  board = new Object("box.obj", plane);
+  
+>>>>>>> 7235f4aca1fcd02c632f2884c9bf5cc228614aa1
   // Set up the shaders
   m_shader = new Shader();
   if(!m_shader->Initialize())
@@ -117,12 +123,31 @@ void Graphics::Update(unsigned int dt, Physics *p, Object *o)
  // Update the object
   btTransform trans; //supports rigid movement like transformations and rotations
   btScalar m[16]; //4x4 matrix
-  p->dynamicsWorld->stepSimulation(dt, 10); //dictates how quick simulation runs
+
+  // note : for Graphics::Update, we may not need to use dt it seems?
+  p->dynamicsWorld->stepSimulation(1.f/60.f, 10); //dictates how quick simulation runs
+  p->Update();
   o->RBody->getMotionState()->getWorldTransform(trans);
   trans.getOpenGLMatrix(m);
   o->model = glm::make_mat4(m);
 
+<<<<<<< HEAD
 
+=======
+  // btTransform trans;
+  // btScalar m[16];
+  // physics.dynamicsWorld->stepSimulation(dt, 10);
+
+  // object.RBody->getMotionState()->getWorldTransform(trans);
+
+  // trans.getOpenGLMatrix(m);
+  // for(int i = 0; i != 17; i++){
+  //   std::cout << m[i] << std::endl;
+  // }
+  // object.model = glm::make_mat4(m);
+
+  //object.Update(dt);
+>>>>>>> 7235f4aca1fcd02c632f2884c9bf5cc228614aa1
 }
 
 void Graphics::Render()

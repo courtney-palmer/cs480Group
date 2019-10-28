@@ -60,12 +60,11 @@ bool Engine::Initialize(int argc, char **argv)
 
   // TESTING : load initialized graphics object into physics
   // Consider : create objects from engine and then assign graphics and physics to handle&update them?
-  m_physics->AddShape(m_graphics->board, 0,0,0, false); // board starts at origin by default
+  m_physics->AddShape(m_graphics->cube, 0, 20, 0, true); //incorporating physics with initialized object
+  m_physics->AddShape(m_graphics->board, 0,-10,0, false); // board starts at origin by default
   //m_physics->AddShape(m_graphics->cylinder, 0, -30, 0, false); //incorporating physics with initialized object
-  m_physics->AddShape(m_graphics->cube, 0, 5, 0, true); //incorporating physics with initialized object
   //m_physics->AddShape(m_graphics->ball, 0, 2, 0, true);
-
-
+  
   // No errors
   return true;
 }
@@ -111,6 +110,56 @@ void Engine::Keyboard()
     {
       case SDLK_ESCAPE:
       m_running = false; //quit the program
+      break;
+
+      //////Input to move cube
+
+      case SDLK_UP:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 10));
+      break;
+
+      case SDLK_DOWN:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, -10));
+      break;
+
+      case SDLK_LEFT:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(10, 0, 0));
+      break;
+
+      case SDLK_RIGHT:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(-10, 0, 0));
+      break;
+
+      case SDLK_SPACE:
+      m_graphics->cube->RBody->applyCentralImpulse(btVector3(0, 10, 0));
+      break;
+
+      default:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 0));
+      break;
+    }
+  }
+    else if (m_event.type == SDL_KEYUP)
+  {
+    // handle key down events here
+    switch(m_event.key.keysym.sym)
+    {
+      //////make sure cube stops
+
+      case SDLK_UP:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 0));
+      break;
+
+      case SDLK_DOWN:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 0));
+      break;
+
+      case SDLK_LEFT:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 0));
+      break;
+
+      case SDLK_RIGHT:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 0));
       break;
 
       default:
