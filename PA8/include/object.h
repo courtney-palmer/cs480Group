@@ -11,7 +11,8 @@
 class Object
 {
   public:
-  Object(std::string objFileName, Shape colliShape);
+    Object(std::string objFileName, Shape colliShape);
+    Object(std::string objFileName, const ShapeInfo& newShape);
     ~Object();
     void Update();
     void Render();

@@ -45,11 +45,29 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   }
 
   // Create the objects
+  // initialize collision objects first, see graphics_headers for struct info
 
-  cube = new Object("cubeTest.obj", box); // test object
+  /* For usage w/ old/og constructor */
+  /*
+    cube = new Object("cubeTest.obj", box); // test object 
   board = new Object("box.obj", plane);
   ball = new Object("sphere.obj", sphere);
   cylinder = new Object("cylinder.obj", cylind);
+  */
+  
+  // Usage w/ new constructor
+  struct ShapeInfo cubeInfo(box, 1, 1, 1);
+  cube = new Object("cubeTest.obj", cubeInfo);
+
+  struct ShapeInfo boardInfo(box, 500, 1, 500);
+  board = new Object("box.obj", boardInfo);
+
+  struct ShapeInfo ballInfo(sphere, 1, 1, 1);
+  ball = new Object("sphere.obj", ballInfo);
+
+  struct ShapeInfo cylindInfo(cylind, 1, 1, 1);
+  cylinder = new Object("cylinder.obj", cylind);
+
 
   // Set up the shaders
   m_shader = new Shader();

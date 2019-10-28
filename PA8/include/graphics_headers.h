@@ -51,8 +51,10 @@ struct ShapeInfo { // Goes along with shape
   Shape shapeName;
   // 0 - default size value
   btScalar extents[3]; // stores up to 3 values for use of initializing primitives
-  
-  btVector3 getBtVector3() {
+  ShapeInfo(Shape s, float x=0, float y=0, float z=0) : shapeName(s) {
+    extents[0] = x; extents[1] = y; extents[2] = z;
+  }
+  btVector3 getBtVector3() const {
     if(validify())
       return btVector3(extents[0], extents[1], extents[2]);
     else {
@@ -60,10 +62,18 @@ struct ShapeInfo { // Goes along with shape
     } 
   }
   
-  bool validify() { // check extents values to make sure each are nonnegative values
+  bool validify() const { // check extents values to make sure each are nonnegative values
     return (extents[0] >= 0 &&
 	    extents[1] >= 0 &&
 	    extents[2] >= 0) ?  true : false;
+  }
+
+  void output() const {
+    std::cout << shapeName << " ";
+    for(int i = 0; i < 3; i++) {
+      std::cout << extents[i] << " ";
+    }
+    std::cout << std::endl;
   }
 };
 

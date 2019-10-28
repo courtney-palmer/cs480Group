@@ -7,14 +7,10 @@
 
 Object::Object(std::string objFileName, Shape colliShape)
 {
-
-    //////////////////// BULLET STUFF //////////////////////
-
+//////////////////// BULLET STUFF //////////////////////
   // Make collision object that corresponds to the given model
   // Add collision object to physics.dynamicsWorld
-
   // wip, collision object does not correspond to given model currently
-  
   switch(colliShape) {
   case box:
     shape = new btBoxShape(btVector3(1,1,1));
@@ -57,17 +53,52 @@ Object::Object(std::string objFileName, Shape colliShape)
   i++; //next argument is the name name we want
 /// ^^^actually let's make a config file ^^^///
 
+*/
+}
 
-  if((strcmp(argv[i], "box") == 0)) //determine what type the shape is
-    shapeType = Shape.box;
-  if((strcmp(argv[i], "sphere") == 0)) //determine what type the shape is
-    shapeType = Shape.sphere;
-  if((strcmp(argv[i], "plane") == 0)) //determine what type the shape is
-    shapeType = Shape.box;
-  if((strcmp(argv[i], "cylinder") == 0)) //determine what type the shape is
-    shapeType = Shape.sphere;
+Object::Object(std::string objFileName, const ShapeInfo& newShape)
+{
+//////////////////// BULLET STUFF //////////////////////
+  // Make collision object that corresponds to the given model
+  // Add collision object to physics.dynamicsWorld
+  // wip, collision object does not correspond to given model currently
+  
+  switch(newShape.shapeName) {
+  case box:
+    shape = new btBoxShape(newShape.getBtVector3()); // 1 1 1
+    break;
+  case sphere:
+    shape = new btSphereShape(newShape.extents[0]);
+    break;
+  case plane:
+    //shape = new btStaticPlaneShape(btVector3(0, 1, 0), -10);
+    //shape = new btBoxShape(btVector3(500, 1, 500)); //
+    shape = new btBoxShape(newShape.getBtVector3());
+    break;
+  case cylind:
+    shape = new btCylinderShape(newShape.getBtVector3());
+    break;
+  case mesh:
+    // if mesh, the object cannot be a dynamic object, and it has to be
+    // initialized 
+    //shape = new btTriangleMesh();
+    break;
+  }
 
-  AddShape(&shape, shapeType);*/
+  // LOAD MODEL
+  if(loadModel(objFileName)) {
+    std::cout << "Model loaded." << std::endl;
+  }
+  
+  glGenBuffers(1, &VB);
+  glBindBuffer(GL_ARRAY_BUFFER, VB);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
+  
+  glGenBuffers(1, &IB);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+  
+  showMeshData();
 }
 
 bool Object::loadModel(std::string objFileName) {
