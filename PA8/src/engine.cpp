@@ -62,8 +62,8 @@ bool Engine::Initialize(int argc, char **argv)
   // Consider : create objects from engine and then assign graphics and physics to handle&update them?
   m_physics->AddShape(m_graphics->cube, 0, 20, 0, true); //incorporating physics with initialized object
   m_physics->AddShape(m_graphics->board, 0,-10,0, false); // board starts at origin by default
-  //m_physics->AddShape(m_graphics->cylinder, 0, -30, 0, false); //incorporating physics with initialized object
-  //m_physics->AddShape(m_graphics->ball, 0, 2, 0, true);
+  m_physics->AddShape(m_graphics->cylinder, 0, 5, 0, false); //incorporating physics with initialized object
+  m_physics->AddShape(m_graphics->ball, 0, -5, 0, false);
   
   // No errors
   return true;
@@ -90,6 +90,8 @@ void Engine::Run()
     // Update and render the graphics according to the physics
     m_graphics->Update(m_DT, m_physics, m_graphics->board);
     m_graphics->Update(m_DT, m_physics, m_graphics->cube);
+    m_graphics->Update(m_DT, m_physics, m_graphics->ball);
+    m_graphics->Update(m_DT, m_physics, m_graphics->cylinder);
     m_graphics->Render();
 
     // Swap to the Window

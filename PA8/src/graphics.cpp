@@ -46,18 +46,11 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
 
   // Create the objects
 
-<<<<<<< HEAD
-  board = new Object("box.obj", box);
-  //cylinder = new Object("cylinder.obj", cylind);
-  cube = new Object("cubeTest.obj", box); // test object
-  //ball = new Object("sphere.obj", sphere);
-
-
-=======
   cube = new Object("cubeTest.obj", box); // test object
   board = new Object("box.obj", plane);
-  
->>>>>>> 7235f4aca1fcd02c632f2884c9bf5cc228614aa1
+  ball = new Object("sphere.obj", sphere);
+  cylinder = new Object("cylinder.obj", cylind);
+
   // Set up the shaders
   m_shader = new Shader();
   if(!m_shader->Initialize())
@@ -131,9 +124,6 @@ void Graphics::Update(unsigned int dt, Physics *p, Object *o)
   trans.getOpenGLMatrix(m);
   o->model = glm::make_mat4(m);
 
-<<<<<<< HEAD
-
-=======
   // btTransform trans;
   // btScalar m[16];
   // physics.dynamicsWorld->stepSimulation(dt, 10);
@@ -147,7 +137,6 @@ void Graphics::Update(unsigned int dt, Physics *p, Object *o)
   // object.model = glm::make_mat4(m);
 
   //object.Update(dt);
->>>>>>> 7235f4aca1fcd02c632f2884c9bf5cc228614aa1
 }
 
 void Graphics::Render()
@@ -170,11 +159,11 @@ void Graphics::Render()
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(board->GetModel()));
   board->Render();
 
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(cylinder->GetModel()));
-  // cylinder->Render();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(cylinder->GetModel()));
+  cylinder->Render();
 
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ball->GetModel()));
-  // ball->Render();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ball->GetModel()));
+  ball->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();
