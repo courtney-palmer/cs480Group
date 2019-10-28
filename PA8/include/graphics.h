@@ -22,8 +22,10 @@ class Graphics
     void Update(unsigned int dt, Physics *p, Object *o);
     void Render();
 
-    Object *cube;
-    Object *board;
+    Object *board; //static
+    Object *cylinder; //static
+    Object *cube; //kinematic
+    Object *ball; //dynamic
   
   private:
     std::string ErrorString(GLenum error);

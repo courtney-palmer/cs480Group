@@ -43,7 +43,7 @@ enum Shape //for use with bullet
 	box,
 	sphere,
 	plane,
-	cylinder,
+	cylind,
 	mesh
 };
 

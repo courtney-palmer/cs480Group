@@ -47,8 +47,10 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   // Create the objects
 
   cube = new Object("cubeTest.obj", box); // test object
-  board = new Object("box.obj", box);
-  
+  board = new Object("box.obj", plane);
+  ball = new Object("sphere.obj", sphere);
+  cylinder = new Object("cylinder.obj", cylind);
+
   // Set up the shaders
   m_shader = new Shader();
   if(!m_shader->Initialize())
@@ -156,6 +158,12 @@ void Graphics::Render()
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(board->GetModel()));
   board->Render();
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(cylinder->GetModel()));
+  cylinder->Render();
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ball->GetModel()));
+  ball->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();
