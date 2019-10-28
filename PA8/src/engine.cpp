@@ -62,6 +62,14 @@ bool Engine::Initialize(int argc, char **argv)
   // Consider : create objects from engine and then assign graphics and physics to handle&update them?
   m_physics->AddShape(m_graphics->cube, 0, 20, 0, true); //incorporating physics with initialized object
   m_physics->AddShape(m_graphics->board, 0,-10,0, false); // board starts at origin by default
+  
+ // m_physics->AddShape(m_graphics->floor, 0, -10, 0, false);
+  // m_physics->AddShape(m_graphics->leftWall, 0, 0, 0, false);
+  // m_physics->AddShape(m_graphics->rightWall, 0, 0, 0, false);
+  // m_physics->AddShape(m_graphics->backWall, 0, 0, 0, false);
+  // m_physics->AddShape(m_graphics->frontWall, 0, 0, 0, false);
+  
+  
   m_physics->AddShape(m_graphics->cylinder, 0, 5, 0, false); //incorporating physics with initialized object
   m_physics->AddShape(m_graphics->ball, 0, -5, 0, false);
   
@@ -89,6 +97,12 @@ void Engine::Run()
     
     // Update and render the graphics according to the physics
     m_graphics->Update(m_DT, m_physics, m_graphics->board);
+    //m_graphics->Update(m_DT, m_physics, m_graphics->floor);
+    // m_graphics->Update(m_DT, m_physics, m_graphics->leftWall);
+    // m_graphics->Update(m_DT, m_physics, m_graphics->rightWall);
+    // m_graphics->Update(m_DT, m_physics, m_graphics->backWall);
+    // m_graphics->Update(m_DT, m_physics, m_graphics->frontWall);
+
     m_graphics->Update(m_DT, m_physics, m_graphics->cube);
     m_graphics->Update(m_DT, m_physics, m_graphics->ball);
     m_graphics->Update(m_DT, m_physics, m_graphics->cylinder);
@@ -117,22 +131,27 @@ void Engine::Keyboard()
       //////Input to move cube
 
       case SDLK_UP:
+      std::cout << "up" << std::endl;
       m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 10));
       break;
 
       case SDLK_DOWN:
+      std::cout << "down" << std::endl;
       m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, -10));
       break;
 
       case SDLK_LEFT:
+      std::cout << "left" << std::endl;
       m_graphics->cube->RBody->setLinearVelocity(btVector3(10, 0, 0));
       break;
 
       case SDLK_RIGHT:
+      std::cout << "right" << std::endl;
       m_graphics->cube->RBody->setLinearVelocity(btVector3(-10, 0, 0));
       break;
 
       case SDLK_SPACE:
+      std::cout << "space" << std::endl;
       m_graphics->cube->RBody->applyCentralImpulse(btVector3(0, 10, 0));
       break;
 

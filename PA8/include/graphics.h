@@ -26,6 +26,11 @@ class Graphics
     Object *cylinder; //static
     Object *cube; //kinematic
     Object *ball; //dynamic
+    Object *floor;
+    Object *leftWall;
+    Object *rightWall;
+    Object *backWall;
+    Object *frontWall;
   
   private:
     std::string ErrorString(GLenum error);
