@@ -38,14 +38,11 @@ A config file is stored in the PA8 folder. This file stores information about th
 ## Extra Credit
 
 ## Controls
-<!--
-'0' - '9' | Switch Planet Focus<br/>
-'q'       | Solar System Zoomed in<br/>
-'w'       | Solar System Reset<br/>
-'e'       | Solar System Zoom out<br/>
-'up'      | Speed up simulation<br/>
-'down'    | Slow down simulation
--->
+'up'      | Move forward<br/>
+'down'    | Move backward<br/>
+'left'    | Move left<br/>
+'right'   | Move right<br/>
+'spcae'   | Jump
 
 ## References
 <!--

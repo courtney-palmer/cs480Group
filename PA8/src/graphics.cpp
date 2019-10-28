@@ -47,7 +47,7 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   // Create the objects
 
   cube = new Object("cubeTest.obj", box); // test object
-  board = new Object("box.obj", box);
+  board = new Object("box.obj", plane);
   
   // Set up the shaders
   m_shader = new Shader();

@@ -113,19 +113,51 @@ void Engine::Keyboard()
       //////Input to move cube
 
       case SDLK_UP:
-      m_graphics->cube->RBody->applyCentralForce(btVector3(0, 0, 1));
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 10));
       break;
 
       case SDLK_DOWN:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, -10));
       break;
 
       case SDLK_LEFT:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(10, 0, 0));
       break;
 
       case SDLK_RIGHT:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(-10, 0, 0));
       break;
 
       case SDLK_SPACE:
+      m_graphics->cube->RBody->applyCentralImpulse(btVector3(0, 10, 0));
+      break;
+
+      default:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 0));
+      break;
+    }
+  }
+    else if (m_event.type == SDL_KEYUP)
+  {
+    // handle key down events here
+    switch(m_event.key.keysym.sym)
+    {
+      //////make sure cube stops
+
+      case SDLK_UP:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 0));
+      break;
+
+      case SDLK_DOWN:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 0));
+      break;
+
+      case SDLK_LEFT:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 0));
+      break;
+
+      case SDLK_RIGHT:
+      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 0));
       break;
 
       default:

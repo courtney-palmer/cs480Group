@@ -21,7 +21,7 @@ Object::Object(std::string objFileName, Shape colliShape)
     shape = new btSphereShape(btScalar(1));
     break;
   case plane:
-    shape = new btBoxShape(btVector3(1,0.1,1)); // WIP CHANGE TO PLANE SPECIFIC SHAPE
+    shape = new btStaticPlaneShape(btVector3(0, 1, 0), 0); // WIP CHANGE TO PLANE SPECIFIC SHAPE
     break;
   case cylinder:
     shape = new btCylinderShape(btVector3(1,1,1));
