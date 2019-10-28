@@ -24,6 +24,9 @@ class Engine
     unsigned int getDT();
     long long GetCurrentTimeMillis();
   private:
+    std::vector<Object*> objs;
+    unsigned int dynamicCubeIndex;
+    
     // Window related variables
     Window *m_window;    
     string m_WINDOW_NAME;

@@ -34,7 +34,7 @@ Object::Object(std::string objFileName, Shape colliShape)
 
   // LOAD MODEL
   if(loadModel(objFileName)) {
-    std::cout << "Model loaded." << std::endl;
+    //std::cout << "Model loaded." << std::endl;
   }
   
   glGenBuffers(1, &VB);
@@ -52,7 +52,6 @@ Object::Object(std::string objFileName, Shape colliShape)
     i++;
   i++; //next argument is the name name we want
 /// ^^^actually let's make a config file ^^^///
-
 */
 }
 
@@ -71,8 +70,6 @@ Object::Object(std::string objFileName, const ShapeInfo& newShape)
     shape = new btSphereShape(newShape.extents[0]);
     break;
   case plane:
-    //shape = new btStaticPlaneShape(btVector3(0, 1, 0), -10);
-    //shape = new btBoxShape(btVector3(500, 1, 500)); //
     shape = new btBoxShape(newShape.getBtVector3());
     break;
   case cylind:
@@ -87,7 +84,7 @@ Object::Object(std::string objFileName, const ShapeInfo& newShape)
 
   // LOAD MODEL
   if(loadModel(objFileName)) {
-    std::cout << "Model loaded." << std::endl;
+    //    std::cout << "Model loaded." << std::endl;
   }
   
   glGenBuffers(1, &VB);
@@ -98,7 +95,8 @@ Object::Object(std::string objFileName, const ShapeInfo& newShape)
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
   
-  showMeshData();
+  //  showMeshData();
+  return;
 }
 
 bool Object::loadModel(std::string objFileName) {
@@ -108,12 +106,12 @@ bool Object::loadModel(std::string objFileName) {
   std::string firstPath = "../Assets/Models/";
   std::string fullFilePath = firstPath + fileName;
 
-  std::cout << "Filename: " << fileName << std::endl;
+  //std::cout << "Filename: " << fileName << std::endl;
 
   aiMesh *mesh;
   scene = importer.ReadFile(fullFilePath, aiProcess_Triangulate);
   meshNumber = scene->mNumMeshes; //hold numberof meshes in the scene
-  std::cout << "Number of meshes: " << meshNumber << std::endl;
+  //std::cout << "Number of meshes: " << meshNumber << std::endl;
   
   // Retrieve Vertices(position & color) & Indices in each Mesh
   for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++) //loop through each mesh found
@@ -135,12 +133,12 @@ bool Object::loadModel(std::string objFileName) {
         colorVert.y = colorVal.g;
         colorVert.z = colorVal.b;
       }
-      std::cout << "colors for mesh " << meshNums << " is: " << colorVert.x << " "<< colorVert.y << " " << colorVert.z << std::endl;
+      // std::cout << "colors for mesh " << meshNums << " is: " << colorVert.x << " "<< colorVert.y << " " << colorVert.z << std::endl;
     }  
 
     // Get INDICES (and vertices) from MESH
     int faceNumber = mesh->mNumFaces; //holds the number of faces in the current mesh
-    std::cout << "Number of Faces for mesh " << meshNums << " is: " << faceNumber << std::endl;
+    //std::cout << "Number of Faces for mesh " << meshNums << " is: " << faceNumber << std::endl;
 
     for(int f = 0; f < faceNumber; f++) //traverse each face, save the 3 indices
     {
@@ -161,11 +159,11 @@ bool Object::loadModel(std::string objFileName) {
         Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
       }
     } // End for : "Get INDICES from Mesh
-    std::cout << std::endl;
+    //std::cout << std::endl;
   } // End for loop "Retrieve Info from Meshes"
 
-  std::cout << "Total Vertices Stored in Object: " << Vertices.size() << std::endl
-	    << "Total Indices Stored: " << Indices.size() << std::endl;
+  //std::cout << "Total Vertices Stored in Object: " << Vertices.size() << std::endl
+  //	    << "Total Indices Stored: " << Indices.size() << std::endl;
   ///////////// -- END OF  ASSIMP STUFF -- /////////////////
   return true;
 }
@@ -201,13 +199,6 @@ void Object::Render()
   
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color));
-
-  // as far as we know, glBindBuffer initializes the buffer
-  //glBindBuffer(GL_ARRAY_BUFFER, VB);
-  //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-
-  //glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
-
   
   // Draw Each Mesh
   for(int i = 0; i < meshData.size(); i++)

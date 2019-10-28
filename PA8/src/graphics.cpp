@@ -47,8 +47,6 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   // Create the objects
   // initialize collision objects first, see graphics_headers for struct info
 
-  cube = new Object("cubeTest.obj", box); // test object
-  board = new Object("tray.obj", plane);
   //declaring our box
   // floor = new Object("cubeTest.obj", box);
   // leftWall = new Object("cubeTest.obj", box);
@@ -56,10 +54,7 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   // backWall = new Object("cubeTest.obj", box);
   // frontWall = new Object("cubeTest.obj", box);
 
-  ball = new Object("sphere.obj", sphere);
-  cylinder = new Object("cylinder.obj", cylind);
-  
-  // Usage w/ new constructor
+  /*
   struct ShapeInfo cubeInfo(box, 1, 1, 1);
   cube = new Object("cubeTest.obj", cubeInfo);
 
@@ -71,7 +66,7 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
 
   struct ShapeInfo cylindInfo(cylind, 1, 1, 1);
   cylinder = new Object("cylinder.obj", cylind);
-
+  */
 
   // Set up the shaders
   m_shader = new Shader();
@@ -133,32 +128,19 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   return true;
 }
 
-void Graphics::Update(unsigned int dt, Physics *p, Object *o)
+void Graphics::Update(Physics *p, Object *o)
 {
  // Update the object
   btTransform trans; //supports rigid movement like transformations and rotations
   btScalar m[16]; //4x4 matrix
 
-  // note : for Graphics::Update, we may not need to use dt it seems?
-  p->dynamicsWorld->stepSimulation(1.f/60.f, 10); //dictates how quick simulation runs
-  p->Update();
+  //p->dynamicsWorld->stepSimulation(1.f/60.f, 10); //dictates how quick simulation runs
+  // step simulation moved to physics update
+  //p->Update();
   o->RBody->getMotionState()->getWorldTransform(trans);
   trans.getOpenGLMatrix(m);
   o->model = glm::make_mat4(m);
 
-  // btTransform trans;
-  // btScalar m[16];
-  // physics.dynamicsWorld->stepSimulation(dt, 10);
-
-  // object.RBody->getMotionState()->getWorldTransform(trans);
-
-  // trans.getOpenGLMatrix(m);
-  // for(int i = 0; i != 17; i++){
-  //   std::cout << m[i] << std::endl;
-  // }
-  // object.model = glm::make_mat4(m);
-
-  //object.Update(dt);
 }
 
 void Graphics::Render()
@@ -202,6 +184,62 @@ void Graphics::Render()
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ball->GetModel()));
   ball->Render();
+
+  // Get any errors from OpenGL
+  auto error = glGetError();
+  if ( error != GL_NO_ERROR )
+  {
+    string val = ErrorString( error );
+    cout << "Error initializing OpenGL! " << error << ", " << val << endl;
+  }
+}
+
+void Graphics::Render(std::vector<Object*>& objs)
+{
+  //clear the screen
+  glClearColor(0.0, 0.0, 0.2, 1.0);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  // Start the correct program
+  m_shader->Enable();
+
+  // Send in the projection and view to the shader
+  glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
+  glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
+
+  for(int i = 0; i < objs.size(); i++) {
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(objs[i]->GetModel()));
+    objs[i]->Render();
+  }
+
+  // Render the objects
+  //  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(cube->GetModel()));
+  //  cube->Render();
+
+  // Rendering a box
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(floor->GetModel()));
+  // floor->Render();
+
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(leftWall->GetModel()));
+  // leftWall->Render();
+
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(rightWall->GetModel()));
+  // rightWall->Render();
+
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(backWall->GetModel()));
+  // backWall->Render();
+
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(frontWall->GetModel()));
+  // frontWall->Render();
+
+  //  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(board->GetModel()));
+  //  board->Render();
+
+  //  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(cylinder->GetModel()));
+  //  cylinder->Render();
+
+  //glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ball->GetModel()));
+  //ball->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();

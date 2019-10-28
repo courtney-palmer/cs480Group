@@ -58,11 +58,49 @@ bool Engine::Initialize(int argc, char **argv)
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
 
+  // Create the objects
+  // create struct > use struct to initialize object
+  // push object into objs array  > add object to physics world
+
+  // add moveable cube
+  struct ShapeInfo info(box, 1, 1, 1);
+  Object* temp = new Object("cubeTest.obj", info);
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      0,10,0,
+		      true);
+  dynamicCubeIndex = objs.size()-1;
+
+  // add board/platform : static
+  struct ShapeInfo boardInfo(box, 50, 1, 50);
+  temp = new Object("box.obj", boardInfo);
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      0, -10, 0,
+		      false);
+
+  // Add ball
+  struct ShapeInfo ballInfo(sphere, 1, 1, 1);
+  temp = new Object("sphere.obj", ballInfo);
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		     0,-5,0,
+		     true);
+
+  // Add cylinder
+  struct ShapeInfo cylindInfo(cylind, 1, 1, 1);
+  temp = new Object("cylinder.obj", cylind);
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		     0,3,0,
+		     false);
+  
+
   // TESTING : load initialized graphics object into physics
   // Consider : create objects from engine and then assign graphics and physics to handle&update them?
-  m_physics->AddShape(m_graphics->board, 0, -11, 0, false); // board starts at origin by default
-  m_physics->AddShape(m_graphics->cube, 0, 20, 0, true); //incorporating physics with initialized object
-  m_physics->AddShape(m_graphics->board, 0,-10,0, false); // board starts at origin by default
+  //  m_physics->AddShape(m_graphics->board, 0, -10, 0, false); // board starts at origin by default
+  //  m_physics->AddShape(m_graphics->cube, 0, 10, 0, true); //incorporating physics with initialized object
+  //  m_physics->AddShape(m_graphics->board, 0,-10,0, false); // board starts at origin by default
   
  // m_physics->AddShape(m_graphics->floor, 0, -10, 0, false);
   // m_physics->AddShape(m_graphics->leftWall, 0, 0, 0, false);
@@ -70,9 +108,8 @@ bool Engine::Initialize(int argc, char **argv)
   // m_physics->AddShape(m_graphics->backWall, 0, 0, 0, false);
   // m_physics->AddShape(m_graphics->frontWall, 0, 0, 0, false);
   
-  
-  m_physics->AddShape(m_graphics->cylinder, 0, 5, 0, false); //incorporating physics with initialized object
-  m_physics->AddShape(m_graphics->ball, 0, -5, 0, true);
+  //  m_physics->AddShape(m_graphics->cylinder, 0, 5, 0, false); //incorporating physics with initialized object
+  //  m_physics->AddShape(m_graphics->ball, 0, -5, 0, true);
   
   // No errors
   return true;
@@ -95,19 +132,33 @@ void Engine::Run()
 
     // Update physics
     m_physics->Update();
-    
-    // Update and render the graphics according to the physics
-    m_graphics->Update(m_DT, m_physics, m_graphics->board);
-    //m_graphics->Update(m_DT, m_physics, m_graphics->floor);
-    // m_graphics->Update(m_DT, m_physics, m_graphics->leftWall);
-    // m_graphics->Update(m_DT, m_physics, m_graphics->rightWall);
-    // m_graphics->Update(m_DT, m_physics, m_graphics->backWall);
-    // m_graphics->Update(m_DT, m_physics, m_graphics->frontWall);
 
-    m_graphics->Update(m_DT, m_physics, m_graphics->cube);
-    m_graphics->Update(m_DT, m_physics, m_graphics->ball);
-    m_graphics->Update(m_DT, m_physics, m_graphics->cylinder);
-    m_graphics->Render();
+    // Update Graphics
+    for(int i = 0; i < objs.size(); i++) {
+      m_graphics->Update(m_physics, objs[i]);
+    }
+
+    // Render
+    m_graphics->Render(objs);
+
+
+    /*
+    // Update and render the graphics according to the physics
+    m_graphics->Update( m_physics, m_graphics->board);
+    //m_graphics->Update( m_physics, m_graphics->floor);
+    // m_graphics->Update( m_physics, m_graphics->leftWall);
+    // m_graphics->Update( m_physics, m_graphics->rightWall);
+    // m_graphics->Update( m_physics, m_graphics->backWall);
+    // m_graphics->Update( m_physics, m_graphics->frontWall);
+
+    m_graphics->Update( m_physics, m_graphics->cube);
+    m_graphics->Update( m_physics, m_graphics->ball);
+    m_graphics->Update( m_physics, m_graphics->cylinder);
+    */
+    // ideal use
+    //    for(int i = 0; i < objs.size(); i++) {
+    //m_graphics->Update(m_physics, objs[i]);
+    //    }
 
     // Swap to the Window
     m_window->Swap();
@@ -132,28 +183,30 @@ void Engine::Keyboard()
       //////Input to move cube
 
       case SDLK_UP:
-      m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
-      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 10));
+	//m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
+	//m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 10));
+	objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, 0, 10));
       break;
 
       case SDLK_DOWN:
-      m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
-      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, -10));
+      objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+      objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, 0, -10));
       break;
 
       case SDLK_LEFT:
-      m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
-      m_graphics->cube->RBody->setLinearVelocity(btVector3(10, 0, 0));
+      objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+      objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(10, 0, 0));
       break;
 
       case SDLK_RIGHT:
-      m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
-      m_graphics->cube->RBody->setLinearVelocity(btVector3(-10, 0, 0));
+      objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+      objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(-10, 0, 0));
       break;
 
       case SDLK_SPACE:
-      m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
-      m_graphics->cube->RBody->applyCentralImpulse(btVector3(0, 10, 0));
+      objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+      objs[dynamicCubeIndex]->RBody->applyCentralImpulse(btVector3(0, 10, 0));
       break;
 
       default:
@@ -168,19 +221,19 @@ void Engine::Keyboard()
       //////make sure cube stops
 
       case SDLK_UP:
-      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 0));
+      objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
       break;
 
       case SDLK_DOWN:
-      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 0));
+      objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
       break;
 
       case SDLK_LEFT:
-      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 0));
+      objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
       break;
 
       case SDLK_RIGHT:
-      m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 0));
+      objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
       break;
 
       default:

@@ -16,6 +16,7 @@ class Object
     ~Object();
     void Update();
     void Render();
+    void showMeshData() const;
 
     glm::mat4 GetModel();
     glm::mat4 model;
@@ -38,7 +39,7 @@ class Object
     GLuint IB;
 
     bool loadModel(std::string objFileName);
-    void showMeshData() const;
+
 
  public: // PUblic for testing reasons currently
     // Used for physics

@@ -68,11 +68,8 @@ bool Physics::Initialize()
 
 // Step through dynamics world simulation and output for debugging purposes
 void Physics::Update() {
-  //dynamicsWorld->stepSimulation(1.0f/60.f, 10);
-  // ^
-  // Comment this back in when graphics step simulation is moved
-  // back to physics. Works when tested
-  OutputCollisionObjects();
+  dynamicsWorld->stepSimulation(1.0f/60.f, 10);
+  //OutputCollisionObjects();
 }
 
 /* Add btCollisionObject given by newly initialized object to physics->dynamicsWorld

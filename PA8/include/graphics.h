@@ -19,18 +19,19 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height, int argc, char **argv);
-    void Update(unsigned int dt, Physics *p, Object *o);
+    void Update(Physics *p, Object *o);
     void Render();
+    void Render(std::vector<Object*>& objs);
 
     Object *board; //static
     Object *cylinder; //static
     Object *cube; //dynamic
     Object *ball; //dynamic
-    Object *floor;
-    Object *leftWall;
-    Object *rightWall;
-    Object *backWall;
-    Object *frontWall;
+    Object *floor; // static
+    Object *leftWall; // static
+    Object *rightWall; // static
+    Object *backWall; // static
+    Object *frontWall; // static
   
   private:
     std::string ErrorString(GLenum error);
