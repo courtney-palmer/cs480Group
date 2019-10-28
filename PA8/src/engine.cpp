@@ -110,6 +110,24 @@ void Engine::Keyboard()
       m_running = false; //quit the program
       break;
 
+      //////Input to move cube
+
+      case SDLK_UP:
+      m_graphics->cube->RBody->applyCentralForce(btVector3(0, 0, 1));
+      break;
+
+      case SDLK_DOWN:
+      break;
+
+      case SDLK_LEFT:
+      break;
+
+      case SDLK_RIGHT:
+      break;
+
+      case SDLK_SPACE:
+      break;
+
       default:
       break;
     }
