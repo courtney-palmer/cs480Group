@@ -24,7 +24,7 @@ class Graphics
 
     Object *board; //static
     Object *cylinder; //static
-    Object *cube; //kinematic
+    Object *cube; //dynamic
     Object *ball; //dynamic
   
   private:
