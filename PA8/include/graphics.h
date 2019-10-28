@@ -19,10 +19,10 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height, int argc, char **argv);
-    void Update(unsigned int dt, Physics &physics, Object &object);
+    void Update(unsigned int dt, Physics *p, Object *o);
     void Render();
 
-    Object *object;
+    Object *cube;
     Object *board;
   
   private:

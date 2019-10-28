@@ -29,7 +29,7 @@ Object::Object(std::string objFileName, Shape colliShape)
   case mesh:
     // if mesh, the object cannot be a dynamic object, and it has to be
     // initialized 
-    shape = new btTriangleMesh();
+    //shape = new btTriangleMesh();
     break;
   }
 
@@ -81,9 +81,9 @@ Object::Object(std::string objFileName, Shape colliShape)
       for(int i = 0; i < 3; i++)
       {
 	// if collision shape is triangle mesh, load indices into there too
-	if(colliShape == mesh) {
-	  // load model info into bullet triangle mesh
-	}
+	// if(colliShape == mesh) {
+	//   // load model info into bullet triangle mesh
+	// }
 
         Indices.push_back(face->mIndices[i]);  // push back face indices onto Indices
         // load vertexs for face using mesh indices

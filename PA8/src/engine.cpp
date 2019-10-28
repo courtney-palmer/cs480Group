@@ -39,28 +39,28 @@ bool Engine::Initialize(int argc, char **argv)
   
   // Start the graphics
   m_graphics = new Graphics();
-  if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, argc, argv))
+  if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, argc, argv)) //initialize new instance of Objects here
   {
     printf("The graphics failed to initialize.\n");
     return false;
   }
-std::cout << "Graphics loaded" << std::endl;
+  std::cout << "Graphics loaded" << std::endl;
  
 // Start the physics
    m_physics = new Physics();
-   if(!m_physics->Initialize())
+   if(!m_physics->Initialize()) //set the 5 components of a physics world here
    {
      printf("The physics failed to initialize.\n");
      return false;
    }
- std::cout << "Physics loaded" << std::endl;
+   std::cout << "Physics loaded" << std::endl;
 
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
 
   // TESTING : load initialized graphics object into physics
   // Consider : create objects from engine and then assign graphics and physics to handle&update them?
-  m_physics->AddShape(m_graphics->object, 0, 4, 0);
+  m_physics->AddShape(m_graphics->cube, 0, 4, 0, true); //incorporating physics with initialized object
   m_physics->AddShape(m_graphics->board, 0,0,0, false); // board starts at origin by default
 
   // No errors
@@ -86,7 +86,8 @@ void Engine::Run()
     m_physics->Update();
     
     // Update and render the graphics according to the physics
-    m_graphics->Update(m_DT, *(m_physics), *(m_graphics->object));
+    m_graphics->Update(m_DT, m_physics, m_graphics->board);
+    m_graphics->Update(m_DT, m_physics, m_graphics->cube);
     m_graphics->Render();
 
     // Swap to the Window

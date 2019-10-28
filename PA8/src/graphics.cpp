@@ -46,7 +46,7 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
 
   // Create the objects
 
-  object = new Object("cubeTest.obj", box); // test object
+  cube = new Object("cubeTest.obj", box); // test object
   board = new Object("box.obj", box);
   
   // Set up the shaders
@@ -109,20 +109,30 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   return true;
 }
 
-void Graphics::Update(unsigned int dt, Physics &physics, Object &object)
+void Graphics::Update(unsigned int dt, Physics *p, Object *o)
 {
  // Update the object
-  btTransform trans;
-  btScalar m[16];
-  physics.dynamicsWorld->stepSimulation(dt, 10);
-
-  object.RBody->getMotionState()->getWorldTransform(trans);
-
+  btTransform trans; //supports rigid movement like transformations and rotations
+  btScalar m[16]; //4x4 matrix
+  p->dynamicsWorld->stepSimulation(dt, 10); //dictates how quick simulation runs
+  o->RBody->getMotionState()->getWorldTransform(trans);
   trans.getOpenGLMatrix(m);
-  for(int i = 0; i != 17; i++){
-    std::cout << m[i] << std::endl;
-  }
-  object.model = glm::make_mat4(m);
+  o->model = glm::make_mat4(m);
+
+
+
+
+  // btTransform trans;
+  // btScalar m[16];
+  // physics.dynamicsWorld->stepSimulation(dt, 10);
+
+  // object.RBody->getMotionState()->getWorldTransform(trans);
+
+  // trans.getOpenGLMatrix(m);
+  // for(int i = 0; i != 17; i++){
+  //   std::cout << m[i] << std::endl;
+  // }
+  // object.model = glm::make_mat4(m);
 
   //object.Update(dt);
 }
@@ -141,8 +151,11 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
 
   // Render the object
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(object->GetModel()));
-  object->Render();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(cube->GetModel()));
+  cube->Render();
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(board->GetModel()));
+  board->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();
