@@ -23,7 +23,7 @@ Object::Object(std::string objFileName, Shape colliShape)
   case plane:
     shape = new btBoxShape(btVector3(1,0.1,1)); // WIP CHANGE TO PLANE SPECIFIC SHAPE
     break;
-  case cylinder:
+  case cylind:
     shape = new btCylinderShape(btVector3(1,1,1));
     break;
   case mesh:
