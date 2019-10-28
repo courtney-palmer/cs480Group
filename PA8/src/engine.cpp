@@ -26,6 +26,9 @@ Engine::~Engine()
   m_graphics = NULL;
 }
 
+// default shape for use in initialize
+struct ShapeInfo ShapeInfo_default = {box, {1,1,1}};
+
 bool Engine::Initialize(int argc, char **argv)
 {
   // Start a window

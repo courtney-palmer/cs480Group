@@ -4,6 +4,7 @@
 // make another constructor that will take in dimensional sizes along with the
 // parameters already defined below
 
+
 Object::Object(std::string objFileName, Shape colliShape)
 {
 
@@ -13,6 +14,7 @@ Object::Object(std::string objFileName, Shape colliShape)
   // Add collision object to physics.dynamicsWorld
 
   // wip, collision object does not correspond to given model currently
+  
   switch(colliShape) {
   case box:
     shape = new btBoxShape(btVector3(1,1,1));
