@@ -66,17 +66,24 @@ bool Physics::Initialize()
   return true;
 }
 
-// Step through dynamics world simulation
+// Step through dynamics world simulation and output for debugging purposes
 void Physics::Update() {
-  dynamicsWorld->stepSimulation(1.0f/60.f, 10);
-  
+  //dynamicsWorld->stepSimulation(1.0f/60.f, 10);
+  // ^
+  // Comment this back in when graphics step simulation is moved
+  // back to physics. Works when tested
   OutputCollisionObjects();
 }
 
-/* Add btCollisionObject given by newly initialized object to physics->dynamicsWorld;
-   dynamic default value is 1
+/* Add btCollisionObject given by newly initialized object to physics->dynamicsWorld
+   aka Adds object to physics environment
+   @param obj : Object* : Pointer to object that will be added to dynamics world
+   @param x : float : starting x coordinate
+   @param y : float : starting y coordinate
+   @param z : float : starting z coordinate
+   @param dynamic : bool : 1 if the object is dynamic, 0 if object static/kinematic
+   @post  dynamicsWorld adds one rigid body to its collection of collision objects
  */
-
 void Physics::AddShape(Object* obj, float x, float y, float z, bool dynamic)
 {
   // btVector3 stores the initial starting position in xyz
@@ -99,6 +106,11 @@ void Physics::AddShape(Object* obj, float x, float y, float z, bool dynamic)
   dynamicsWorld->addRigidBody(rigidBody);
 }
 
+/*
+  Output center position of all objects registered in dynamicsWorld
+  @pre  none
+  @post none
+ */
 void Physics::OutputCollisionObjects() const {
   int upper = dynamicsWorld->getNumCollisionObjects();
   for(int i = 0; i < upper; i++) {

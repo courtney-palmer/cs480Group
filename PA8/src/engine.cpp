@@ -60,8 +60,8 @@ bool Engine::Initialize(int argc, char **argv)
 
   // TESTING : load initialized graphics object into physics
   // Consider : create objects from engine and then assign graphics and physics to handle&update them?
-  m_physics->AddShape(m_graphics->cube, 0, 4, 0, true); //incorporating physics with initialized object
-  m_physics->AddShape(m_graphics->board, 0,0,0, false); // board starts at origin by default
+  m_physics->AddShape(m_graphics->cube, 0, 20, 0, true); //incorporating physics with initialized object
+  m_physics->AddShape(m_graphics->board, 0,-10,0, false); // board starts at origin by default
 
   // No errors
   return true;
