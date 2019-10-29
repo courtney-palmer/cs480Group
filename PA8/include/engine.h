@@ -40,6 +40,10 @@ class Engine
     unsigned int m_DT;
     long long m_currentTimeMillis;
     bool m_running;
+
+    float velX;
+    float velY;
+    float velZ;
 };
 
 #endif // ENGINE_H

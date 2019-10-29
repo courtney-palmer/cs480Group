@@ -193,8 +193,8 @@ void Engine::Keyboard()
     // handle key down events here
     switch(m_event.key.keysym.sym)
     {
-      //////make sure cube stops
-
+      ////// When an arrow key is released, make sure cube stops moving in the given direction
+      ////// However, the cube's velocity in other directions should stay the same
       case SDLK_UP:
 	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
       break;

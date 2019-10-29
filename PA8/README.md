@@ -36,18 +36,20 @@ A config file is stored in the PA8 folder. This file stores information about th
 -->
 
 ## Extra Credit
+A triangle mesh was used to load in the board/tray that holds all the other objects. The implementation can be seen in:
+object.cpp 
+- Object(std::string objFileName, const ShapeInfo& newShape)
+- bool loadModel(std::string objFileName)
+
+engine.cpp
+- bool Initialize(int argc, char** argv);
+
+The tray is loaded as a triangle mesh into Bullet.
 
 ## Controls
 'up'      | Move forward<br/>
 'down'    | Move backward<br/>
 'left'    | Move left<br/>
 'right'   | Move right<br/>
-'spcae'   | Jump
-
-## References
-<!--
-All textures were provided by http://planetpixelemporium.com/planets.html <br/>
-Planet info was provided by https://nssdc.gsfc.nasa.gov/planetary/factsheet/planet_table_ratio.html and altered for use in this program.
-Moon info provided by https://www.windows2universe.org/our_solar_system/moons_table.html  and altered for use in this program.
--->
+'space'   | Jump
 
