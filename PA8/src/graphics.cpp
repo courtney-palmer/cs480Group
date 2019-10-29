@@ -44,7 +44,7 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
     return false;
   }
 
-  // Create the objects
+  // Creation of objects has been moved to engine.cpp
   // initialize collision objects first, see graphics_headers for struct info
 
   //declaring our box
@@ -53,20 +53,6 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   // rightWall = new Object("cubeTest.obj", box);
   // backWall = new Object("cubeTest.obj", box);
   // frontWall = new Object("cubeTest.obj", box);
-
-  /*
-  struct ShapeInfo cubeInfo(box, 1, 1, 1);
-  cube = new Object("cubeTest.obj", cubeInfo);
-
-  struct ShapeInfo boardInfo(box, 500, 1, 500);
-  board = new Object("box.obj", boardInfo);
-
-  struct ShapeInfo ballInfo(sphere, 1, 1, 1);
-  ball = new Object("sphere.obj", ballInfo);
-
-  struct ShapeInfo cylindInfo(cylind, 1, 1, 1);
-  cylinder = new Object("cylinder.obj", cylind);
-  */
 
   // Set up the shaders
   m_shader = new Shader();

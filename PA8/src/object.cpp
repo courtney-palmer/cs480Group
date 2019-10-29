@@ -1,16 +1,12 @@
 #include "object.h"
 
-// optionally for adjusting size of collision shapes
-// make another constructor that will take in dimensional sizes along with the
-// parameters already defined below
-
-
+/*
+  old constructor : does not allow you to specify shape of collision object at all
+  See next constructor for updated version
+ */
 Object::Object(std::string objFileName, Shape colliShape)
 {
 //////////////////// BULLET STUFF //////////////////////
-  // Make collision object that corresponds to the given model
-  // Add collision object to physics.dynamicsWorld
-  // wip, collision object does not correspond to given model currently
   switch(colliShape) {
   case box:
     shape = new btBoxShape(btVector3(1,1,1));
@@ -61,7 +57,8 @@ Object::Object(std::string objFileName, const ShapeInfo& newShape)
   // Make collision object that corresponds to the given model
   // Add collision object to physics.dynamicsWorld
   // wip, collision object does not correspond to given model currently
-  
+  objTriMesh = nullptr;
+  shape = nullptr;
   switch(newShape.shapeName) {
   case box:
     shape = new btBoxShape(newShape.getBtVector3()); // 1 1 1
@@ -77,8 +74,9 @@ Object::Object(std::string objFileName, const ShapeInfo& newShape)
     break;
   case mesh:
     // if mesh, the object cannot be a dynamic object, and it has to be
-    // initialized 
-    //shape = new btTriangleMesh();
+    // initialized. See loadModel() for loading in the mesh
+    // particularly the parts w/ if (objTriMesh != nullptr)
+    objTriMesh = new btTriangleMesh();
     break;
   }
 
@@ -86,7 +84,8 @@ Object::Object(std::string objFileName, const ShapeInfo& newShape)
   if(loadModel(objFileName)) {
     //    std::cout << "Model loaded." << std::endl;
   }
-  
+
+  // Set up vertices and indices for rendering this object
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
   glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
@@ -95,18 +94,22 @@ Object::Object(std::string objFileName, const ShapeInfo& newShape)
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
   
-  //  showMeshData();
+  //  showMeshData(); // Used for debugging.
   return;
 }
 
+/*
+  This loads in .obj file information in order to render the object
+  @param objFileName : std::string : file name of obj file
+  @pre objFileName is assumed to be somewhere in ../Assets/Models/.
+  @post Indices, Vertices(, objTriMesh if shape is mesh) will be filled w/ model info
+ */
 bool Object::loadModel(std::string objFileName) {
     ///////////// -- ADDING ASSIMP STUFF -- /////////////////
   const char *fileName;
   fileName = objFileName.c_str();
   std::string firstPath = "../Assets/Models/";
   std::string fullFilePath = firstPath + fileName;
-
-  //std::cout << "Filename: " << fileName << std::endl;
 
   aiMesh *mesh;
   scene = importer.ReadFile(fullFilePath, aiProcess_Triangulate);
@@ -138,33 +141,45 @@ bool Object::loadModel(std::string objFileName) {
 
     // Get INDICES (and vertices) from MESH
     int faceNumber = mesh->mNumFaces; //holds the number of faces in the current mesh
-    //std::cout << "Number of Faces for mesh " << meshNums << " is: " << faceNumber << std::endl;
 
     for(int f = 0; f < faceNumber; f++) //traverse each face, save the 3 indices
     {
       aiFace* face = &mesh->mFaces[f]; // get the current face
+
+      btVector3 triArray[3]; // For use w/ bullet triangle mesh
+      
       // Use index value to load vertex values from mVertices
       for(int i = 0; i < 3; i++)
       {
-	// if collision shape is triangle mesh, load indices into there too
-	// if(colliShape == mesh) {
-	//   // load model info into bullet triangle mesh
-	// }
-
         Indices.push_back(face->mIndices[i]);  // push back face indices onto Indices
         // load vertexs for face using mesh indices
         aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get vurrent vertice vector
+	// if collision shape is triangle mesh, load indices into there too
+        if(objTriMesh != nullptr) {
+	  // load model info into bullet triangle mesh
+	  triArray[i] = btVector3(vertVect.x, vertVect.y, vertVect.z);
+	}
+	
         glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z); 
         Vertex *tempVertex = new Vertex(tempPos, colorVert); 
         Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
+      } // End for : "Process every triangle face and store into indices and vertices
+
+      if(objTriMesh != nullptr) {
+	objTriMesh->addTriangle(triArray[0], triArray[1], triArray[2]);
       }
+
     } // End for : "Get INDICES from Mesh
-    //std::cout << std::endl;
+
   } // End for loop "Retrieve Info from Meshes"
 
-  //std::cout << "Total Vertices Stored in Object: " << Vertices.size() << std::endl
-  //	    << "Total Indices Stored: " << Indices.size() << std::endl;
   ///////////// -- END OF  ASSIMP STUFF -- /////////////////
+
+  if(objTriMesh != nullptr) {
+    shape = new btBvhTriangleMeshShape(objTriMesh, true);
+    std::cout << "Shape for triangle mesh succesfully assigned" << std::endl;
+  }
+  
   return true;
 }
 

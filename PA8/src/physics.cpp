@@ -91,7 +91,7 @@ void Physics::AddShape(Object* obj, float x, float y, float z, bool dynamic)
   btScalar mass = (dynamic) ? 1 : 0;
   
   btVector3 inertia(0, 0, 0);
-  
+
   obj->shape->calculateLocalInertia(mass, inertia);
   
   btRigidBody::btRigidBodyConstructionInfo shapeRigidBodyCI(mass, shapeMotionState,

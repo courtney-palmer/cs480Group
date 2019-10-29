@@ -45,6 +45,7 @@ class Object
     // Used for physics
     btCollisionObject *physicsObject; // Holds both world transform & shape, see shape
     btCollisionShape *shape; // Defines shape of collision object
+    btTriangleMesh *objTriMesh; // used if shape is mesh, otherwise null
     Shape shapeType;
     btRigidBody *RBody;
     // for INLINE Getters & setters
