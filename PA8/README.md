@@ -40,6 +40,7 @@ A triangle mesh was used to load in the board/tray that holds all the other obje
 object.cpp 
 - Object(std::string objFileName, const ShapeInfo& newShape)
 - bool loadModel(std::string objFileName)
+
 engine.cpp
 - bool Initialize(int argc, char** argv);
 
