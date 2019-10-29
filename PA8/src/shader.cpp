@@ -42,19 +42,19 @@ bool Shader::AddShader(GLenum ShaderType, int argc, char **argv)
 	int i = 0;
   if(ShaderType == GL_VERTEX_SHADER)
   {
-		while(!(strcmp(argv[i], "-v") == 0)) //go through arguments until you find -v flag
-			i++;
-		i++; //next argument is the file name we want
-		std::string fileName(argv[i]);
-		std::ifstream shaderFile ("../Assets/Shaders/" + fileName); //open the file
-		if (!shaderFile) //if unable to open the file, write an error to the terminal
-			std::cerr << "There was a problem with the vertex shader file." << std::endl;
-		else
-		{
-			//assign the text in the file to the string s
-			s.assign((std::istreambuf_iterator<char>(shaderFile)), (std::istreambuf_iterator<char>()));
-			shaderFile.close();
-		}
+    while(!(strcmp(argv[i], "-v") == 0)) //go through arguments until you find -v flag
+      i++;
+    i++; //next argument is the file name we want
+    std::string fileName(argv[i]);
+    std::ifstream shaderFile ("../Assets/Shaders/" + fileName); //open the file
+    if (!shaderFile) //if unable to open the file, write an error to the terminal
+      std::cerr << "There was a problem with the vertex shader file." << std::endl;
+    else
+      {
+	//assign the text in the file to the string s
+	s.assign((std::istreambuf_iterator<char>(shaderFile)), (std::istreambuf_iterator<char>()));
+	shaderFile.close();
+      }
   }
   else if(ShaderType == GL_FRAGMENT_SHADER)
   {
@@ -82,6 +82,56 @@ bool Shader::AddShader(GLenum ShaderType, int argc, char **argv)
   }
 
   // Save the shader object - will be deleted in the destructor
+  m_shaderObjList.push_back(ShaderObj);
+
+  const GLchar* p[1];
+  p[0] = s.c_str();
+  GLint Lengths[1] = { (GLint)s.size() };
+
+  glShaderSource(ShaderObj, 1, p, Lengths);
+
+  glCompileShader(ShaderObj);
+
+  GLint success;
+  glGetShaderiv(ShaderObj, GL_COMPILE_STATUS, &success);
+
+  if (!success) 
+  {
+    GLchar InfoLog[1024];
+    glGetShaderInfoLog(ShaderObj, 1024, NULL, InfoLog);
+    std::cerr << "Error compiling: " << InfoLog << std::endl;
+    return false;
+  }
+
+  glAttachShader(m_shaderProg, ShaderObj);
+
+  return true;
+}
+
+bool Shader::AddShader(GLenum ShaderType, std::string filename) {
+
+  std::string s; // This will hold the shader program code
+
+  // Move the file information into s
+  std::ifstream shaderFile("../Assets/Shaders/" + filename); // Open file
+  // If file open, assign to string that holds info
+  if(shaderFile) {
+    s.assign((std::istreambuf_iterator<char>(shaderFile)), (std::istreambuf_iterator<char>()));
+    shaderFile.close();
+  }
+  else {
+    std::cerr << "There was a problem with loading the shader file." << std::endl;
+    return false;
+  }
+
+  GLuint ShaderObj = glCreateShader(ShaderType);
+
+  if(ShaderObj == 0) {
+    std::cerr << "Error creating shader type " << ShaderType << std::endl;
+    return false;
+  }
+
+  // Save shader object - will delete in destructor
   m_shaderObjList.push_back(ShaderObj);
 
   const GLchar* p[1];
