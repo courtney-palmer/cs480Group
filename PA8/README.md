@@ -36,13 +36,19 @@ A config file is stored in the PA8 folder. This file stores information about th
 -->
 
 ## Extra Credit
+A triangle mesh was used to load in the board/tray that holds all the other objects. The implementation can be seen in:
+object.cpp 
+- Object(std::string objFileName, const ShapeInfo& newShape)
+- bool loadModel(std::string objFileName)
+engine.cpp
+- bool Initialize(int argc, char** argv);
 
 ## Controls
 'up'      | Move forward<br/>
 'down'    | Move backward<br/>
 'left'    | Move left<br/>
 'right'   | Move right<br/>
-'spcae'   | Jump
+'space'   | Jump
 
 ## References
 <!--
