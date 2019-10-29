@@ -41,9 +41,7 @@ class Engine
     long long m_currentTimeMillis;
     bool m_running;
 
-    float velX;
-    float velY;
-    float velZ;
+    btVector3 vel;
 };
 
 #endif // ENGINE_H

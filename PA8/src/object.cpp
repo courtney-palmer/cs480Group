@@ -40,6 +40,8 @@ Object::Object(std::string objFileName, Shape colliShape)
   glGenBuffers(1, &IB);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+
+  //velocity = btVector3(0.0f, 0.0f, 0.0f);
   
   showMeshData();
 
@@ -93,6 +95,8 @@ Object::Object(std::string objFileName, const ShapeInfo& newShape)
   glGenBuffers(1, &IB);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
+
+  //velocity = btVector3(0.0f, 0.0f, 0.0f);
   
   //  showMeshData(); // Used for debugging.
   return;

@@ -40,6 +40,8 @@ class Object
 
     bool loadModel(std::string objFileName);
 
+    //btVector3 velocity;
+
 
  public: // PUblic for testing reasons currently
     // Used for physics
