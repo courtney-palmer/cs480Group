@@ -161,22 +161,22 @@ void Engine::Keyboard()
 	// m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
 	// m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 10));
 	objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, 0, 10));
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(objs[dynamicCubeIndex]->RBody->getLinearVelocity().getX(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), 10));
       break;
 
       case SDLK_DOWN:
 	objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, 0, -10));
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(objs[dynamicCubeIndex]->RBody->getLinearVelocity().getX(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), -10));
       break;
 
       case SDLK_LEFT:
 	objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(10, 0, 0));
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(10, objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getZ()));
       break;
 
       case SDLK_RIGHT:
 	objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(-10, 0, 0));
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(-10, objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getZ()));
       break;
 
       case SDLK_SPACE:
@@ -196,19 +196,19 @@ void Engine::Keyboard()
       ////// When an arrow key is released, make sure cube stops moving in the given direction
       ////// However, the cube's velocity in other directions should stay the same
       case SDLK_UP:
-	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(objs[dynamicCubeIndex]->RBody->getLinearVelocity().getX(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), 0));
       break;
 
       case SDLK_DOWN:
-	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(objs[dynamicCubeIndex]->RBody->getLinearVelocity().getX(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), 0));
       break;
 
       case SDLK_LEFT:
-	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getZ()));
       break;
 
       case SDLK_RIGHT:
-	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getZ()));
       break;
 
       default:
