@@ -10,8 +10,6 @@ uniform mat4 modelMatrix;
 uniform vec4 LightPosition;
 uniform float Shininess;
 
-out vec4 gl_FragColor;
-
 void main(void)
 {
 	// Normalize the input lighting vectors

@@ -36,7 +36,7 @@ bool Shader::Initialize()
 }
 
 // Use this method to add shaders to the program. When finished - call finalize()
-bool Shader::AddShader(GLenum ShaderType, int argc, char **argv)
+bool Shader::AddShader(GLenum ShaderType, char **argv)
 {
   std::string s;
 	int i = 0;

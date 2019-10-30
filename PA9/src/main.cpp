@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 {
   // Start an engine and run it then cleanup after
   Engine *engine = new Engine("PA9", 800, 600);
-  if(!engine->Initialize(argc, argv))
+  if(!engine->Initialize(argv))
   {
     printf("The engine failed to start.\n");
     delete engine;

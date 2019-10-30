@@ -26,7 +26,7 @@ Engine::~Engine()
   m_graphics = NULL;
 }
 
-bool Engine::Initialize(int argc, char **argv)
+bool Engine::Initialize(char **argv)
 {
   // Start a window
   m_window = new Window();
@@ -39,7 +39,7 @@ bool Engine::Initialize(int argc, char **argv)
   
   // Start the graphics
   m_graphics = new Graphics();
-  if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, argc, argv)) //initialize new instance of Objects here
+  if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, argv)) //initialize new instance of Objects here
   {
     printf("The graphics failed to initialize.\n");
     return false;

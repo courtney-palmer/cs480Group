@@ -18,7 +18,7 @@ class Graphics
   public:
     Graphics();
     ~Graphics();
-    bool Initialize(int width, int height, int argc, char **argv);
+    bool Initialize(int width, int height, char **argv);
     void Update(Physics *p, Object *o);
     void Render();
     void Render(std::vector<Object*>& objs);

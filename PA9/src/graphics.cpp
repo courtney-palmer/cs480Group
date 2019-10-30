@@ -10,7 +10,7 @@ Graphics::~Graphics()
 
 }
 
-bool Graphics::Initialize(int width, int height, int argc, char **argv)
+bool Graphics::Initialize(int width, int height, char **argv)
 {
   // Used for the linux OS
   #if !defined(__APPLE__) && !defined(MACOSX)
@@ -47,13 +47,6 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   // Creation of objects has been moved to engine.cpp
   // initialize collision objects first, see graphics_headers for struct info
 
-  //declaring our box
-  // floor = new Object("cubeTest.obj", box);
-  // leftWall = new Object("cubeTest.obj", box);
-  // rightWall = new Object("cubeTest.obj", box);
-  // backWall = new Object("cubeTest.obj", box);
-  // frontWall = new Object("cubeTest.obj", box);
-
   // Set up the shaders
   m_shader = new Shader();
   if(!m_shader->Initialize())
@@ -63,14 +56,14 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
   }
 
   // Add the vertex shader
-  if(!m_shader->AddShader(GL_VERTEX_SHADER, argc, argv))
+  if(!m_shader->AddShader(GL_VERTEX_SHADER, argv))
   {
     printf("Vertex Shader failed to Initialize\n");
     return false;
   }
 
   // Add the fragment shader
-  if(!m_shader->AddShader(GL_FRAGMENT_SHADER, argc, argv))
+  if(!m_shader->AddShader(GL_FRAGMENT_SHADER, argv))
   {
     printf("Fragment Shader failed to Initialize\n");
     return false;

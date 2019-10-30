@@ -18,7 +18,7 @@ class Engine
     Engine(string name, int width, int height);
     Engine(string name);
     ~Engine();
-    bool Initialize(int argc, char **argv);
+    bool Initialize(char **argv);
     void Run();
     void Keyboard();
     unsigned int getDT();
