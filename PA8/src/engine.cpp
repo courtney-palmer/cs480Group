@@ -160,6 +160,7 @@ void Engine::Keyboard()
       //////Input to move cube
 
       case SDLK_UP:
+<<<<<<< HEAD
         // Example of original code :
         // m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
         // m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 10));
@@ -181,6 +182,29 @@ void Engine::Keyboard()
         objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
         objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(-10, vel.getY(), vel.getZ()));
         break;
+=======
+	// Example of original code :
+	// m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
+	// m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 10));
+	objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(objs[dynamicCubeIndex]->RBody->getLinearVelocity().getX(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), 10));
+      break;
+
+      case SDLK_DOWN:
+	objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(objs[dynamicCubeIndex]->RBody->getLinearVelocity().getX(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), -10));
+      break;
+
+      case SDLK_LEFT:
+	objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(10, objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getZ()));
+      break;
+
+      case SDLK_RIGHT:
+	objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(-10, objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getZ()));
+      break;
+>>>>>>> 5f6f72e4999172326a2140348bb35c17c156988d
 
       case SDLK_SPACE:
         objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
@@ -199,6 +223,7 @@ void Engine::Keyboard()
       ////// When an arrow key is released, make sure cube stops moving in the given direction
       ////// However, the cube's velocity in other directions should stay the same
       case SDLK_UP:
+<<<<<<< HEAD
 	      objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(vel.getX(), vel.getY(), 0));
         break;
 
@@ -213,6 +238,22 @@ void Engine::Keyboard()
       case SDLK_RIGHT:
 	      objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, vel.getY(), vel.getZ()));
         break;
+=======
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(objs[dynamicCubeIndex]->RBody->getLinearVelocity().getX(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), 0));
+      break;
+
+      case SDLK_DOWN:
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(objs[dynamicCubeIndex]->RBody->getLinearVelocity().getX(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), 0));
+      break;
+
+      case SDLK_LEFT:
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getZ()));
+      break;
+
+      case SDLK_RIGHT:
+	objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), objs[dynamicCubeIndex]->RBody->getLinearVelocity().getZ()));
+      break;
+>>>>>>> 5f6f72e4999172326a2140348bb35c17c156988d
 
       default:
         break;

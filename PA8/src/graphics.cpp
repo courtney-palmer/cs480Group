@@ -62,6 +62,7 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
     return false;
   }
 
+  
   // Add the vertex shader
   if(!m_shader->AddShader(GL_VERTEX_SHADER, argc, argv))
   {
@@ -75,6 +76,10 @@ bool Graphics::Initialize(int width, int height, int argc, char **argv)
     printf("Fragment Shader failed to Initialize\n");
     return false;
   }
+  
+  // Testing purposes, comment above section back for og
+  //m_shader->AddShader(GL_VERTEX_SHADER, std::string("shader-v.txt"));
+  //m_shader->AddShader(GL_FRAGMENT_SHADER, std::string("shader-f.txt"));
 
   // Connect the program
   if(!m_shader->Finalize())
