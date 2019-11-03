@@ -172,11 +172,11 @@ void Graphics::Render(std::vector<Object*>& objs)
 
 
   //render light stuff
-  glUniform4f(m_shader->GetUniformLocation("LightPosition"), 0,8,0,0);
-  glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z,1);
-  glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), 1,1,1,1);
-  glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), 1,1,1,1);
-  glUniform1f(m_shader->GetUniformLocation("Shininess"), 10);
+  glUniform4f(m_shader->GetUniformLocation("LightPosition"), 1.2f, 1.0f, 2.0f, 0.0f);
+  glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z, 1.0f);
+  glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), 1.0f, 1.0f, 1.0f, 1.0f);
+  glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), 1.0f, 1.0f, 1.0f, 1.0f);
+  glUniform1f(m_shader->GetUniformLocation("Shininess"), 10.0f);
 
   // Render the objects
   for(int i = 0; i < objs.size(); i++) {

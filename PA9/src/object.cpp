@@ -131,6 +131,7 @@ bool Object::loadModel(std::string objFileName) {
     aiMaterial *mtrl; // define a material type (stores materials)
     mtrl = scene->mMaterials[mesh->mMaterialIndex]; //retrieve current mesh materials
     glm::vec3 colorVert (0.0f, 0.0f, 0.0f); // initialize a temporary color vertex
+    glm::vec3 normVert (0.0f, 0.0f, 0.0f); //initialize a temporary normal vertex
 
     if(mtrl != NULL)
     {
@@ -157,7 +158,15 @@ bool Object::loadModel(std::string objFileName) {
       {
         Indices.push_back(face->mIndices[i]);  // push back face indices onto Indices
         // load vertexs for face using mesh indices
-        aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get vurrent vertice vector
+        aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get current vertice vector
+        if(mesh->HasNormals())
+        {
+          std::cout << "There are normals!" << std::endl;
+          aiVector3D vert = mesh->mNormals[Indices.back()];
+          normVert.x = vert.x;
+          normVert.y = vert.y;
+          normVert.z = vert.z;
+        }
 	// if collision shape is triangle mesh, load indices into there too
         if(objTriMesh != nullptr) {
 	  // load model info into bullet triangle mesh
@@ -165,7 +174,7 @@ bool Object::loadModel(std::string objFileName) {
 	}
 	
         glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z); 
-        Vertex *tempVertex = new Vertex(tempPos, colorVert); 
+        Vertex *tempVertex = new Vertex(tempPos, colorVert, normVert); 
         Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
       } // End for : "Process every triangle face and store into indices and vertices
 
