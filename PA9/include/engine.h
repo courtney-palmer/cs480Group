@@ -23,6 +23,9 @@ class Engine
     void Keyboard();
     unsigned int getDT();
     long long GetCurrentTimeMillis();
+
+    int shaderToggle = 0;
+
   private:
     std::vector<Object*> objs;
     unsigned int dynamicCubeIndex;

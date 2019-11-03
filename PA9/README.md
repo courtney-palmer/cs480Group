@@ -47,3 +47,9 @@ A config file is stored in the PA8 folder. This file stores information about th
 'right'   | Move right<br/>
 'space'   | Jump
 
+### Lighting
+'q'      | Fragment Lighting <br/>
+'e'      | Vertex Lighting <br/>
+'y'      | decrease ambient light <br/>
+'u'      | increase ambient light<br/>
+

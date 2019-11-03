@@ -186,6 +186,16 @@ void Graphics::Render(std::vector<Object*>& objs)
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
 
+
+  //render light stuff
+  glUniform4f(m_shader->GetUniformLocation("LightPosition"), 0,8,0,0);
+  glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z,1);
+  glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), 1,1,1,1);
+  glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), 1,1,1,1);
+  glUniform1f(m_shader->GetUniformLocation("Shininess"), 10);
+
+
+
   for(int i = 0; i < objs.size(); i++) {
     glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(objs[i]->GetModel()));
     objs[i]->Render();

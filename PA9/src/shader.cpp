@@ -35,6 +35,94 @@ bool Shader::Initialize()
   return true;
 }
 
+void Shader::toggleShader(GLenum ShaderType, int shaderToggle){
+  std::string s;
+
+  if(ShaderType == GL_VERTEX_SHADER && shaderToggle == 0)
+  {
+    std::cout << "VERT TOGGLE 0" << std::endl;
+    std::ifstream shaderFile ("../Assets/Shaders/fLight-shader-v.txt"); //open the file
+		if (!shaderFile) //if unable to open the file, write an error to the terminal
+			std::cerr << "There was a problem with the fragment shader file." << std::endl;
+		else
+		{
+			//assign the text in the file to the string s
+			s.assign((std::istreambuf_iterator<char>(shaderFile)), (std::istreambuf_iterator<char>()));
+			shaderFile.close();
+		}
+  }
+  else if(ShaderType == GL_VERTEX_SHADER && shaderToggle == 1)
+  {
+    std::cout << "VERT TOGGLE 1" << std::endl;
+    std::ifstream shaderFile ("../Assets/Shaders/vLight-shader-v.txt"); //open the file
+		if (!shaderFile) //if unable to open the file, write an error to the terminal
+			std::cerr << "There was a problem with the fragment shader file." << std::endl;
+		else
+		{
+			//assign the text in the file to the string s
+			s.assign((std::istreambuf_iterator<char>(shaderFile)), (std::istreambuf_iterator<char>()));
+			shaderFile.close();
+		}
+  }
+  else if(ShaderType == GL_FRAGMENT_SHADER && shaderToggle == 0)
+  {
+    std::cout << "FRAG TOGGLE 0" << std::endl;
+    std::ifstream shaderFile ("../Assets/Shaders/fLight-shader-f.txt"); //open the file
+		if (!shaderFile) //if unable to open the file, write an error to the terminal
+			std::cerr << "There was a problem with the fragment shader file." << std::endl;
+		else
+		{
+			//assign the text in the file to the string s
+			s.assign((std::istreambuf_iterator<char>(shaderFile)), (std::istreambuf_iterator<char>()));
+			shaderFile.close();
+		}
+  }
+  else if(ShaderType == GL_FRAGMENT_SHADER && shaderToggle == 1)
+  {
+    std::cout << "FRAG TOGGLE 1" << std::endl;
+    std::ifstream shaderFile ("../Assets/Shaders/vLight-shader-f.txt"); //open the file
+		if (!shaderFile) //if unable to open the file, write an error to the terminal
+			std::cerr << "There was a problem with the fragment shader file." << std::endl;
+		else
+		{
+			//assign the text in the file to the string s
+			s.assign((std::istreambuf_iterator<char>(shaderFile)), (std::istreambuf_iterator<char>()));
+			shaderFile.close();
+		}
+  }
+
+  // toggle is set, now add shaders
+  GLuint ShaderObj = glCreateShader(ShaderType);
+
+  if (ShaderObj == 0) 
+  {
+    std::cerr << "Error creating shader type " << ShaderType << std::endl;
+  }
+
+  // Save the shader object - will be deleted in the destructor
+  m_shaderObjList.push_back(ShaderObj);
+
+  const GLchar* p[1];
+  p[0] = s.c_str();
+  GLint Lengths[1] = { (GLint)s.size() };
+
+  glShaderSource(ShaderObj, 1, p, Lengths);
+
+  glCompileShader(ShaderObj);
+
+  GLint success;
+  glGetShaderiv(ShaderObj, GL_COMPILE_STATUS, &success);
+
+  if (!success) 
+  {
+    GLchar InfoLog[1024];
+    glGetShaderInfoLog(ShaderObj, 1024, NULL, InfoLog);
+    std::cerr << "Error compiling: " << InfoLog << std::endl;
+  }
+
+  glAttachShader(m_shaderProg, ShaderObj);
+}
+
 // Use this method to add shaders to the program. When finished - call finalize()
 bool Shader::AddShader(GLenum ShaderType, char **argv)
 {
