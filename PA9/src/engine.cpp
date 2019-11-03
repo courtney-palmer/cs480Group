@@ -157,6 +157,44 @@ void Engine::Keyboard()
       m_running = false; //quit the program
       break;
 
+      //toggle to vert shader
+      case SDLK_q:
+        std::cout << "q" << std::endl;
+        m_graphics->m_shader->Initialize();
+		     
+		     m_graphics->m_shader->toggleShader(GL_VERTEX_SHADER, 0);
+		     m_graphics->m_shader->toggleShader(GL_FRAGMENT_SHADER, 0);
+		      
+		    m_graphics->m_shader->Finalize();
+		    m_graphics->m_shader->Enable();
+        break;
+
+      //toggle to frag shader
+      case SDLK_e:
+        std::cout << "e" << std::endl;
+        m_graphics->m_shader->Initialize();
+		     
+		    m_graphics->m_shader->toggleShader(GL_VERTEX_SHADER, 1);
+		    m_graphics->m_shader->toggleShader(GL_FRAGMENT_SHADER, 1);
+		      
+		    m_graphics->m_shader->Finalize();
+		    m_graphics->m_shader->Enable();
+        break;
+
+      case SDLK_u: // increase ambient lighting
+        std::cout << "u" << std::endl;
+        std::cout <<  m_graphics->ambience.x << " " <<  m_graphics->ambience.y << " " <<  m_graphics->ambience.z << std::endl;
+        m_graphics->ambience.x += 0.05f;
+        m_graphics->ambience.y += 0.05f;
+        m_graphics->ambience.z += 0.05f;
+        break;
+      case SDLK_y: //decrease ambient lighting
+        std::cout << "y" << std::endl;
+        std::cout <<  m_graphics->ambience.x << " " <<  m_graphics->ambience.y << " " <<  m_graphics->ambience.z << std::endl;
+        m_graphics->ambience.x -= 0.05f;
+        m_graphics->ambience.y -= 0.05f;
+        m_graphics->ambience.z -= 0.05f;
+        break;
       //////Input to move cube
 
       case SDLK_UP:

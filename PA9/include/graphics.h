@@ -11,6 +11,7 @@ using namespace std;
 #include "shader.h"
 #include "object.h"
 #include "physics.h"
+#include <vector>
 
 class Graphics
 {
@@ -32,12 +33,16 @@ class Graphics
     Object *rightWall; // static
     Object *backWall; // static
     Object *frontWall; // static
-  
+    Shader *m_shader;
+
+    glm::vec3 ambience = glm::vec3(0.2f, 0.2f, 0.2f);
+    glm::vec3 specular  = glm::vec3(0.05f, 0.05f, 0.05f);
+    glm::vec3 diffuse  = glm::vec3(0.05f, 0.05f, 0.05f);
+
   private:
     std::string ErrorString(GLenum error);
 
     Camera *m_camera;
-    Shader *m_shader;
 
     GLint m_projectionMatrix;
     GLint m_viewMatrix;
