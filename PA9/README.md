@@ -24,6 +24,8 @@ First, make sure that the files were built using standard cmake procedures [desc
 To run the program, navigate to your executable build folder and open a terminal. Then, run
 ```
 ./PA9 -v shader-v.txt -f shader-f.txt
+./PA9 -v vLight-shader-v.txt -f vLight-shader-f.txt
+./PA9 -v fLight-shader-v.txt -f fLight-shader-f.txt
 ```
 NOTES: 
 <ul>
