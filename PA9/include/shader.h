@@ -13,6 +13,7 @@ class Shader
     bool Initialize();
     void Enable();
     bool AddShader(GLenum ShaderType, char **argv);
+    bool AddShader(GLenum ShaderType, std::string filename);
     bool Finalize();
     GLint GetUniformLocation(const char* pUniformName);
 
