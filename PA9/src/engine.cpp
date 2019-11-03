@@ -162,11 +162,11 @@ void Engine::Keyboard()
         std::cout << "q" << std::endl;
         m_graphics->m_shader->Initialize();
 		     
-		     m_graphics->m_shader->toggleShader(GL_VERTEX_SHADER, 0);
-		     m_graphics->m_shader->toggleShader(GL_FRAGMENT_SHADER, 0);
+	m_graphics->m_shader->toggleShader(GL_VERTEX_SHADER, 0);
+	m_graphics->m_shader->toggleShader(GL_FRAGMENT_SHADER, 0);
 		      
-		    m_graphics->m_shader->Finalize();
-		    m_graphics->m_shader->Enable();
+	m_graphics->m_shader->Finalize();
+	m_graphics->m_shader->Enable();
         break;
 
       //toggle to frag shader
@@ -174,11 +174,11 @@ void Engine::Keyboard()
         std::cout << "e" << std::endl;
         m_graphics->m_shader->Initialize();
 		     
-		    m_graphics->m_shader->toggleShader(GL_VERTEX_SHADER, 1);
-		    m_graphics->m_shader->toggleShader(GL_FRAGMENT_SHADER, 1);
+	m_graphics->m_shader->toggleShader(GL_VERTEX_SHADER, 1);
+	m_graphics->m_shader->toggleShader(GL_FRAGMENT_SHADER, 1);
 		      
-		    m_graphics->m_shader->Finalize();
-		    m_graphics->m_shader->Enable();
+	m_graphics->m_shader->Finalize();
+	m_graphics->m_shader->Enable();
         break;
 
       case SDLK_u: // increase ambient lighting
@@ -195,8 +195,8 @@ void Engine::Keyboard()
         m_graphics->ambience.y -= 0.05f;
         m_graphics->ambience.z -= 0.05f;
         break;
-      //////Input to move cube
 
+      //////Input to move cube
       case SDLK_UP:
         // Example of original code :
         // m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);

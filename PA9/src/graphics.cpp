@@ -139,22 +139,6 @@ void Graphics::Render()
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(cube->GetModel()));
   cube->Render();
 
-  // Rendering a box
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(floor->GetModel()));
-  // floor->Render();
-
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(leftWall->GetModel()));
-  // leftWall->Render();
-
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(rightWall->GetModel()));
-  // rightWall->Render();
-
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(backWall->GetModel()));
-  // backWall->Render();
-
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(frontWall->GetModel()));
-  // frontWall->Render();
-
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(board->GetModel()));
   board->Render();
 
@@ -194,41 +178,11 @@ void Graphics::Render(std::vector<Object*>& objs)
   glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), 1,1,1,1);
   glUniform1f(m_shader->GetUniformLocation("Shininess"), 10);
 
-
-
+  // Render the objects
   for(int i = 0; i < objs.size(); i++) {
     glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(objs[i]->GetModel()));
     objs[i]->Render();
   }
-
-  // Render the objects
-  //  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(cube->GetModel()));
-  //  cube->Render();
-
-  // Rendering a box
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(floor->GetModel()));
-  // floor->Render();
-
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(leftWall->GetModel()));
-  // leftWall->Render();
-
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(rightWall->GetModel()));
-  // rightWall->Render();
-
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(backWall->GetModel()));
-  // backWall->Render();
-
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(frontWall->GetModel()));
-  // frontWall->Render();
-
-  //  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(board->GetModel()));
-  //  board->Render();
-
-  //  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(cylinder->GetModel()));
-  //  cylinder->Render();
-
-  //glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ball->GetModel()));
-  //ball->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();
