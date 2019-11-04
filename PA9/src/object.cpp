@@ -161,7 +161,6 @@ bool Object::loadModel(std::string objFileName) {
         aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get current vertice vector
         if(mesh->HasNormals())
         {
-          std::cout << "There are normals!" << std::endl;
           aiVector3D vert = mesh->mNormals[Indices.back()];
           normVert.x = vert.x;
           normVert.y = vert.y;
@@ -222,11 +221,11 @@ glm::mat4 Object::GetModel()
 
 void Object::Render()
 {
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
+  glEnableVertexAttribArray(0); // position attribute
+  glEnableVertexAttribArray(1); // normal attribute
   
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color));
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0); //position
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color)); //normal
   
   // Draw Each Mesh
   for(int i = 0; i < meshData.size(); i++)
@@ -236,6 +235,7 @@ void Object::Render()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * meshData[i].meshSize, &Indices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
     glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
   }
+
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
 }

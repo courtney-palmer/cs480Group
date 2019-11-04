@@ -68,6 +68,7 @@ bool Engine::Initialize(char **argv)
   // push object into objs array  > add object to physics world
 
   
+  
   // add moveable cube
   struct ShapeInfo info(box, 1, 1, 1); // 1,1,1 represents size of collision shape
   Object* temp = new Object("cubeTest.obj", info);
@@ -78,6 +79,14 @@ bool Engine::Initialize(char **argv)
   // Used in Keyboard() to refer to array index of object that will be moved
   dynamicCubeIndex = objs.size()-1;
   
+// add a temporary lamp
+  struct ShapeInfo lampInfo(mesh);
+  temp = new Object("cubeTest.obj", info);
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      7, 6, 10,
+		      false);
+
   // add board/platform : static
   struct ShapeInfo boardInfo(mesh);
   temp = new Object("tray.obj", boardInfo);
@@ -162,11 +171,11 @@ void Engine::Keyboard()
         std::cout << "q" << std::endl;
         m_graphics->m_shader->Initialize();
 		     
-	m_graphics->m_shader->toggleShader(GL_VERTEX_SHADER, 0);
-	m_graphics->m_shader->toggleShader(GL_FRAGMENT_SHADER, 0);
-		      
-	m_graphics->m_shader->Finalize();
-	m_graphics->m_shader->Enable();
+        m_graphics->m_shader->toggleShader(GL_VERTEX_SHADER, 0);
+        m_graphics->m_shader->toggleShader(GL_FRAGMENT_SHADER, 0);
+                
+        m_graphics->m_shader->Finalize();
+        m_graphics->m_shader->Enable();
         break;
 
       //toggle to frag shader
@@ -174,28 +183,49 @@ void Engine::Keyboard()
         std::cout << "e" << std::endl;
         m_graphics->m_shader->Initialize();
 		     
-	m_graphics->m_shader->toggleShader(GL_VERTEX_SHADER, 1);
-	m_graphics->m_shader->toggleShader(GL_FRAGMENT_SHADER, 1);
-		      
-	m_graphics->m_shader->Finalize();
-	m_graphics->m_shader->Enable();
+        m_graphics->m_shader->toggleShader(GL_VERTEX_SHADER, 1);
+        m_graphics->m_shader->toggleShader(GL_FRAGMENT_SHADER, 1);
+                
+        m_graphics->m_shader->Finalize();
+        m_graphics->m_shader->Enable();
         break;
 
       case SDLK_u: // increase ambient lighting
-        std::cout << "u" << std::endl;
-        std::cout <<  m_graphics->ambience.x << " " <<  m_graphics->ambience.y << " " <<  m_graphics->ambience.z << std::endl;
+        std::cout << "Ambience: " << m_graphics->ambience.x << " " <<  m_graphics->ambience.y << " " <<  m_graphics->ambience.z << std::endl;
         m_graphics->ambience.x += 0.05f;
         m_graphics->ambience.y += 0.05f;
         m_graphics->ambience.z += 0.05f;
         break;
       case SDLK_y: //decrease ambient lighting
-        std::cout << "y" << std::endl;
-        std::cout <<  m_graphics->ambience.x << " " <<  m_graphics->ambience.y << " " <<  m_graphics->ambience.z << std::endl;
+        std::cout <<  "Ambience: " << m_graphics->ambience.x << " " <<  m_graphics->ambience.y << " " <<  m_graphics->ambience.z << std::endl;
         m_graphics->ambience.x -= 0.05f;
         m_graphics->ambience.y -= 0.05f;
         m_graphics->ambience.z -= 0.05f;
         break;
-
+      case SDLK_h: //increase cubes diffuse lighting
+        std::cout << "Cube Diffuse: " <<  m_graphics->cDiffuse.x << " " <<  m_graphics->cDiffuse.y << " " <<  m_graphics->cDiffuse.z << std::endl;
+        m_graphics->cDiffuse.x += 0.05f;
+        m_graphics->cDiffuse.y += 0.05f;
+        m_graphics->cDiffuse.z += 0.05f;
+        break;
+      case SDLK_j: //decrease cubes diffuse lighting
+        std::cout << "Cube Diffuse: " <<  m_graphics->cDiffuse.x << " " <<  m_graphics->cDiffuse.y << " " <<  m_graphics->cDiffuse.z << std::endl;
+        m_graphics->cDiffuse.x -= 0.05f;
+        m_graphics->cDiffuse.y -= 0.05f;
+        m_graphics->cDiffuse.z -= 0.05f;
+        break;
+      case SDLK_n: //increase cubes specular lighting
+        std::cout << "Cube Specular: " <<  m_graphics->cSpecular.x << " " <<  m_graphics->cSpecular.y << " " <<  m_graphics->cSpecular.z << std::endl;
+        m_graphics->cSpecular.x += 0.05f;
+        m_graphics->cSpecular.y += 0.05f;
+        m_graphics->cSpecular.z += 0.05f;
+        break;
+      case SDLK_m: //decrease cubes specular lighting
+        std::cout << "Cube Specular: " <<  m_graphics->cSpecular.x << " " <<  m_graphics->cSpecular.y << " " <<  m_graphics->cSpecular.z << std::endl;
+        m_graphics->cSpecular.x -= 0.05f;
+        m_graphics->cSpecular.y -= 0.05f;
+        m_graphics->cSpecular.z -= 0.05f;
+        break;
       //////Input to move cube
       case SDLK_UP:
         // Example of original code :
