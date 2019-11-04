@@ -135,7 +135,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
 
-  lightPos = glm::vec3(7, 6, 10); //exactly matches lamp object position
+  lightPos = glm::vec3(15, 15, 10); //exactly matches lamp object position
 
   return true;
 }
@@ -217,8 +217,8 @@ void Graphics::Render(std::vector<Object*>& objs)
 
   //glUniform4f(m_shader->GetUniformLocation("LightPosition"),  7, 6, 10, 0.0f);
   glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z, 1.0f);
-  glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), cDiffuse.x, cDiffuse.y, cDiffuse.z, 1.0f);
-  glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), cSpecular.x, cSpecular.y, cSpecular.z, 1.0f);
+  glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z, 1.0f);
+  glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), specular.x, specular.y, specular.z, 1.0f);
   glUniform1f(m_shader->GetUniformLocation("Shininess"), 100.0f);
 
   /*

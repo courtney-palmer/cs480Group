@@ -84,7 +84,7 @@ bool Engine::Initialize(char **argv)
   temp = new Object("cubeTest.obj", info);
   objs.push_back(temp);
   m_physics->AddShape(temp,
-		      7, 6, 10,
+		      15, 15, 10,
 		      false);
 
   // add board/platform : static
@@ -167,7 +167,6 @@ void Engine::Keyboard()
       break;
 
       //toggle to vert shader
-<<<<<<< HEAD
       case SDLK_v:
         std::cout << "v" << std::endl;
         m_graphics->toggleShader(1);
@@ -177,29 +176,6 @@ void Engine::Keyboard()
       case SDLK_f:
         std::cout << "f" << std::endl;
         m_graphics->toggleShader(2);
-=======
-      case SDLK_q:
-        std::cout << "q" << std::endl;
-        m_graphics->m_shader->Initialize();
-		     
-        m_graphics->m_shader->toggleShader(GL_VERTEX_SHADER, 0);
-        m_graphics->m_shader->toggleShader(GL_FRAGMENT_SHADER, 0);
-                
-        m_graphics->m_shader->Finalize();
-        m_graphics->m_shader->Enable();
-        break;
-
-      //toggle to frag shader
-      case SDLK_e:
-        std::cout << "e" << std::endl;
-        m_graphics->m_shader->Initialize();
-		     
-        m_graphics->m_shader->toggleShader(GL_VERTEX_SHADER, 1);
-        m_graphics->m_shader->toggleShader(GL_FRAGMENT_SHADER, 1);
-                
-        m_graphics->m_shader->Finalize();
-        m_graphics->m_shader->Enable();
->>>>>>> d57900fbacd0c613733c4b80377ccb6479f25ee8
         break;
 
       case SDLK_u: // increase ambient lighting
@@ -215,28 +191,28 @@ void Engine::Keyboard()
         m_graphics->ambience.z -= 0.05f;
         break;
       case SDLK_h: //increase cubes diffuse lighting
-        std::cout << "Cube Diffuse: " <<  m_graphics->cDiffuse.x << " " <<  m_graphics->cDiffuse.y << " " <<  m_graphics->cDiffuse.z << std::endl;
-        m_graphics->cDiffuse.x += 0.05f;
-        m_graphics->cDiffuse.y += 0.05f;
-        m_graphics->cDiffuse.z += 0.05f;
+        std::cout << "Cube Diffuse: " <<  m_graphics->diffuse.x << " " <<  m_graphics->diffuse.y << " " <<  m_graphics->diffuse.z << std::endl;
+        m_graphics->diffuse.x += 0.05f;
+        m_graphics->diffuse.y += 0.05f;
+        m_graphics->diffuse.z += 0.05f;
         break;
       case SDLK_j: //decrease cubes diffuse lighting
-        std::cout << "Cube Diffuse: " <<  m_graphics->cDiffuse.x << " " <<  m_graphics->cDiffuse.y << " " <<  m_graphics->cDiffuse.z << std::endl;
-        m_graphics->cDiffuse.x -= 0.05f;
-        m_graphics->cDiffuse.y -= 0.05f;
-        m_graphics->cDiffuse.z -= 0.05f;
+        std::cout << "Cube Diffuse: " <<  m_graphics->diffuse.x << " " <<  m_graphics->diffuse.y << " " <<  m_graphics->diffuse.z << std::endl;
+        m_graphics->diffuse.x -= 0.05f;
+        m_graphics->diffuse.y -= 0.05f;
+        m_graphics->diffuse.z -= 0.05f;
         break;
       case SDLK_n: //increase cubes specular lighting
-        std::cout << "Cube Specular: " <<  m_graphics->cSpecular.x << " " <<  m_graphics->cSpecular.y << " " <<  m_graphics->cSpecular.z << std::endl;
-        m_graphics->cSpecular.x += 0.05f;
-        m_graphics->cSpecular.y += 0.05f;
-        m_graphics->cSpecular.z += 0.05f;
+        std::cout << "Cube Specular: " <<  m_graphics->specular.x << " " <<  m_graphics->specular.y << " " <<  m_graphics->specular.z << std::endl;
+        m_graphics->specular.x += 0.05f;
+        m_graphics->specular.y += 0.05f;
+        m_graphics->specular.z += 0.05f;
         break;
       case SDLK_m: //decrease cubes specular lighting
-        std::cout << "Cube Specular: " <<  m_graphics->cSpecular.x << " " <<  m_graphics->cSpecular.y << " " <<  m_graphics->cSpecular.z << std::endl;
-        m_graphics->cSpecular.x -= 0.05f;
-        m_graphics->cSpecular.y -= 0.05f;
-        m_graphics->cSpecular.z -= 0.05f;
+        std::cout << "Cube Specular: " <<  m_graphics->specular.x << " " <<  m_graphics->specular.y << " " <<  m_graphics->specular.z << std::endl;
+        m_graphics->specular.x -= 0.05f;
+        m_graphics->specular.y -= 0.05f;
+        m_graphics->specular.z -= 0.05f;
         break;
       //////Input to move cube
       case SDLK_UP:

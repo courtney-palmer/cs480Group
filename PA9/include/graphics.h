@@ -39,8 +39,8 @@ class Graphics
     Object *lamp;
 
     glm::vec3 ambience = glm::vec3(0.2f, 0.2f, 0.2f);
-    glm::vec3 cSpecular  = glm::vec3(0.05f, 0.05f, 0.05f);
-    glm::vec3 cDiffuse  = glm::vec3(0.05f, 0.05f, 0.05f);
+    glm::vec3 specular  = glm::vec3(0.05f, 0.05f, 0.05f);
+    glm::vec3 diffuse  = glm::vec3(0.05f, 0.05f, 0.05f);
     glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 0.0f);
 
  struct Light{
