@@ -222,10 +222,12 @@ glm::mat4 Object::GetModel()
 void Object::Render()
 {
   glEnableVertexAttribArray(0); // position attribute
-  glEnableVertexAttribArray(1); // normal attribute
+  glEnableVertexAttribArray(1); // color attribute
+  glEnableVertexAttribArray(2); // normal
   
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0); //position
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color)); //normal
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color)); //color
+  glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,normal)); //normal
   
   // Draw Each Mesh
   for(int i = 0; i < meshData.size(); i++)
@@ -238,6 +240,7 @@ void Object::Render()
 
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(2);
 }
 
 void Object::showMeshData() const {
