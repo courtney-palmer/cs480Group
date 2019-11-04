@@ -23,10 +23,6 @@ First, make sure that the files were built using standard cmake procedures [desc
 
 To run the program, navigate to your executable build folder and open a terminal. Then, run
 ```
-./PA9 -v shader-v.txt -f shader-f.txt
-./PA9 -v vLight-shader-v.txt -f vLight-shader-f.txt
-./PA9 -v fLight-shader-v.txt -f fLight-shader-f.txt
-
 ./PA9 -v vLight-shader-v.txt fLight-shader-v.txt  -f vLight-shader-f.txt fLight-shader-f.txt
 ```
 NOTES: 
@@ -50,8 +46,8 @@ A config file is stored in the PA8 folder. This file stores information about th
 'space'   | Jump
 
 ### Lighting
-'q'      | Fragment Lighting <br/>
-'e'      | Vertex Lighting <br/>
+'f'      | Fragment Lighting <br/>
+'v'      | Vertex Lighting <br/>
 'y'      | decrease ambient light <br/>
 'u'      | increase ambient light<br/>
 
