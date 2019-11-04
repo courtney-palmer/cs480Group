@@ -28,7 +28,7 @@
 //Bullet
 #include <btBulletDynamicsCommon.h>
 
-#define INVALID_UNIFORM_LOCATION 0x7fffffff
+#define INVALID_UNIFORM_LOCATION -1
 
 struct Vertex
 {

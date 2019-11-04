@@ -24,6 +24,8 @@ class Graphics
     void Render();
     void Render(std::vector<Object*>& objs);
 
+    void toggleShader(int tog);
+
     Object *board; //static
     Object *cylinder; //static
     Object *cube; //dynamic
@@ -33,11 +35,13 @@ class Graphics
     // Object *rightWall; // static
     // Object *backWall; // static
     // Object *frontWall; // static
+    
+    std::vector<Shader*> shaders;
     Shader *m_shader;
 
-    glm::vec3 ambience = glm::vec3(1.0f, 0.5f, 0.31f);
-    glm::vec3 diffuse  = glm::vec3(1.0f, 0.5f, 0.31f);
-    glm::vec3 specular  = glm::vec3(0.5f, 0.5f, 0.5f);
+    glm::vec3 ambience = glm::vec3(1.0f, 1.0f, 1.0f);
+    glm::vec3 specular  = glm::vec3(0.05f, 0.05f, 0.05f);
+    glm::vec3 diffuse  = glm::vec3(0.05f, 0.05f, 0.05f);
 
   private:
     std::string ErrorString(GLenum error);

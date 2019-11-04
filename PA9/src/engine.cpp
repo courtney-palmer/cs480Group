@@ -158,27 +158,15 @@ void Engine::Keyboard()
       break;
 
       //toggle to vert shader
-      case SDLK_q:
-        std::cout << "q" << std::endl;
-        m_graphics->m_shader->Initialize();
-		     
-	m_graphics->m_shader->toggleShader(GL_VERTEX_SHADER, 0);
-	m_graphics->m_shader->toggleShader(GL_FRAGMENT_SHADER, 0);
-		      
-	m_graphics->m_shader->Finalize();
-	m_graphics->m_shader->Enable();
+      case SDLK_v:
+        std::cout << "v" << std::endl;
+        m_graphics->toggleShader(1);
         break;
 
       //toggle to frag shader
-      case SDLK_e:
-        std::cout << "e" << std::endl;
-        m_graphics->m_shader->Initialize();
-		     
-	m_graphics->m_shader->toggleShader(GL_VERTEX_SHADER, 1);
-	m_graphics->m_shader->toggleShader(GL_FRAGMENT_SHADER, 1);
-		      
-	m_graphics->m_shader->Finalize();
-	m_graphics->m_shader->Enable();
+      case SDLK_f:
+        std::cout << "f" << std::endl;
+        m_graphics->toggleShader(2);
         break;
 
       case SDLK_u: // increase ambient lighting

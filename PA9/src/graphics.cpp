@@ -48,33 +48,59 @@ bool Graphics::Initialize(int width, int height, char **argv)
   // initialize collision objects first, see graphics_headers for struct info
 
   // Set up the shaders
-  m_shader = new Shader();
-  if(!m_shader->Initialize())
+  int numShaders = 0; //number of shader programs -> 1 vert shader + 1 frag shader = 1 shader program
+  int v, f; //index of v flag and f flag
+  int i = 0;
+  while(!(strcmp(argv[i], "-v") == 0)) //go through arguments until you find -v flag
+		i++;
+  v = i; //set v flag's index
+  i++; //next argument is first shader
+  while(!(strcmp(argv[i], "-f") == 0)) //go through arguments until you find -f flag
   {
-    printf("Shader Failed to Initialize\n");
-    return false;
+    i++;
+    numShaders++; //each argument is a new shader program
+  }
+  f = i; //set f flag's index
+	
+  for(i = 1; i < numShaders + 1; i++)
+  {
+    shaders.push_back(new Shader());
+    //m_shader = new Shader();
+    //if(!m_shader->Initialize())
+    if(!shaders.back()->Initialize())
+    {
+      printf("Shader Failed to Initialize\n");
+      return false;
+    }
+
+    std::string fileName(argv[v + i]); //file we want is at the v flag plus an offset of i (i = 1 for the first shader, i = 2 for the second, etc)
+    // Add the vertex shader
+    //if(!m_shader->AddShader(GL_VERTEX_SHADER, fileName))
+    if(!shaders.back()->AddShader(GL_VERTEX_SHADER, fileName))
+    {
+      printf("Vertex Shader failed to Initialize\n");
+      return false;
+    }
+
+    fileName.clear();
+
+    fileName.assign(argv[f + i]); //file we want is at the f flag plus an offset of i (i = 1 for the first shader, i = 2 for the second, etc)
+    // Add the fragment shader
+    if(!shaders.back()->AddShader(GL_FRAGMENT_SHADER, fileName))
+    {
+      printf("Fragment Shader failed to Initialize\n");
+      return false;
+    }
+
+    // Connect the program
+    if(!shaders.back()->Finalize())
+    {
+      printf("Program to Finalize\n");
+      return false;
+    }
   }
 
-  // Add the vertex shader
-  if(!m_shader->AddShader(GL_VERTEX_SHADER, argv))
-  {
-    printf("Vertex Shader failed to Initialize\n");
-    return false;
-  }
-
-  // Add the fragment shader
-  if(!m_shader->AddShader(GL_FRAGMENT_SHADER, argv))
-  {
-    printf("Fragment Shader failed to Initialize\n");
-    return false;
-  }
-
-  // Connect the program
-  if(!m_shader->Finalize())
-  {
-    printf("Program to Finalize\n");
-    return false;
-  }
+  m_shader = shaders.front();
 
   // Locate the projection matrix in the shader
   m_projectionMatrix = m_shader->GetUniformLocation("projectionMatrix");
@@ -133,7 +159,14 @@ void Graphics::Render()
 
   // Send in the projection and view to the shader
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
-  glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
+  glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
+
+    //render light stuff
+  glUniform4f(m_shader->GetUniformLocation("LightPosition"), -5.0f, -5.0f, 0.0f, 0.0f);
+  glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z, 1.0f);
+  glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z, 1.0f);
+  glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), specular.x, specular.y, specular.z, 1.0f);
+  glUniform1f(m_shader->GetUniformLocation("Shininess"), 100.0f);
 
   // Render the objects
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(cube->GetModel()));
@@ -222,6 +255,21 @@ string Graphics::ErrorString(GLenum error)
   else
   {
     return "None";
+  }
+}
+
+void Graphics::toggleShader(int tog)
+{
+  switch(tog)
+  {
+    case 1:
+      m_shader = shaders.front();
+      break;
+    case 2:
+      m_shader = shaders.back();
+      break;
+    default:
+      break;
   }
 }
 
