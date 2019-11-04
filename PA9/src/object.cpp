@@ -161,7 +161,6 @@ bool Object::loadModel(std::string objFileName) {
         aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get current vertice vector
         if(mesh->HasNormals())
         {
-          std::cout << "There are normals!" << std::endl;
           aiVector3D vert = mesh->mNormals[Indices.back()];
           normVert.x = vert.x;
           normVert.y = vert.y;

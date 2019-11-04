@@ -28,16 +28,16 @@ class Graphics
     Object *cylinder; //static
     Object *cube; //dynamic
     Object *ball; //dynamic
-    Object *floor; // static
-    Object *leftWall; // static
-    Object *rightWall; // static
-    Object *backWall; // static
-    Object *frontWall; // static
+    // Object *floor; // static
+    // Object *leftWall; // static
+    // Object *rightWall; // static
+    // Object *backWall; // static
+    // Object *frontWall; // static
     Shader *m_shader;
 
-    glm::vec3 ambience = glm::vec3(0.2f, 0.2f, 0.2f);
-    glm::vec3 specular  = glm::vec3(0.05f, 0.05f, 0.05f);
-    glm::vec3 diffuse  = glm::vec3(0.05f, 0.05f, 0.05f);
+    glm::vec3 ambience = glm::vec3(1.0f, 0.5f, 0.31f);
+    glm::vec3 diffuse  = glm::vec3(1.0f, 0.5f, 0.31f);
+    glm::vec3 specular  = glm::vec3(0.5f, 0.5f, 0.5f);
 
   private:
     std::string ErrorString(GLenum error);
