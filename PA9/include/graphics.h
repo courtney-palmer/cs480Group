@@ -56,7 +56,7 @@ class Graphics
     Light spotLight;
     float spotLightAngle;
     float theta;
-    
+
   private:
     std::string ErrorString(GLenum error);
 

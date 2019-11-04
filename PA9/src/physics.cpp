@@ -2,11 +2,7 @@
 
 Physics::Physics()
 {
-  broadphase = nullptr;
-  collisionConfiguration = nullptr;
-  dispatcher = nullptr;
-  solver = nullptr;
-  dynamicsWorld = nullptr;
+
 }
 
 Physics::~Physics()
