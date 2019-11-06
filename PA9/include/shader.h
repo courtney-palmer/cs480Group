@@ -12,12 +12,9 @@ class Shader
     ~Shader();
     bool Initialize();
     void Enable();
-    //bool AddShader(GLenum ShaderType, char **argv);
     bool AddShader(GLenum ShaderType, std::string filename);
     bool Finalize();
     GLint GetUniformLocation(const char* pUniformName);
-
-    //void toggleShader(GLenum ShaderType, int shaderToggle);
 
     GLuint m_shaderProg;    // both were origionally private. Leaving as public temporarily
     std::vector<GLuint> m_shaderObjList;

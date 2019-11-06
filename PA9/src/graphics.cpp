@@ -135,7 +135,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
 
-  lightPos = glm::vec3(15, 15, 10); //exactly matches lamp object position
+  lightPos = glm::vec3(15, 15, 10);
 
   return true;
 }
@@ -169,11 +169,11 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
 
     //render light stuff
-  glUniform4f(m_shader->GetUniformLocation("LightPosition"), -5.0f, -5.0f, 0.0f, 0.0f);
-  glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z, 1.0f);
-  glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z, 1.0f);
-  glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), specular.x, specular.y, specular.z, 1.0f);
-  glUniform1f(m_shader->GetUniformLocation("Shininess"), 100.0f);
+  // glUniform4f(m_shader->GetUniformLocation("LightPosition"), -5.0f, -5.0f, 0.0f, 0.0f);
+  // glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z, 1.0f);
+  // glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z, 1.0f);
+  // glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), specular.x, specular.y, specular.z, 1.0f);
+  // glUniform1f(m_shader->GetUniformLocation("Shininess"), 100.0f);
 
   // Render the objects
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(cube->GetModel()));
@@ -188,8 +188,8 @@ void Graphics::Render()
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ball->GetModel()));
   ball->Render();
 
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(lamp->GetModel()));
-  lamp->Render();
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(lamp->GetModel()));
+  // lamp->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();
@@ -215,43 +215,12 @@ void Graphics::Render(std::vector<Object*>& objs)
 
   //////////////////////////////// -- RENDERING LIGHT THNIGS -- ////////////////////////////////
 
-  //glUniform4f(m_shader->GetUniformLocation("LightPosition"),  7, 6, 10, 0.0f);
+  glUniform4f(m_shader->GetUniformLocation("LightPosition"),  7, 6, 10, 0.0f);
   glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z, 1.0f);
   glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z, 1.0f);
   glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), specular.x, specular.y, specular.z, 1.0f);
   glUniform1f(m_shader->GetUniformLocation("Shininess"), 100.0f);
 
-  /*
-     
-    lightingShader.use(); 
-    lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f); 
-    lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f); 
-    lightingShader.setVec3("lightPos", lightPos); 
-    lightingShader.setVec3("viewPos", camera.Position); 
-
-
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f); 
-    glm::mat4 view = camera.GetViewMatrix(); 
-    lightingShader.setMat4("projection", projection); 
-    lightingShader.setMat4("view", view); 
-
-
-    glm::mat4 model = glm::mat4(1.0f); 
-    lightingShader.setMat4("model", model); 
-
-
-    lampShader.use(); 
-    lampShader.setMat4("projection", projection); 
-    lampShader.setMat4("view", view); 
-    model = glm::mat4(1.0f); 
-    model = glm::translate(model, lightPos); 
-    model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube 
-    lampShader.setMat4("model", model); 
-
-    glBindVertexArray(lightVAO); 
-    glDrawArrays(GL_TRIANGLES, 0, 36); 
-
-  */
   //////////////////////////////// -- END OF RENDERING LIGHT THNIGS -- ////////////////////////////////
 
   // Render the objects
@@ -270,12 +239,6 @@ void Graphics::Render(std::vector<Object*>& objs)
   }
 }
 
-void Graphics::RenderLight(Shader* shader, glm::vec4 lPos, glm::vec4 ambProd, glm::vec4 difProd, glm::vec4 specProd, float shine){
-  // glUniform4f(shader->GetUniformLocation("LightPosition"),  lPos);
-  // glUniform4f(shader->GetUniformLocation("AmbientProduct"), difProd);
-  // glUniform4f(shader->GetUniformLocation("SpecularProduct"), specProd);
-  // glUniform1f(shader->GetUniformLocation("Shininess"), shine);
-}
 
 string Graphics::ErrorString(GLenum error)
 {
