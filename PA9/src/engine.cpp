@@ -80,12 +80,12 @@ bool Engine::Initialize(char **argv)
   dynamicCubeIndex = objs.size()-1;
   
 // add a temporary lamp
-  struct ShapeInfo lampInfo(mesh);
-  temp = new Object("cubeTest.obj", info);
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      15, 15, 10,
-		      false);
+  // struct ShapeInfo lampInfo(mesh);
+  // temp = new Object("cubeTest.obj", info);
+  // objs.push_back(temp);
+  // m_physics->AddShape(temp,
+	// 	      15, 15, 10,
+	// 	      false);
 
   // add board/platform : static
   struct ShapeInfo boardInfo(mesh);
@@ -191,25 +191,25 @@ void Engine::Keyboard()
         m_graphics->ambience.z -= 0.05f;
         break;
       case SDLK_h: //increase cubes diffuse lighting
-        std::cout << "Cube Diffuse: " <<  m_graphics->diffuse.x << " " <<  m_graphics->diffuse.y << " " <<  m_graphics->diffuse.z << std::endl;
+        std::cout << "Diffuse: " <<  m_graphics->diffuse.x << " " <<  m_graphics->diffuse.y << " " <<  m_graphics->diffuse.z << std::endl;
         m_graphics->diffuse.x += 0.05f;
         m_graphics->diffuse.y += 0.05f;
         m_graphics->diffuse.z += 0.05f;
         break;
       case SDLK_j: //decrease cubes diffuse lighting
-        std::cout << "Cube Diffuse: " <<  m_graphics->diffuse.x << " " <<  m_graphics->diffuse.y << " " <<  m_graphics->diffuse.z << std::endl;
+        std::cout << "Diffuse: " <<  m_graphics->diffuse.x << " " <<  m_graphics->diffuse.y << " " <<  m_graphics->diffuse.z << std::endl;
         m_graphics->diffuse.x -= 0.05f;
         m_graphics->diffuse.y -= 0.05f;
         m_graphics->diffuse.z -= 0.05f;
         break;
       case SDLK_n: //increase cubes specular lighting
-        std::cout << "Cube Specular: " <<  m_graphics->specular.x << " " <<  m_graphics->specular.y << " " <<  m_graphics->specular.z << std::endl;
+        std::cout << "Specular: " <<  m_graphics->specular.x << " " <<  m_graphics->specular.y << " " <<  m_graphics->specular.z << std::endl;
         m_graphics->specular.x += 0.05f;
         m_graphics->specular.y += 0.05f;
         m_graphics->specular.z += 0.05f;
         break;
       case SDLK_m: //decrease cubes specular lighting
-        std::cout << "Cube Specular: " <<  m_graphics->specular.x << " " <<  m_graphics->specular.y << " " <<  m_graphics->specular.z << std::endl;
+        std::cout << "Specular: " <<  m_graphics->specular.x << " " <<  m_graphics->specular.y << " " <<  m_graphics->specular.z << std::endl;
         m_graphics->specular.x -= 0.05f;
         m_graphics->specular.y -= 0.05f;
         m_graphics->specular.z -= 0.05f;

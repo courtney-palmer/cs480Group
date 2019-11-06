@@ -36,30 +36,13 @@ class Graphics
     std::vector<Shader*> shaders;
     Shader *m_shader;
 
-    Object *lamp;
+    //Object *lamp;
 
     glm::vec3 ambience = glm::vec3(1.0f, 1.0f, 1.0f);
     glm::vec3 specular  = glm::vec3(1.0f, 1.0f, 1.0f);
     glm::vec3 diffuse  = glm::vec3(1.0f, 1.0f, 1.0f);
     glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 0.0f);
 
- struct Light{
-    glm::vec3 direction;
-    glm::vec3 position;
-    float cutoff;
-    
-    glm::vec3 ambience;
-    glm::vec3 diffuse;
-    glm::vec3 spectular;
-
-    float constant;
-    float linear;
-    float quadratic;
-  };
-
-    Light spotLight;
-    float spotLightAngle;
-    float theta;
 
   private:
     std::string ErrorString(GLenum error);
