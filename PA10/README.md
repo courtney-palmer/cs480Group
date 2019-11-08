@@ -33,8 +33,6 @@ NOTES:
 <!--<li>There are several textures provided within the Assets->Textures folder. You may use any image file as long as it has been placed inside the Assets->Textures folder.The name of the desired texture must be added in the appropriate place in the config file to be added to the program.</li>
 </ul>-->
 
-## Extra Credit
-
 ## Controls
 ### Cube
 'up'      | Move forward<br/>
@@ -52,3 +50,5 @@ NOTES:
 'h'      | Increase diffuse light<br/>
 'm'      | Decrease specular light <br/>
 'n'      | Increase specular light<br/>
+
+## Extra Credit
