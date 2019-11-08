@@ -9,7 +9,8 @@
   @post Initialize Vertices, Indices, btCollisionObject
         Generates buffer for VB, IB
  */
-Object::Object(std::string objFileName, const ShapeInfo& newShape)
+Object::Object(std::string objFileName, const ShapeInfo& newShape,
+	       std::string texFileName)
 {
 //////////////////// BULLET STUFF //////////////////////
   objTriMesh = nullptr; // Used to store btTriangleMesh if it will be used
@@ -38,7 +39,17 @@ Object::Object(std::string objFileName, const ShapeInfo& newShape)
   // LOAD MODEL
   if(!loadModel(objFileName)) {
     std::cout << "Model not loaded." << std::endl;
-  }  
+  }
+
+  if(texFileName == NA) {
+    std::cout << "No Texture to load." << std::endl;
+  }
+  else {
+    std::cout << "Loading " << texFileName << std::endl;
+    if(!loadTexture(texFileName)) {
+      std::cout << "Texture failed to load." << std::endl;
+    }
+  }
 
   // Set up vertices and indices for rendering this object
   glGenBuffers(1, &VB);
@@ -93,6 +104,7 @@ bool Object::loadModel(std::string objFileName) {
     mtrl = scene->mMaterials[mesh->mMaterialIndex]; //retrieve current mesh materials
     glm::vec3 colorVert (0.0f, 0.0f, 0.0f); // initialize a temporary color vertex
     glm::vec3 normVert (0.0f, 0.0f, 0.0f); //initialize a temporary normal vertex
+    glm::vec2 uvVert (0,0); // initialize temporary uv vertex
 
     if(mtrl != NULL)
     {
@@ -117,13 +129,17 @@ bool Object::loadModel(std::string objFileName) {
       // Use index value to load vertex values from mVertices
       for(int i = 0; i < 3; i++)
       {
-	//	std::cout << "Loading for face " << f << " vertex " << i << std::endl; // DEBUG
 
         Indices.push_back(face->mIndices[i]);  // push back face indices onto Indices
         // load vertexs for face using mesh indices
         aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get current vertice vector
 
-	//	std::cout << "Indices loaded for current vertex\n"; // DEBUG
+	// load UVs
+	if(mesh->HasTextureCoords(0)){
+          aiVector3D vert = mesh->mTextureCoords[0][face->mIndices[i]];
+          uvVert.x = vert.x;
+          uvVert.y = vert.y;
+	}
 	
 	// load Normals
         if(mesh->HasNormals())
@@ -142,7 +158,7 @@ bool Object::loadModel(std::string objFileName) {
 	}
 	
         glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z); 
-        Vertex *tempVertex = new Vertex(tempPos, colorVert, normVert); 
+        Vertex *tempVertex = new Vertex(tempPos, colorVert, normVert, uvVert); 
         Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
 
 	//	std::cout << Vertices.size() << " vertices\n"; // DEBUG
@@ -163,6 +179,54 @@ bool Object::loadModel(std::string objFileName) {
     std::cout << "Shape for triangle mesh succesfully assigned" << std::endl;
   }
   
+  return true;
+}
+
+/**
+    This function loads a texture from a .jpg file using imageMagick
+    @param std::string textFileName: File name of the .mtl file
+    @pre none
+    @post Texture will be bound to the model
+    @return bool that indicates success of texture loading
+*/
+bool Object::loadTexture(std::string textFileName) {
+
+  if(textFileName == std::string("NULL"))
+    return false;
+
+  // ADD TEXTURES
+  ///////////// -- IMAGE MAGICK -- /////////////////
+  //texture = new GLuint[meshNumber];
+  textureNames.push_back(textFileName);
+  texture = new GLuint[meshNumber];
+  unsigned int index = textureNames.size() - 1;
+
+  //load textures from images
+  Magick::Blob blob;
+  Magick::Image *image = NULL;
+  image = new Magick::Image("../Assets/Textures/" + textFileName);
+  image->write(&blob, "RGBA");
+
+  if(textFileName.find("Ring") != std::string::npos ||
+     textFileName.find("ring") != std::string::npos) {
+    
+    // Insert custom texture or something?
+    
+    glGenTextures(1, &texture[index]);
+    glBindTexture(GL_TEXTURE_2D, texture[index]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    
+  } else {
+    //generate texture in OpenGL
+    glGenTextures(1, &texture[index]);
+    glBindTexture(GL_TEXTURE_2D, texture[index]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    delete image;
+  }
   return true;
 }
 
@@ -195,10 +259,12 @@ void Object::Render()
   glEnableVertexAttribArray(0); // position attribute
   glEnableVertexAttribArray(1); // color attribute
   glEnableVertexAttribArray(2); // normal
+  //  glEnableVertexAttribArray(3); // texture
   
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0); //position
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color)); //color
   glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,normal)); //normal
+  //  glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,texture)); // texture
   
   // Draw Each Mesh
   for(int i = 0; i < meshData.size(); i++)
@@ -207,11 +273,21 @@ void Object::Render()
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * meshData[i].meshSize, &Vertices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * meshData[i].meshSize, &Indices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
     glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+
+    /*
+    //bind texture
+    if(textured) {
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, texture[i]);
+      glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+    }
+    */
   }
 
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(2);
+  //  glDisableVertexAttribArray(3);
 }
 
 void Object::showMeshData() const {

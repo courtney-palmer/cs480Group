@@ -103,7 +103,7 @@ bool Engine::Initialize(char **argv)
 
   // Add walls : Static
   struct ShapeInfo wallInfo(mesh);
-  temp = new Object("walls.obj", wallInfo);
+  temp = new Object("blenderTexturedWalls.obj", wallInfo, "wood.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      0, -10, 0,
@@ -154,8 +154,11 @@ void Engine::Run()
       m_graphics->Update(m_physics, objs[i]);
     }
 
+    std::cout << "Attempting Render" << std::endl;
+    std::cout << objs.size() << std::endl;
     // Render, send in objs vector array
     m_graphics->Render(objs);
+    std::cout << "Finished Render" << std::endl;
 
     // Swap to the Window
     m_window->Swap();

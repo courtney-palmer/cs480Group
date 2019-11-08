@@ -28,6 +28,9 @@
 //Bullet
 #include <btBulletDynamicsCommon.h>
 
+// Image Magick
+#include <Magick++.h>
+
 #define INVALID_UNIFORM_LOCATION -1
 
 struct Vertex
@@ -35,8 +38,10 @@ struct Vertex
   glm::vec3 vertex;
   glm::vec3 color;
   glm::vec3 normal;
+  glm::vec2 texture;
 
-  Vertex(glm::vec3 v, glm::vec3 c, glm::vec3 n): vertex(v), color(c), normal(n) {}
+Vertex(glm::vec3 v, glm::vec3 c, glm::vec3 n) :vertex(v), color(c), normal(n) {}
+Vertex(glm::vec3 v, glm::vec3 c, glm::vec3 n, glm::vec2 t) :vertex(v), color(c), normal(n), texture(t) {}
 };
 
 enum Shape //for use with bullet
