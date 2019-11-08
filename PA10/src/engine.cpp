@@ -65,17 +65,15 @@ bool Engine::Initialize(char **argv)
   //        in Engine::Run()
   // Format is as follows: 
   // create ShapeInfo struct > use struct to initialize object
-  // push object into objs array  > add object to physics world
-
-  
+  // push object into objs array  > add object to physics world  
   
   // add moveable cube
   struct ShapeInfo info(box, 1, 1, 1); // 1,1,1 represents size of collision shape
-  Object* temp = new Object("cubeTest.obj", info);
+  Object* temp = new Object("cubeTest.obj", info); // temp holds next object to be stored
   objs.push_back(temp);
-  m_physics->AddShape(temp,
+  m_physics->AddShape(temp,   // pass in pointer to the object you just created
 		      0,10,0, // 0,10,0 represents starting position of object
-		      true);
+		      true);  // this value is static vs dynamic. true - dynamic
   // Used in Keyboard() to refer to array index of object that will be moved
   dynamicCubeIndex = objs.size()-1;
   
@@ -87,6 +85,8 @@ bool Engine::Initialize(char **argv)
 		      15, 15, 10,
 		      false);
 
+
+  std::cout << "Adding Board\n";
   // add board/platform : static
   struct ShapeInfo boardInfo(mesh);
   temp = new Object("tray.obj", boardInfo);
@@ -94,6 +94,7 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      0, -8, 20,
 		      false);
+  
 
   // Add ball
   struct ShapeInfo ballInfo(sphere, 1, 1, 1);

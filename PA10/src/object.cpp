@@ -36,9 +36,9 @@ Object::Object(std::string objFileName, const ShapeInfo& newShape)
   }
 
   // LOAD MODEL
-  if(loadModel(objFileName)) {
-    //    std::cout << "Model loaded." << std::endl;
-  }
+  if(!loadModel(objFileName)) {
+    std::cout << "Model not loaded." << std::endl;
+  }  
 
   // Set up vertices and indices for rendering this object
   glGenBuffers(1, &VB);
@@ -51,7 +51,7 @@ Object::Object(std::string objFileName, const ShapeInfo& newShape)
 
   //velocity = btVector3(0.0f, 0.0f, 0.0f);
   
-  //  showMeshData(); // Used for debugging.
+  //showMeshData(); // Used for debugging.
   return;
 }
 
@@ -73,7 +73,7 @@ bool Object::loadModel(std::string objFileName) {
   aiMesh *mesh;
   scene = importer.ReadFile(fullFilePath, aiProcess_Triangulate);
   meshNumber = scene->mNumMeshes; //hold numberof meshes in the scene
-  // std::cout << "Number of meshes: " << meshNumber << std::endl; // DEBUG
+  //  std::cout << "Number of meshes: " << meshNumber << std::endl; // DEBUG
   
   // === Retrieve Vertices(position & color) & Indices in each Mesh ===
   // Loop through each mesh found
@@ -83,6 +83,10 @@ bool Object::loadModel(std::string objFileName) {
     // Store mesh size and the mesh starting index (as stored in Vertices)
     meshData.push_back( meshInfo(mesh->mNumFaces*3, Indices.size())); 
 
+    //    std::cout << "Mesh " << meshNums << " num vertices: " << mesh->mNumFaces*3
+    //	      << " & Starting index: " << Indices.size() << std::endl; // DEBUG
+
+    // === Obtain Color values from .mtl if relevant ===
     aiColor4D colorVal (0.0f, 0.0f, 0.0f, 1.0f); //r, g, b, a, (a controls transparency)
     scene->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, colorVal); 
     aiMaterial *mtrl; // define a material type (stores materials)
@@ -113,15 +117,22 @@ bool Object::loadModel(std::string objFileName) {
       // Use index value to load vertex values from mVertices
       for(int i = 0; i < 3; i++)
       {
+	//	std::cout << "Loading for face " << f << " vertex " << i << std::endl; // DEBUG
+
         Indices.push_back(face->mIndices[i]);  // push back face indices onto Indices
         // load vertexs for face using mesh indices
         aiVector3D vertVect = mesh->mVertices[Indices.back()]; // get current vertice vector
+
+	//	std::cout << "Indices loaded for current vertex\n"; // DEBUG
+	
+	// load Normals
         if(mesh->HasNormals())
         {
           aiVector3D vert = mesh->mNormals[Indices.back()];
           normVert.x = vert.x;
           normVert.y = vert.y;
           normVert.z = vert.z;
+	  //	  std::cout << "Normals loaded\n";
         }
 
 	// if collision shape is triangle mesh, load indices into there too
@@ -133,6 +144,9 @@ bool Object::loadModel(std::string objFileName) {
         glm::vec3 tempPos = glm::vec3(vertVect.x, vertVect.y, vertVect.z); 
         Vertex *tempVertex = new Vertex(tempPos, colorVert, normVert); 
         Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
+
+	//	std::cout << Vertices.size() << " vertices\n"; // DEBUG
+	
       } // End for : "Process every triangle face and store into indices and vertices
 
       if(objTriMesh != nullptr) {
