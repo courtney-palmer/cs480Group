@@ -27,6 +27,23 @@ bool Camera::Initialize(int w, int h)
   return true;
 }
 
+/**
+    This function updates camera position given a set of 3 vertices
+    @param float posX, posY, posZ: represents the position vector for a camera object
+    @param float frontX, frontY, frontZ: represents the direction the camera is facing
+    @param float upX, upY, upZ: represents the up vectoc component of the camera
+    @pre none
+    @post sets the view component given a set of 3 vectors
+*/
+void Camera::Update(float posX, float posY, float posZ,
+        float frontX, float frontY, float frontZ,
+		    float upX, float upY, float upZ) {
+
+  view = glm::lookAt( glm::vec3(posX, posY, posZ),
+		      glm::vec3(frontX, frontY, frontZ),
+		      glm::vec3(upX, upY, upZ) );
+}
+
 glm::mat4 Camera::GetProjection()
 {
   return projection;

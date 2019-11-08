@@ -56,6 +56,9 @@ bool Graphics::Initialize(int width, int height, char **argv)
     printf("Camera Failed to Initialize\n");
     return false;
   }
+  m_camera->Update(0,70,0,
+		   0,-10,0,
+		   0,0,1);
 
   // Load Shaders
   if(!loadShaders(argv)) {
