@@ -12,6 +12,7 @@ class Physics
     bool Initialize();
 
     void Update();
+    //void Update(std::vector<Object*>& objs, unsigned int ballIndex, unsigned int trigIndex);
 
     // default : obj starts at origin as dynamic collision object
     void AddShape(Object* obj,
@@ -21,6 +22,8 @@ class Physics
     void OutputCollisionObjects() const;
 
     btDiscreteDynamicsWorld *dynamicsWorld;
+
+    //bool lostBall;
 
   private:
 

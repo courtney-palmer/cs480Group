@@ -25,8 +25,6 @@ class Object
     Assimp::Importer importer;
     const aiScene* scene;
 
-    float angle;
-
     struct meshInfo {
       unsigned int meshSize, meshStartIndex;
     meshInfo(unsigned int a, unsigned int b) : meshSize(a), meshStartIndex(b) {}

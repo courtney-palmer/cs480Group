@@ -66,6 +66,26 @@ bool Physics::Initialize()
 void Physics::Update() {
   dynamicsWorld->stepSimulation(1.0f/60.f, 10);
   //OutputCollisionObjects();
+
+    //check to see if ball has collided with the box to trigger losing the ball
+  //code modified from https://www.raywenderlich.com/2606-bullet-physics-tutorial-getting-started
+  // int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
+  // for(int i = 0; i < numManifolds; i++)
+  // {
+  //   btPersistentManifold* contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+  //   const btCollisionObject* obA = contactManifold->getBody0();
+  //   const btCollisionObject* obB = contactManifold->getBody1();
+
+  //   if (contactManifold->getNumContacts() > 0)
+  //   {
+  //     if(obA == objs[ballIndex]->physicsObject && obB == objs[trigIndex]->physicsObject && !lostBall)
+  //       lostBall = true;
+  //     else if(obB == objs[ballIndex]->physicsObject && obA == objs[trigIndex]->physicsObject && !lostBall)
+  //       lostBall = true;
+  //     else
+  //       lostBall = false;
+  //   }
+  // }
 }
 
 /* Add btCollisionObject given by newly initialized object to physics->dynamicsWorld
