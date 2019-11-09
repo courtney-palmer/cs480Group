@@ -19,10 +19,14 @@ Object::Object(std::string objFileName, const ShapeInfo& newShape,
   shape = nullptr;      // Will be used to store collision shape when initialized
   switch(newShape.shapeName) {
   case box:
+    physicsObject = new btCollisionObject();
     shape = new btBoxShape(newShape.getBtVector3()); // 1 1 1
+    physicsObject->setCollisionShape(shape);
     break;
   case sphere:
+    physicsObject = new btCollisionObject();
     shape = new btSphereShape(newShape.extents[0]);
+    physicsObject->setCollisionShape(shape);
     break;
   case plane:
     shape = new btBoxShape(newShape.getBtVector3());
@@ -251,7 +255,7 @@ Object::~Object()
  */
 void Object::Update()
 {
-  model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+  //model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
 glm::mat4 Object::GetModel()

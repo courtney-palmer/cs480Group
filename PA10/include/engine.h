@@ -23,12 +23,19 @@ class Engine
     void Keyboard();
     unsigned int getDT();
     long long GetCurrentTimeMillis();
+    void LoseBall();
 
     int shaderToggle = 0;
+
+    const int MAX_BALLS = 3; //The maximum number of balls the player starts with in a game
+    int ballsRemaining; //The number of balls the player has remaining before game over
+    float zCoordTrigger; //If the ball hits this coordinate on the z axis, it is lost
 
   private:
     std::vector<Object*> objs;
     unsigned int dynamicCubeIndex;
+    unsigned int ballIndex;
+    unsigned int trigIndex;
     
     // Window related variables
     Window *m_window;    
@@ -45,6 +52,7 @@ class Engine
     bool m_running;
 
     btVector3 vel;
+    btVector3 pos;
 };
 
 #endif // ENGINE_H

@@ -58,6 +58,9 @@ bool Engine::Initialize(char **argv)
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
 
+  ballsRemaining = MAX_BALLS;
+  zCoordTrigger = 10.0f;
+
 
   // ============= Create the objects ===============================
   // note : Objects in obj array have graphics and physics components
@@ -78,13 +81,12 @@ bool Engine::Initialize(char **argv)
   dynamicCubeIndex = objs.size()-1;
   
 // add a temporary lamp
-  struct ShapeInfo lampInfo(mesh);
-  temp = new Object("cubeTest.obj", info);
+  struct ShapeInfo lampInfo(box, 1, 1, 1);
+  temp = new Object("cubeTest.obj", lampInfo);
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      15, 15, 10,
 		      false);
-
 
   std::cout << "Adding Board\n";
   // add board/platform : static
@@ -108,6 +110,15 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      0, -10, 0,
 		      false);
+  //add thin box to be ball loss trigger
+  struct ShapeInfo lossTrigInfo(box, 10.0f, 1.0f, 0.5f);
+  temp = new Object("lossTrigger.obj", lossTrigInfo);
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      0, -7, -9,
+		      false);
+  trigIndex = objs.size()-1;
+  //objs[trigIndex]->physicsObject->setUserPointer(lossTag);
 
   // Add ball
   struct ShapeInfo ballInfo(sphere, 0.5, 0.5, 0.5);
@@ -116,6 +127,8 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		     0,-8,0,
 		     true);
+  ballIndex = objs.size()-1;
+  //objs[ballIndex]->physicsObject->setUserPointer(ballTag);
 
   // Add cylinder
   struct ShapeInfo cylindInfo(cylind, 1, 1, 1);
@@ -148,6 +161,7 @@ void Engine::Run()
 
     // Update physics
     m_physics->Update();
+    //m_physics->Update(objs, ballIndex, trigIndex);
 
     // Update Graphics, send in physics instance and each single object.
     for(int i = 0; i < objs.size(); i++) {
@@ -156,6 +170,31 @@ void Engine::Run()
 
     // Render, send in objs vector array
     m_graphics->Render(objs);
+
+    // Check to see if a ball has been lost
+    // if(m_physics->lostBall = true)
+    //   LoseBall();
+
+    // btCollisionObject* obj = objs[ballIndex]->physicsObject;
+    // btRigidBody* body = btRigidBody::upcast(obj);
+    // btTransform trans;
+
+    // if(body && body->getMotionState()) {
+    //   body->getMotionState()->getWorldTransform(trans);
+    // }
+    // else {
+    //   trans = obj->getWorldTransform();
+    // }
+
+    // std::cout << "World position of object: " << float(trans.getOrigin().getX()) << " "
+	  //     << trans.getOrigin().getY() << " "
+	  //     << trans.getOrigin().getZ() << std::endl;
+
+    // if(trans.getOrigin().getZ() >= zCoordTrigger)
+    // {
+    //   //lose a ball
+    //   LoseBall();
+    // }
 
     // Swap to the Window
     m_window->Swap();
@@ -311,4 +350,10 @@ long long Engine::GetCurrentTimeMillis()
   gettimeofday(&t, NULL);
   long long ret = t.tv_sec * 1000 + t.tv_usec / 1000;
   return ret;
+}
+
+void Engine::LoseBall()
+{
+  std::cout << "Lost Ball" << std::endl;
+  //m_physics->lostBall = false;
 }
