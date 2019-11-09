@@ -56,14 +56,19 @@ bool Graphics::Initialize(int width, int height, char **argv)
     printf("Camera Failed to Initialize\n");
     return false;
   }
+
+  // Set camera above the pinball board
   m_camera->Update(0,70,0,
 		   0,-10,0,
 		   0,0,1);
 
+  shaderIndex = 0;
   // Load Shaders
   if(!loadShaders(argv)) {
     std::cout << "Shaders Failed to Initialize" << std::endl;
   }
+  // DEBUG : also load default shaders
+  addShaders("shader-v.txt", "shader-f.txt");
 
   // Locate the projection matrix in the shader
   m_projectionMatrix = m_shader->GetUniformLocation("projectionMatrix");
@@ -126,8 +131,6 @@ bool Graphics::loadShaders(char **argv) {
   for(i = 1; i < numShaders + 1; i++)
   {
     shaders.push_back(new Shader());
-    //m_shader = new Shader();
-    //if(!m_shader->Initialize())
     if(!shaders.back()->Initialize())
     {
       printf("Shader Failed to Initialize\n");
@@ -135,8 +138,6 @@ bool Graphics::loadShaders(char **argv) {
     }
 
     std::string fileName(argv[v + i]); //file we want is at the v flag plus an offset of i (i = 1 for the first shader, i = 2 for the second, etc)
-    // Add the vertex shader
-    //if(!m_shader->AddShader(GL_VERTEX_SHADER, fileName))
     if(!shaders.back()->AddShader(GL_VERTEX_SHADER, fileName))
     {
       printf("Vertex Shader failed to Initialize\n");
@@ -161,7 +162,43 @@ bool Graphics::loadShaders(char **argv) {
     }
   }
 
-  m_shader = shaders.front();
+  m_shader = shaders[shaderIndex];
+  return true;
+}
+
+/*
+  Function adds shaders to the list of shaders available
+ */
+bool Graphics::addShaders(std::string vFileName, std::string fFileName) {
+  shaders.push_back(new Shader());
+
+  if(!shaders.back()->Initialize()) {
+    std::cout << "Shader failed to initialize." << std::endl;
+    shaders.pop_back();
+    return false;
+  }
+
+  // Vertex shader
+  if(!shaders.back()->AddShader(GL_VERTEX_SHADER, vFileName)) {
+    std::cout << "Vertex shader failed init\n";
+    shaders.pop_back();
+    return false;
+  }
+
+  // Frag shader
+  if(!shaders.back()->AddShader(GL_FRAGMENT_SHADER, fFileName)) {
+    std::cout << "Fragment shader failed init\n";
+    shaders.pop_back();
+    return false;
+  }
+
+  // Finalize
+  if(!shaders.back()->Finalize()) {
+    std::cout << "Shader program unable to finalize.\n";
+    shaders.pop_back();
+    return false;
+  }
+
   return true;
 }
 
@@ -199,11 +236,14 @@ void Graphics::Render()
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
 
-    //render light stuff
+  //render light stuff
   glUniform4f(m_shader->GetUniformLocation("LightPosition"), -5.0f, -5.0f, 0.0f, 0.0f);
-  glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z, 1.0f);
-  glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z, 1.0f);
-  glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), specular.x, specular.y, specular.z, 1.0f);
+  glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z,
+	      1.0f);
+  glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z,
+	      1.0f);
+  glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), specular.x, specular.y, specular.z,
+	      1.0f);
   glUniform1f(m_shader->GetUniformLocation("Shininess"), 100.0f);
 
   // Render the objects
@@ -246,14 +286,16 @@ void Graphics::Render(std::vector<Object*>& objs)
 
   //////////////////////////////// -- RENDERING LIGHT THNIGS -- ////////////////////////////////
 
-  //glUniform4f(m_shader->GetUniformLocation("LightPosition"),  7, 6, 10, 0.0f);
-  glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z, 1.0f);
-  glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z, 1.0f);
-  glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), specular.x, specular.y, specular.z, 1.0f);
-  glUniform1f(m_shader->GetUniformLocation("Shininess"), 100.0f);
+  //std::cout << "Using shader " << shaderIndex << std::endl;
+  if(shaderIndex != 2) {
+    //glUniform4f(m_shader->GetUniformLocation("LightPosition"),  7, 6, 10, 0.0f);
+    glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z, 1.0f);
+    glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z, 1.0f);
+    glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), specular.x, specular.y, specular.z, 1.0f);
+    glUniform1f(m_shader->GetUniformLocation("Shininess"), 100.0f);
+  }
 
-  /*
-     
+  /*  
     lightingShader.use(); 
     lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f); 
     lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f); 
@@ -342,16 +384,20 @@ string Graphics::ErrorString(GLenum error)
 
 void Graphics::toggleShader(int tog)
 {
-  switch(tog)
-  {
-    case 1:
-      m_shader = shaders.front();
-      break;
-    case 2:
-      m_shader = shaders.back();
-      break;
-    default:
-      break;
+  // DEBUG : Show shaders
+  //  for(int i = 0; i < shaders.size(); i++) {
+  //  }
+  std::cout << "Shaders: " << shaders.size() << std::endl;
+
+  // Check if tog is within range
+  if(tog < shaders.size() && tog >= 0) {
+    shaderIndex = tog;
+    m_shader = shaders[tog];
   }
+  else {
+    shaderIndex = 0;
+    std::cout << "Not a valid shader toggle value." << std::endl;
+  }
+  
 }
 

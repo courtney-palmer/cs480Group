@@ -23,7 +23,9 @@ class Graphics
 
     bool Initialize(int width, int height, char **argv);
     bool loadShaders(char **argv);
+    bool addShaders(std::string vFileName, std::string fFileName);
     void Update(Physics *p, Object *o);
+    int getActiveShaderIndex() const {return shaderIndex;}
 
     void Render();
     void Render(std::vector<Object*>& objs);
@@ -38,6 +40,7 @@ class Graphics
     Object *ball; //dynamic
     
     std::vector<Shader*> shaders;
+    int shaderIndex;
     Shader *m_shader;
 
     Object *lamp;

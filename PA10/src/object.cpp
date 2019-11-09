@@ -12,6 +12,8 @@
 Object::Object(std::string objFileName, const ShapeInfo& newShape,
 	       std::string texFileName)
 {
+  textured = false;
+
 //////////////////// BULLET STUFF //////////////////////
   objTriMesh = nullptr; // Used to store btTriangleMesh if it will be used
   shape = nullptr;      // Will be used to store collision shape when initialized
@@ -42,13 +44,16 @@ Object::Object(std::string objFileName, const ShapeInfo& newShape,
   }
 
   if(texFileName == NA) {
-    std::cout << "No Texture to load." << std::endl;
+    //std::cout << "No Texture to load." << std::endl;
+    textured = false;
   }
   else {
-    std::cout << "Loading " << texFileName << std::endl;
+    //std::cout << "Loading " << texFileName << std::endl;
     if(!loadTexture(texFileName)) {
       std::cout << "Texture failed to load." << std::endl;
     }
+    else
+      textured = true;
   }
 
   // Set up vertices and indices for rendering this object
@@ -259,12 +264,12 @@ void Object::Render()
   glEnableVertexAttribArray(0); // position attribute
   glEnableVertexAttribArray(1); // color attribute
   glEnableVertexAttribArray(2); // normal
-  //  glEnableVertexAttribArray(3); // texture
+  glEnableVertexAttribArray(3); // texture
   
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0); //position
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color)); //color
   glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,normal)); //normal
-  //  glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,texture)); // texture
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,texture)); // texture
   
   // Draw Each Mesh
   for(int i = 0; i < meshData.size(); i++)
@@ -272,6 +277,12 @@ void Object::Render()
     
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * meshData[i].meshSize, &Vertices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * meshData[i].meshSize, &Indices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
+
+    if(textured) {
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, texture[i]);
+    }
+
     glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
 
     /*
@@ -287,7 +298,7 @@ void Object::Render()
   glDisableVertexAttribArray(0);
   glDisableVertexAttribArray(1);
   glDisableVertexAttribArray(2);
-  //  glDisableVertexAttribArray(3);
+  glDisableVertexAttribArray(3);
 }
 
 void Object::showMeshData() const {

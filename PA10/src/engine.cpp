@@ -154,11 +154,8 @@ void Engine::Run()
       m_graphics->Update(m_physics, objs[i]);
     }
 
-    std::cout << "Attempting Render" << std::endl;
-    std::cout << objs.size() << std::endl;
     // Render, send in objs vector array
     m_graphics->Render(objs);
-    std::cout << "Finished Render" << std::endl;
 
     // Swap to the Window
     m_window->Swap();
@@ -186,14 +183,20 @@ void Engine::Keyboard()
       //toggle to vert shader
       case SDLK_v:
         std::cout << "v" << std::endl;
-        m_graphics->toggleShader(1);
+        m_graphics->toggleShader(0);
         break;
 
       //toggle to frag shader
       case SDLK_f:
         std::cout << "f" << std::endl;
-        m_graphics->toggleShader(2);
+        m_graphics->toggleShader(1);
         break;
+
+      // toggle flat shading
+      case SDLK_c:
+	std::cout << "flat" << std::endl;
+	m_graphics->toggleShader(2);
+	break;
 
       case SDLK_u: // increase ambient lighting
         std::cout << "Ambience: " << m_graphics->ambience.x << " " <<  m_graphics->ambience.y << " " <<  m_graphics->ambience.z << std::endl;
