@@ -8,10 +8,13 @@
 #include <assimp/postprocess.h>
 #include <assimp/color4.h>
 
+const std::string NA("NA");
+
 class Object
 {
   public:
-    Object(std::string objFileName, const ShapeInfo& newShape);
+  Object(std::string objFileName, const ShapeInfo& newShape,
+	 std::string texFileName = NA);
     ~Object();
     void Update();
     void Render();
@@ -34,8 +37,12 @@ class Object
     std::vector<unsigned int> Indices;
     GLuint VB;
     GLuint IB;
+    GLuint* texture;
 
     bool loadModel(std::string objFileName);
+    bool loadTexture(std::string textFileName);
+    std::vector<std::string> textureNames;
+    bool textured;
 
     //btVector3 velocity;
 
@@ -50,6 +57,8 @@ class Object
     // for INLINE Getters & setters
     //btCollisionObject getCollisionObject() {return *physicsObject;}
     //btCollisionShape getCollisionShape() {return *shape;}
+
+    bool isTextured() const { return textured; }
 };
 
 #endif /* OBJECT_H */

@@ -56,6 +56,9 @@ bool Graphics::Initialize(int width, int height, char **argv)
     printf("Camera Failed to Initialize\n");
     return false;
   }
+  m_camera->Update(0,70,0,
+		   0,-10,0,
+		   0,0,1);
 
   // Load Shaders
   if(!loadShaders(argv)) {
@@ -179,12 +182,18 @@ void Graphics::Update(Physics *p, Object *o)
 
 void Graphics::Render()
 {
+  std::cout << "Entered render method" << std::endl;
+  
   //clear the screen
   glClearColor(0.0, 0.0, 0.2, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  std::cout << "Enabling shader" << std::endl;
+  
   // Start the correct program
   m_shader->Enable();
+
+  std::cout << "Shader enabled?" << std::endl;
 
   // Send in the projection and view to the shader
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
