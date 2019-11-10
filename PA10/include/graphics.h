@@ -38,12 +38,14 @@ class Graphics
     Object *cylinder; //static
     Object *cube; //dynamic
     Object *ball; //dynamic
+    Object *lPaddle;
+    Object * rPaddle;
     
     std::vector<Shader*> shaders;
     int shaderIndex;
     Shader *m_shader;
 
-    Object *lamp;
+    //Object *lamp;
 
     glm::vec3 ambience = glm::vec3(1.0f, 1.0f, 1.0f);
     glm::vec3 specular  = glm::vec3(1.0f, 1.0f, 1.0f);

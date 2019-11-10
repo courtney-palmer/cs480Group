@@ -57,14 +57,14 @@ bool Physics::Initialize()
     return false;
   }
 
-  dynamicsWorld->setGravity(btVector3(0, -9.81, 0)); //sets gravity
+  dynamicsWorld->setGravity(btVector3(0, -9.81, -0.8)); //sets gravity, last value sets gravit at an angle
 
   return true;
 }
 
 // Step through dynamics world simulation and output for debugging purposes
 void Physics::Update() {
-  dynamicsWorld->stepSimulation(1.0f/60.f, 10);
+  dynamicsWorld->stepSimulation(1.0f/20.f, 10); //sped up simulation speed
   //OutputCollisionObjects();
 
     //check to see if ball has collided with the box to trigger losing the ball

@@ -135,8 +135,26 @@ bool Engine::Initialize(char **argv)
   temp = new Object("cylinder.obj", cylindInfo);
   objs.push_back(temp);
   m_physics->AddShape(temp,
-		     0,-10, 10,
+		     0,0,0,
 		     false);
+
+
+  // // Add bumbers
+  // std::cout << "adding paddles" << std::endl;
+  // struct ShapeInfo lPaddleInfo(mesh);
+  // temp = new Object("LeftPaddle.obj", lPaddleInfo);
+  // objs.push_back(temp);
+  //   m_physics->AddShape(temp,
+	// 	      0, 0, 0,
+	// 	      false);
+
+  struct ShapeInfo rPaddleInfo(mesh);
+  temp = new Object("RightPaddleTest.obj", rPaddleInfo);
+  objs.push_back(temp);
+    m_physics->AddShape(temp,
+		      0, 0, 2,
+		      false);
+
 
   // ========================= End Object Creation :> =================
 
@@ -299,6 +317,13 @@ void Engine::Keyboard()
 
       case SDLK_SPACE:
         objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+        objs[dynamicCubeIndex]->RBody->applyCentralImpulse(btVector3(vel.getX(), 10, vel.getZ()));
+        break;
+
+      case SDLK_p:
+        std::cout << "p" << std::endl;
+        objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+
         objs[dynamicCubeIndex]->RBody->applyCentralImpulse(btVector3(vel.getX(), 10, vel.getZ()));
         break;
 

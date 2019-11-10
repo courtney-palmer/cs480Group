@@ -17,8 +17,6 @@ class Shader
     bool Finalize();
     GLint GetUniformLocation(const char* pUniformName);
 
-    //void toggleShader(GLenum ShaderType, int shaderToggle);
-
     GLuint m_shaderProg;    // both were origionally private. Leaving as public temporarily
     std::vector<GLuint> m_shaderObjList;
 };

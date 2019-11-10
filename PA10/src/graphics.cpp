@@ -259,8 +259,14 @@ void Graphics::Render()
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ball->GetModel()));
   ball->Render();
 
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(lamp->GetModel()));
-  lamp->Render();
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(lamp->GetModel()));
+  // lamp->Render();
+
+  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(lPaddle->GetModel()));
+  // lPaddle->Render();
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(rPaddle->GetModel()));
+  rPaddle->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();
