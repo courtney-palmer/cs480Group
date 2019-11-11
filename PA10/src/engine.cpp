@@ -72,7 +72,7 @@ bool Engine::Initialize(char **argv)
   
   // add moveable cube
   struct ShapeInfo info(box, 1, 1, 1); // 1,1,1 represents size of collision shape
-  Object* temp = new Object("cubeTest.obj", info); // temp holds next object to be stored
+  Object* temp = new Object("cubeTest.obj", info, "cubeTest"); // temp holds next object to be stored
   objs.push_back(temp);
   m_physics->AddShape(temp,   // pass in pointer to the object you just created
 		      5,-8,5, // 0,10,0 represents starting position of object
@@ -82,7 +82,7 @@ bool Engine::Initialize(char **argv)
   
 // add a temporary lamp
   struct ShapeInfo lampInfo(box, 1, 1, 1);
-  temp = new Object("cubeTest.obj", lampInfo);
+  temp = new Object("cubeTest.obj", lampInfo "lamp");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      15, 15, 10,
@@ -91,28 +91,28 @@ bool Engine::Initialize(char **argv)
   std::cout << "Adding Board\n";
   // add board/platform : static
   struct ShapeInfo boardInfo(mesh);
-  temp = new Object("board.obj", boardInfo);
+  temp = new Object("board.obj", boardInfo, "board");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      0, -10, 0,
 		      false);
 
   // Add invisible wall on top
-  temp = new Object("board.obj", boardInfo);
+  temp = new Object("board.obj", boardInfo, "cover");
   m_physics->AddShape(temp,
 		      0,-5,0,
 		      false);
 
   // Add walls : Static
   struct ShapeInfo wallInfo(mesh);
-  temp = new Object("blenderTexturedWalls.obj", wallInfo, "wood.jpg");
+  temp = new Object("blenderTexturedWalls.obj", wallInfo, "walls", "wood.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      0, -10, 0,
 		      false);
   //add thin box to be ball loss trigger
   struct ShapeInfo lossTrigInfo(box, 10.0f, 1.0f, 0.5f);
-  temp = new Object("lossTrigger.obj", lossTrigInfo);
+  temp = new Object("lossTrigger.obj", lossTrigInfo, "lossTrigger");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      0, -7, -9,
@@ -122,7 +122,7 @@ bool Engine::Initialize(char **argv)
 
   // Add ball
   struct ShapeInfo ballInfo(sphere, 0.5, 0.5, 0.5);
-  temp = new Object("pinball.obj", ballInfo);
+  temp = new Object("pinball.obj", ballInfo, "pinball");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		     0,-8,0,
@@ -132,7 +132,7 @@ bool Engine::Initialize(char **argv)
 
   // Add cylinder
   struct ShapeInfo cylindInfo(cylind, 1, 1, 1);
-  temp = new Object("cylinder.obj", cylindInfo);
+  temp = new Object("cylinder.obj", cylindInfo, "cylinder");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		     0,0,0,
@@ -149,7 +149,7 @@ bool Engine::Initialize(char **argv)
 	// 	      false);
 
   struct ShapeInfo rPaddleInfo(mesh);
-  temp = new Object("RightPaddleTest.obj", rPaddleInfo);
+  temp = new Object("RightPaddleTest.obj", rPaddleInfo, "rightPaddle");
   objs.push_back(temp);
     m_physics->AddShape(temp,
 		      0, 0, 2,
@@ -381,4 +381,23 @@ void Engine::LoseBall()
 {
   std::cout << "Lost Ball" << std::endl;
   //m_physics->lostBall = false;
+}
+
+/* 
+   Outputs indexes and keynames of all objects in objs
+ */
+void Engine::outputObjects() const {
+  std::cout << "== Objects in engine ==" << std::endl;
+  for(int i = 0; i < objs.size(); i++) {
+    std::cout << i << ": " << objs[i]->getKeyname() << std::endl;
+  }
+  std::cout << "=======================" << std::endl;
+}
+
+int Engine::getIndexOf(const std::string& key) {
+  for(int i = 0; i < objs.size(); i++) {
+    if (objs[i].getKeyname() == key)
+      return i;
+  }
+  return -1; // Key not found 
 }

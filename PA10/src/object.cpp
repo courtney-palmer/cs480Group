@@ -9,10 +9,11 @@
   @post Initialize Vertices, Indices, btCollisionObject
         Generates buffer for VB, IB
  */
-Object::Object(std::string objFileName, const ShapeInfo& newShape,
-	       std::string texFileName)
+Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
+	       const std::string& texFileName, const std::string& key)
 {
   textured = false;
+  keyname = key;
 
 //////////////////// BULLET STUFF //////////////////////
   objTriMesh = nullptr; // Used to store btTriangleMesh if it will be used
@@ -241,12 +242,21 @@ bool Object::loadTexture(std::string textFileName) {
 
 Object::~Object()
 {
+  meshData.clear();
   Vertices.clear();
   Indices.clear();
   delete scene;
-  delete shape;
-  delete RBody;
+
+  delete texture;
+
   delete physicsObject;
+  delete shape;
+  delete objTriMesh;
+  delete RBody;
+
+
+  // DLM CHANGE : aka I'm making the changes in the DLM so they are untested, just fyi
+  
 }
 
 /*
