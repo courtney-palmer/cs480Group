@@ -69,55 +69,55 @@ bool Engine::Initialize(char **argv)
   // Format is as follows: 
   // create ShapeInfo struct > use struct to initialize object
   // push object into objs array  > add object to physics world  
-  
+
   // add moveable cube
   struct ShapeInfo info(box, 1, 1, 1); // 1,1,1 represents size of collision shape
   Object* temp = new Object("cubeTest.obj", info); // temp holds next object to be stored
   objs.push_back(temp);
   m_physics->AddShape(temp,   // pass in pointer to the object you just created
-		      5,-8,5, // 0,10,0 represents starting position of object
-		      true);  // this value is static vs dynamic. true - dynamic
+		      0,2,0, // 0,10,0 represents starting position of object
+		      1);  // this value is static vs dynamic. true - dynamic
   // Used in Keyboard() to refer to array index of object that will be moved
   dynamicCubeIndex = objs.size()-1;
   
-// add a temporary lamp
-  struct ShapeInfo lampInfo(box, 1, 1, 1);
-  temp = new Object("cubeTest.obj", lampInfo);
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      15, 15, 10,
-		      false);
+// // add a temporary lamp
+//   struct ShapeInfo lampInfo(box, 1, 1, 1);
+//   temp = new Object("cubeTest.obj", lampInfo);
+//   objs.push_back(temp);
+//   m_physics->AddShape(temp,
+// 		      15, 15, 10,
+// 		      false);
 
   std::cout << "Adding Board\n";
   // add board/platform : static
-  struct ShapeInfo boardInfo(mesh);
-  temp = new Object("board.obj", boardInfo);
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      0, -10, 0,
-		      false);
+  // struct ShapeInfo boardInfo(mesh);
+  // temp = new Object("board.obj", boardInfo);
+  // objs.push_back(temp);
+  // m_physics->AddShape(temp,
+	// 	      0, 0, 0,
+	// 	      false);
 
-  // Add invisible wall on top
-  temp = new Object("board.obj", boardInfo);
-  m_physics->AddShape(temp,
-		      0,-5,0,
-		      false);
+  // // Add invisible wall on top
+  // temp = new Object("board.obj", boardInfo);
+  // m_physics->AddShape(temp,
+	// 	      0,0,0,
+	// 	      false);
 
   // Add walls : Static
   struct ShapeInfo wallInfo(mesh);
-  temp = new Object("blenderTexturedWalls.obj", wallInfo, "wood.jpg");
+  temp = new Object("board.obj", wallInfo, "wood.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
-		      0, -10, 0,
-		      false);
+		      0, 0, 0,
+		      3);
   //add thin box to be ball loss trigger
-  struct ShapeInfo lossTrigInfo(box, 10.0f, 1.0f, 0.5f);
-  temp = new Object("lossTrigger.obj", lossTrigInfo);
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      0, -7, -9,
-		      false);
-  trigIndex = objs.size()-1;
+  // struct ShapeInfo lossTrigInfo(mesh);
+  // temp = new Object("collisionDetection.obj", lossTrigInfo);
+  // objs.push_back(temp);
+  // m_physics->AddShape(temp,
+	// 	      0, 1, 0,
+	// 	      false);
+  // trigIndex = objs.size()-1;
   //objs[trigIndex]->physicsObject->setUserPointer(lossTag);
 
   // Add ball
@@ -125,21 +125,20 @@ bool Engine::Initialize(char **argv)
   temp = new Object("pinball.obj", ballInfo);
   objs.push_back(temp);
   m_physics->AddShape(temp,
-		     0,-8,0,
-		     true);
+		     7,0,3,
+		     1);
   ballIndex = objs.size()-1;
   //objs[ballIndex]->physicsObject->setUserPointer(ballTag);
 
   // Add cylinder
-  struct ShapeInfo cylindInfo(cylind, 1, 1, 1);
-  temp = new Object("cylinder.obj", cylindInfo);
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		     0,0,0,
-		     false);
+  // struct ShapeInfo cylindInfo(cylind, 1, 1, 1);
+  // temp = new Object("trueCyliner.obj", cylindInfo);
+  // objs.push_back(temp);
+  // m_physics->AddShape(temp,
+	// 	     0,0,15,
+	// 	     true);
 
 
-  // // Add bumbers
   // std::cout << "adding paddles" << std::endl;
   // struct ShapeInfo lPaddleInfo(mesh);
   // temp = new Object("LeftPaddle.obj", lPaddleInfo);
@@ -148,13 +147,13 @@ bool Engine::Initialize(char **argv)
 	// 	      0, 0, 0,
 	// 	      false);
 
-  struct ShapeInfo rPaddleInfo(mesh);
-  temp = new Object("RightPaddleTest.obj", rPaddleInfo);
+  struct ShapeInfo rPaddleInfo(box, 1,1,1);
+  temp = new Object("testLPaddle.obj", rPaddleInfo);
   objs.push_back(temp);
     m_physics->AddShape(temp,
-		      0, 0, 2,
-		      false);
-
+		      5, 5, 0,
+		      2);
+  rPaddleIndex = objs.size()-1;
 
   // ========================= End Object Creation :> =================
 
@@ -322,9 +321,41 @@ void Engine::Keyboard()
 
       case SDLK_p:
         std::cout << "p" << std::endl;
-        objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+        objs[rPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+        m_physics->movePaddle(getDT(), "left", objs[rPaddleIndex]->RBody);
 
-        objs[dynamicCubeIndex]->RBody->applyCentralImpulse(btVector3(vel.getX(), 10, vel.getZ()));
+        // diffx = ballModel.x - leftBumperModel.x;
+        // diffy = ballModel.y - leftBumperModel.y;
+        // diffz = ballModel.z - leftBumperModel.z;
+
+        // if ( abs(objs[ballIndex]->model.x - objs[rPaddleIndex]->model.x) <= 1.4 && abs(objs[ballIndex]->model.z - objs[rPaddleIndex]->model.z) <= 1.4){
+        //   // glm::vec3 normalVec = glm::vec3 (diffx, diffy, diffz);
+        //   // normalize(normalVec);
+        //    objs[rPaddleIndex]->RBody->applyCentralImpulse(btVector3(0.0,0.0,10.0));
+        // }
+
+        //  objs[rPaddleIndex]->RBody->getMotionState()->getWorldTransform(trans);
+        // quat.setEuler(1.2, 0.0, 0.0);
+        // trans.setRotation(quat);
+        // trans.getOpenGLMatrix(m);
+        //  objs[rPaddleIndex]->RBody->getMotionState()->setWorldTransform(trans);
+        //  objs[rPaddleIndex]->RBody->setMotionState( objs[rPaddleIndex]->RBody->getMotionState());
+        // leftBumper->model = glm::make_mat4(m);
+
+        // leftWaitCount = 0;
+        // dt3 = dt;
+        // leftUp = true;
+
+//======================================================================
+      // float directionScalar = 10 * (1/(*ctx.physWorld->getLoadedBodies())[ctx.leftPaddleIndex]->getInvMass());
+      // btVector3 directionVector(-1,0,1);
+      // directionVector *= directionScalar;
+      // btVector3 locationVector(.3,0,-4.5);
+      // //Apply Impulse in (Direction, @ location on body)
+      // (*ctx.physWorld->getLoadedBodies())[ctx.leftPaddleIndex]->applyImpulse(directionVector, locationVector);
+
+//============================================================================================
+        //objs[rPaddleIndex]->RBody->applyCentralImpulse(btVector3(vel.getX(), 10, vel.getZ()));
         break;
 
       default:
