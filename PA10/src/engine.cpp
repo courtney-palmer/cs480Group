@@ -151,7 +151,7 @@ bool Engine::Initialize(char **argv)
   temp = new Object("testLPaddle.obj", rPaddleInfo);
   objs.push_back(temp);
     m_physics->AddShape(temp,
-		      5, 5, 0,
+		      0, 0, 0,
 		      2);
   rPaddleIndex = objs.size()-1;
 
@@ -323,39 +323,6 @@ void Engine::Keyboard()
         std::cout << "p" << std::endl;
         objs[rPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
         m_physics->movePaddle(getDT(), "left", objs[rPaddleIndex]->RBody);
-
-        // diffx = ballModel.x - leftBumperModel.x;
-        // diffy = ballModel.y - leftBumperModel.y;
-        // diffz = ballModel.z - leftBumperModel.z;
-
-        // if ( abs(objs[ballIndex]->model.x - objs[rPaddleIndex]->model.x) <= 1.4 && abs(objs[ballIndex]->model.z - objs[rPaddleIndex]->model.z) <= 1.4){
-        //   // glm::vec3 normalVec = glm::vec3 (diffx, diffy, diffz);
-        //   // normalize(normalVec);
-        //    objs[rPaddleIndex]->RBody->applyCentralImpulse(btVector3(0.0,0.0,10.0));
-        // }
-
-        //  objs[rPaddleIndex]->RBody->getMotionState()->getWorldTransform(trans);
-        // quat.setEuler(1.2, 0.0, 0.0);
-        // trans.setRotation(quat);
-        // trans.getOpenGLMatrix(m);
-        //  objs[rPaddleIndex]->RBody->getMotionState()->setWorldTransform(trans);
-        //  objs[rPaddleIndex]->RBody->setMotionState( objs[rPaddleIndex]->RBody->getMotionState());
-        // leftBumper->model = glm::make_mat4(m);
-
-        // leftWaitCount = 0;
-        // dt3 = dt;
-        // leftUp = true;
-
-//======================================================================
-      // float directionScalar = 10 * (1/(*ctx.physWorld->getLoadedBodies())[ctx.leftPaddleIndex]->getInvMass());
-      // btVector3 directionVector(-1,0,1);
-      // directionVector *= directionScalar;
-      // btVector3 locationVector(.3,0,-4.5);
-      // //Apply Impulse in (Direction, @ location on body)
-      // (*ctx.physWorld->getLoadedBodies())[ctx.leftPaddleIndex]->applyImpulse(directionVector, locationVector);
-
-//============================================================================================
-        //objs[rPaddleIndex]->RBody->applyCentralImpulse(btVector3(vel.getX(), 10, vel.getZ()));
         break;
 
       default:

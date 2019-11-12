@@ -57,7 +57,7 @@ bool Physics::Initialize()
     return false;
   }
 
-  dynamicsWorld->setGravity(btVector3(0, -9.81, -0.8)); //sets gravity, last value sets gravit at an angle
+  dynamicsWorld->setGravity(btVector3(0, -9.81, 0)); //sets gravity, last value sets gravit at an angle
 
   return true;
 }
@@ -99,6 +99,10 @@ void Physics::Update() {
  */
 void Physics::AddShape(Object* obj, float x, float y, float z, int bodyType)
 {
+  // 1 = dynamic
+  // 2 = kinematic
+  // 3 = static
+
   // btVector3 stores the initial starting position in xyz
   btDefaultMotionState *shapeMotionState = \
     new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
@@ -117,9 +121,14 @@ void Physics::AddShape(Object* obj, float x, float y, float z, int bodyType)
   if(bodyType == 2){
     std::cout << "kinematic object" << std::endl;
     //obj->RBody->isKinematicObject();
-    //obj->RBody->setCollisionFlags(obj->RBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-    std::cout << "test" << std::endl;
+    
+    int flags = rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT;
+    rigidBody->setCollisionFlags(flags);
+
+   // obj->RBody->setCollisionFlags(obj->RBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+   // std::cout << "test" << std::endl;
   }
+
     obj->RBody = rigidBody;
     dynamicsWorld->addRigidBody(rigidBody);
 }
@@ -170,7 +179,7 @@ void Physics::movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody 
     // else if( leftPaddleUp )
     // {
       y += dt * M_PI/250;
-        std::cout << "This is after: " << y << std::endl;
+        // std::cout << "This is after: " << y << std::endl;
         if( y > 1.55 )
       {
         y = 1.5;     
