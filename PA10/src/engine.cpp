@@ -72,7 +72,7 @@ bool Engine::Initialize(char **argv)
 
   // add moveable cube
   struct ShapeInfo info(box, 1, 1, 1); // 1,1,1 represents size of collision shape
-  Object* temp = new Object("cubeTest.obj", info, "cubeTest"); // temp holds next object to be stored
+  Object* temp = new Object("cubeTest.obj", info, "block", "wood.jpg"); // temp holds next object to be stored
   objs.push_back(temp);
   m_physics->AddShape(temp,   // pass in pointer to the object you just created
 		      0,2,0, // 0,10,0 represents starting position of object
@@ -105,7 +105,7 @@ bool Engine::Initialize(char **argv)
 
   // Add walls : Static
   struct ShapeInfo wallInfo(mesh);
-  temp = new Object("board.obj", wallInfo, "wood.jpg");
+  temp = new Object("board.obj", wallInfo, "board", "harris.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      0, 0, 0,
@@ -122,7 +122,7 @@ bool Engine::Initialize(char **argv)
 
   // Add ball
   struct ShapeInfo ballInfo(sphere, 0.5, 0.5, 0.5);
-  temp = new Object("pinball.obj", ballInfo, "pinball");
+  temp = new Object("pinball.obj", ballInfo, "pinball", "wood.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		     7,0,3,
@@ -148,7 +148,7 @@ bool Engine::Initialize(char **argv)
 	// 	      false);
 
   struct ShapeInfo rPaddleInfo(box, 1,1,1);
-  temp = new Object("testLPaddle.obj", rPaddleInfo);
+  temp = new Object("testLPaddle.obj", rPaddleInfo, "rPaddle");
   objs.push_back(temp);
     m_physics->AddShape(temp,
 		      0, 0, 0,
