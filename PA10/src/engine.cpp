@@ -394,7 +394,7 @@ void Engine::outputObjects() const {
 
 int Engine::getIndexOf(const std::string& key) {
   for(int i = 0; i < objs.size(); i++) {
-    if (objs[i].getKeyname() == key)
+    if (objs[i]->getKeyname() == key)
       return i;
   }
   return -1; // Key not found 

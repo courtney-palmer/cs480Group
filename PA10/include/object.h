@@ -24,7 +24,7 @@ class Object
     glm::mat4 GetModel();
     glm::mat4 model;
     
-    std::string getKeyname() const { return key; }
+    std::string getKeyname() const { return keyname; }
 
   private:
     std::string keyname;
