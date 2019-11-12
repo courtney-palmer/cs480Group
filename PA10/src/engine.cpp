@@ -72,7 +72,7 @@ bool Engine::Initialize(char **argv)
 
   // add moveable cube
   struct ShapeInfo info(box, 1, 1, 1); // 1,1,1 represents size of collision shape
-  Object* temp = new Object("cubeTest.obj", info); // temp holds next object to be stored
+  Object* temp = new Object("cubeTest.obj", info, "cubeTest"); // temp holds next object to be stored
   objs.push_back(temp);
   m_physics->AddShape(temp,   // pass in pointer to the object you just created
 		      0,2,0, // 0,10,0 represents starting position of object
@@ -122,7 +122,7 @@ bool Engine::Initialize(char **argv)
 
   // Add ball
   struct ShapeInfo ballInfo(sphere, 0.5, 0.5, 0.5);
-  temp = new Object("pinball.obj", ballInfo);
+  temp = new Object("pinball.obj", ballInfo, "pinball");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		     7,0,3,
@@ -379,4 +379,23 @@ void Engine::LoseBall()
 {
   std::cout << "Lost Ball" << std::endl;
   //m_physics->lostBall = false;
+}
+
+/* 
+   Outputs indexes and keynames of all objects in objs
+ */
+void Engine::outputObjects() const {
+  std::cout << "== Objects in engine ==" << std::endl;
+  for(int i = 0; i < objs.size(); i++) {
+    std::cout << i << ": " << objs[i]->getKeyname() << std::endl;
+  }
+  std::cout << "=======================" << std::endl;
+}
+
+int Engine::getIndexOf(const std::string& key) {
+  for(int i = 0; i < objs.size(); i++) {
+    if (objs[i].getKeyname() == key)
+      return i;
+  }
+  return -1; // Key not found 
 }
