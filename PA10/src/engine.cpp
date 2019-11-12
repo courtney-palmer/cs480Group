@@ -187,8 +187,8 @@ void Engine::Run()
     // Render, send in objs vector array
     m_graphics->Render(objs);
 
-     Check to see if a ball has been lost
-     if(m_physics->lostBall = true)
+     //Check to see if a ball has been lost
+     if(m_physics->lostBall == true)
        LoseBall();
 
     // btCollisionObject* obj = objs[ballIndex]->physicsObject;

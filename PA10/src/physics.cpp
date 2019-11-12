@@ -68,6 +68,8 @@ bool Physics::Initialize()
 void Physics::Update() {
   dynamicsWorld->stepSimulation(1.0f/20.f, 10); //sped up simulation speed
 
+  //OutputCollisionObjects();
+
   //check to see if ball has hit the z-coordinate that will trigger a lost ball
   btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[ballIndex];
   btRigidBody* body = btRigidBody::upcast(obj);
@@ -79,6 +81,8 @@ void Physics::Update() {
   else {
 	  trans = obj->getWorldTransform();
   }
+
+  std::cout << "origin is: " << trans.getOrigin().getZ() << " and z coord is: " << zCoordTrigger << std::endl;
 
   if (trans.getOrigin().getZ() <= zCoordTrigger)
 	  lostBall = true;
