@@ -46,7 +46,7 @@ bool Engine::Initialize(char **argv)
   }
   std::cout << "Graphics loaded" << std::endl;
  
-// Start the physics
+ // Start the physics
    m_physics = new Physics();
    if(!m_physics->Initialize()) //set the 5 components of a physics world here
    {
@@ -80,14 +80,6 @@ bool Engine::Initialize(char **argv)
   // Used in Keyboard() to refer to array index of object that will be moved
   dynamicCubeIndex = objs.size()-1;
   
-// // add a temporary lamp
-//   struct ShapeInfo lampInfo(box, 1, 1, 1);
-//   temp = new Object("cubeTest.obj", lampInfo);
-//   objs.push_back(temp);
-//   m_physics->AddShape(temp,
-// 		      15, 15, 10,
-// 		      false);
-
   std::cout << "Adding Board\n";
   // add board/platform : static
   // struct ShapeInfo boardInfo(mesh);
@@ -105,7 +97,7 @@ bool Engine::Initialize(char **argv)
 
   // Add walls : Static
   struct ShapeInfo wallInfo(mesh);
-  temp = new Object("board.obj", wallInfo, "board", "harris.jpg");
+  temp = new Object("pBoard.obj", wallInfo, "board", "harris.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      0, 0, 0,
@@ -125,7 +117,7 @@ bool Engine::Initialize(char **argv)
   temp = new Object("pinball.obj", ballInfo, "pinball", "wood.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
-		     7,0,3,
+		     0,5,0,
 		     1);
   ballIndex = objs.size()-1;
   //objs[ballIndex]->physicsObject->setUserPointer(ballTag);
@@ -147,8 +139,8 @@ bool Engine::Initialize(char **argv)
 	// 	      0, 0, 0,
 	// 	      false);
 
-  struct ShapeInfo rPaddleInfo(box, 1,1,1);
-  temp = new Object("testLPaddle.obj", rPaddleInfo, "rPaddle");
+  struct ShapeInfo rPaddleInfo(mesh);
+  temp = new Object("rightPaddle.obj", rPaddleInfo, "rPaddle");
   objs.push_back(temp);
     m_physics->AddShape(temp,
 		      0, 0, 0,
@@ -188,6 +180,7 @@ void Engine::Run()
     // Render, send in objs vector array
     m_graphics->Render(objs);
 
+    m_physics->OutputCollisionObjects();
     // Check to see if a ball has been lost
     // if(m_physics->lostBall = true)
     //   LoseBall();
