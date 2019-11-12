@@ -15,11 +15,11 @@ class Physics
     //void Update(std::vector<Object*>& objs, unsigned int ballIndex, unsigned int trigIndex);
 
     // default : obj starts at origin as dynamic collision object
-    void AddShape(Object* obj,
-		  float x = 0, float y = 0, float z = 0,
-		  bool dynamic = true);
+    void AddShape(Object* obj,float x = 0, float y = 0, float z = 0, int bodyType = 0);
 
     void OutputCollisionObjects() const;
+
+    void movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody *RBody);
 
     btDiscreteDynamicsWorld *dynamicsWorld;
 

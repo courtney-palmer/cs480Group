@@ -39,6 +39,8 @@ class Engine
     unsigned int dynamicCubeIndex;
     unsigned int ballIndex;
     unsigned int trigIndex;
+
+    unsigned int rPaddleIndex;
     
     // Window related variables
     Window *m_window;    

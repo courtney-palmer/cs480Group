@@ -58,7 +58,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
   }
 
   // Set camera above the pinball board
-  m_camera->Update(0,70,0,
+  m_camera->Update(0,80,-30,
 		   0,-10,0,
 		   0,0,1);
 
@@ -336,7 +336,6 @@ void Graphics::Render(std::vector<Object*>& objs)
   // Render the objects
   for(int i = 0; i < objs.size(); i++) {
     glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(objs[i]->GetModel()));
-    
     objs[i]->Render();
   }
 
