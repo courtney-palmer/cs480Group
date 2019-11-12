@@ -4,8 +4,8 @@ smooth in vec3 fN;
 smooth in vec3 fL;
 smooth in vec3 fE;
 smooth in vec3 color;
-//smooth in vec2 texture;
-//uniform sampler2D sampler;
+smooth in vec2 texture;
+uniform sampler2D sampler;
 
 uniform vec4 AmbientProduct, DiffuseProduct, SpecularProduct;
 uniform mat4 viewMatrix;
@@ -34,7 +34,7 @@ void main(void)
     if( dot(L, N) < 0.0 ) 
 	specular = vec4(0.0, 0.0, 0.0, 1.0);
     
-    gl_FragColor = (ambient + diffuse + specular) * vec4(color, 1.0);
+    gl_FragColor = (ambient + diffuse + specular) * (vec4(color, 1.0) + texture2D(sampler, texture));
     gl_FragColor.a = 1.0;
 }
 

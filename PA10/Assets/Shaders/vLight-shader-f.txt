@@ -1,12 +1,12 @@
 #version 330
 
 smooth in vec4 color;
-//smooth in vec2 texture;
-//uniform sampler2D sampler;
+smooth in vec2 texture;
+uniform sampler2D sampler;
 
 void main(void)
 {
-	gl_FragColor = color;
+	gl_FragColor = color + texture2D(sampler, texture);
 }
 
 
