@@ -29,7 +29,6 @@ class Engine
 
     const int MAX_BALLS = 3; //The maximum number of balls the player starts with in a game
     int ballsRemaining; //The number of balls the player has remaining before game over
-    float zCoordTrigger; //If the ball hits this coordinate on the z axis, it is lost
 
     void outputObjects() const;
     int getIndexOf(const std::string& key); // Returns index from 0-objs.size();

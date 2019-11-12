@@ -59,7 +59,6 @@ bool Engine::Initialize(char **argv)
   m_currentTimeMillis = GetCurrentTimeMillis();
 
   ballsRemaining = MAX_BALLS;
-  zCoordTrigger = 10.0f;
 
 
   // ============= Create the objects ===============================
@@ -188,9 +187,9 @@ void Engine::Run()
     // Render, send in objs vector array
     m_graphics->Render(objs);
 
-    // Check to see if a ball has been lost
-    // if(m_physics->lostBall = true)
-    //   LoseBall();
+     Check to see if a ball has been lost
+     if(m_physics->lostBall = true)
+       LoseBall();
 
     // btCollisionObject* obj = objs[ballIndex]->physicsObject;
     // btRigidBody* body = btRigidBody::upcast(obj);
@@ -378,7 +377,8 @@ long long Engine::GetCurrentTimeMillis()
 void Engine::LoseBall()
 {
   std::cout << "Lost Ball" << std::endl;
-  //m_physics->lostBall = false;
+  m_physics->lostBall = false;
+  //move ball to starting position
 }
 
 /* 

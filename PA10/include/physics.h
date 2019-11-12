@@ -23,7 +23,9 @@ class Physics
 
     btDiscreteDynamicsWorld *dynamicsWorld;
 
-    //bool lostBall;
+    bool lostBall;
+	int ballIndex;
+	float zCoordTrigger; //If the ball hits this coordinate on the z axis, it is lost
 
   private:
 
