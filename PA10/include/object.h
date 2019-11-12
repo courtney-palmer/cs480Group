@@ -13,8 +13,8 @@ const std::string NA("NA"); // Constant to define n/a text file name
 class Object
 {
   public:
-    Object(const std::string& objFileName,      const ShapeInfo& newShape,
-	   const std::string& key = NA, const std::string& texFileName = NA);
+    Object(const std::string& objFileName, const ShapeInfo& newShape,
+		const std::string& key = NA, const std::string& texFileName = NA);
     ~Object();
 
     void Update();

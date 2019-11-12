@@ -10,7 +10,7 @@
         Generates buffer for VB, IB
  */
 Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
-	       const std::string& texFileName, const std::string& key)
+	       const std::string& key, const std::string& texFileName)
 {
   textured = false;
   keyname = key;
