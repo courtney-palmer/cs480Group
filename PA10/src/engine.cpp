@@ -147,6 +147,14 @@ bool Engine::Initialize(char **argv)
 		      2);
   rPaddleIndex = objs.size()-1;
 
+    struct ShapeInfo lPaddleInfo(mesh);
+  temp = new Object("leftPaddle.obj", lPaddleInfo, "lPaddle");
+  objs.push_back(temp);
+    m_physics->AddShape(temp,
+		      0, 0, 0,
+		      2);
+  lPaddleIndex = objs.size()-1;
+
   // ========================= End Object Creation :> =================
 
   // No errors

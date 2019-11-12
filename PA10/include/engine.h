@@ -41,6 +41,7 @@ class Engine
     unsigned int trigIndex;
 
     unsigned int rPaddleIndex;
+    unsigned int lPaddleIndex;
     
     // Window related variables
     Window *m_window;    
