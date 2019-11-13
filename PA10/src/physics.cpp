@@ -217,8 +217,8 @@ void Physics::OutputCollisionObjects() const {
   std::cout << std::endl;
 }
 
-void Physics::applyPlungerForce(btVector3 vel, btRigidBody *RBody, float ballForce){
-  // RBody->setLinearVelocity(btVector3(vel.getX(), vel.getY(), 10));
+void Physics::applyPlungerForce(btRigidBody *RBody){
+  RBody->applyCentralImpulse(btVector3(btVector3(0.0f, 0.0f, 20.0f)));
 }
 
 void Physics::movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody *RBody){

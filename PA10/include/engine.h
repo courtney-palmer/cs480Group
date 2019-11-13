@@ -39,7 +39,7 @@ class Engine
     std::vector<Object*> objs;
     unsigned int dynamicCubeIndex;
     unsigned int ballIndex;
-    unsigned int trigIndex;
+    unsigned int plungerIndex;
 
     unsigned int rPaddleIndex;
     unsigned int lPaddleIndex;

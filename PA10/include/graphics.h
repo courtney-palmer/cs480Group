@@ -27,7 +27,7 @@ class Graphics
     void Update(Physics *p, Object *o);
     int getActiveShaderIndex() const {return shaderIndex;}
 
-    void Render();
+    //void Render();
     void Render(std::vector<Object*>& objs);
     void RenderLight(Shader* shader, glm::vec4 lPos, glm::vec4 ambProd, glm::vec4 difProd, glm::vec4 specProd, float shine);
     

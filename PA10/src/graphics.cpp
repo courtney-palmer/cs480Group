@@ -230,6 +230,12 @@ void Graphics::Render(std::vector<Object*>& objs)
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
 
+  // Render the objects
+  for(int i = 0; i < objs.size(); i++) {
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(objs[i]->GetModel()));
+    objs[i]->Render();
+  }
+
   //////////////////////////////// -- RENDERING LIGHT THNIGS -- ////////////////////////////////
 
   //std::cout << "Using shader " << shaderIndex << std::endl;
@@ -272,12 +278,6 @@ void Graphics::Render(std::vector<Object*>& objs)
 
   */
   //////////////////////////////// -- END OF RENDERING LIGHT THNIGS -- ////////////////////////////////
-
-  // Render the objects
-  for(int i = 0; i < objs.size(); i++) {
-    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(objs[i]->GetModel()));
-    objs[i]->Render();
-  }
 
   // Get any errors from OpenGL
   auto error = glGetError();
@@ -341,7 +341,8 @@ void Graphics::toggleShader(int tog)
   }
   else {
     shaderIndex = 0;
-    std::cout << "Not a valid shader toggle value." << std::endl;
+    m_shader = shaders[tog];
+    std::cout << "Not a valid shader toggle value. Changing to per vertex lighting instead." << std::endl;
   }
   
 }

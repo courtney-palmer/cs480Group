@@ -31,8 +31,7 @@ void main(void)
     vec4 specular = Ks*SpecularProduct;
 
     // discard the specular highlight if the light's behind the vertex
-    if( dot(L, N) < 0.0 ) 
-	specular = vec4(0.0, 0.0, 0.0, 1.0);
+    if( dot(L, N) < 0.0 ) specular = vec4(0.0, 0.0, 0.0, 1.0);
     
     gl_FragColor = (ambient + diffuse + specular) * (vec4(color, 1.0) * texture2D(sampler, texture));
     gl_FragColor.a = 1.0;

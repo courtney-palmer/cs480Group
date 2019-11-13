@@ -137,6 +137,7 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      0,0,0,
 		      3);
+  plungerIndex = objs.size()-1;
 
   //add thin box to be ball loss trigger
   // struct ShapeInfo lossTrigInfo(mesh);
@@ -250,7 +251,7 @@ void Engine::Run()
 
 void Engine::Keyboard()
 {
-  float ballForce = 0.0f;
+  //float ballForce = 0.0f;
   if(m_event.type == SDL_QUIT)
   {
     m_running = false;
@@ -372,7 +373,7 @@ void Engine::Keyboard()
         m_physics->movePaddle(getDT(), "left", objs[lPaddleIndex]->RBody);
         break;
 
-    case SDLK_o: // reset ball
+    case SDLK_r: // reset ball
       m_physics->moveObject(objs, m_physics->getBallIndex(),
 			    4,0,12);
       break;
@@ -395,7 +396,8 @@ void Engine::Keyboard()
 
       case SDLK_o:
         objs[ballIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-        m_physics->applyPlungerForce(vel, objs[ballIndex]->RBody, ballForce);
+        //m_physics->applyPlungerForce(vel, objs[ballIndex]->RBody, ballForce);
+        m_physics->applyPlungerForce(objs[ballIndex]->RBody);
         break;
 
       ////// When an arrow key is released, make sure cube stops moving in the given direction
