@@ -12,7 +12,7 @@ class Physics
     bool Initialize();
 
     void Update();
-    void Update(std::vector<Object*>& objs); 
+    void Update(std::vector<Object*>& objs, unsigned int& score); 
     //void Update(std::vector<Object*>& objs, unsigned int ballIndex, unsigned int trigIndex);
 
     // default : obj starts at origin as dynamic collision object
@@ -35,7 +35,6 @@ class Physics
 
     //void applyPlungerForce(btVector3 vel, btRigidBody *RBody, float ballForce);
     void applyPlungerForce(btRigidBody *RBody);
-
 
     bool lostBall;
     int ballIndex;

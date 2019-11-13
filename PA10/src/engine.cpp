@@ -59,7 +59,7 @@ bool Engine::Initialize(char **argv)
   m_currentTimeMillis = GetCurrentTimeMillis();
 
   ballsRemaining = MAX_BALLS;
-
+  score = 0;
 
   // ============= Create the objects ===============================
   // note : Objects in obj array have graphics and physics components
@@ -103,7 +103,7 @@ bool Engine::Initialize(char **argv)
 		      3);
 
    struct ShapeInfo backInfo(mesh);
-  temp = new Object("backBoard.obj", backInfo, "board", "harris.jpg");
+  temp = new Object("backBoard.obj", backInfo, "backboard", "harris.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      0, 0, 0,
@@ -111,28 +111,31 @@ bool Engine::Initialize(char **argv)
 
   // adding a series of bumpers
   struct ShapeInfo bumperInfo1(mesh);
-  temp = new Object("bumper.obj", bumperInfo1, "board", "wood.jpg");
+  temp = new Object("bumper.obj", bumperInfo1, "bumper1", "wood.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      -1, -1, 0,
 		      3);
+  objs.back()->physicsObject->setUserPointer(objs.back());
 
   struct ShapeInfo bumperInfo2(mesh);
-  temp = new Object("bumper.obj", bumperInfo2, "board", "wood.jpg");
+  temp = new Object("bumper.obj", bumperInfo2, "bumper2", "wood.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      2, -1, 0,
 		      3);
+  objs.back()->physicsObject->setUserPointer(objs.back());
 
-    struct ShapeInfo bumperInfo3(mesh);
-  temp = new Object("bumper.obj", bumperInfo3, "board", "wood.jpg");
+  struct ShapeInfo bumperInfo3(mesh);
+  temp = new Object("bumper.obj", bumperInfo3, "bumper3", "wood.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      1, -1, 5,
 		      3);
-
+  objs.back()->physicsObject->setUserPointer(objs.back());
+  
   struct ShapeInfo plungerInfo(mesh);
-  temp = new Object("plunger.obj", plungerInfo, "board");
+  temp = new Object("plunger.obj", plungerInfo, "plunger");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      0,0,0,
@@ -217,7 +220,7 @@ void Engine::Run()
     }
 
     // Update physics
-    m_physics->Update(objs);
+    m_physics->Update(objs, score);
 
     // run 10x less than m_physics->update
     if(buffer >= bufferMax) {
@@ -373,9 +376,11 @@ void Engine::Keyboard()
         m_physics->movePaddle(getDT(), "left", objs[lPaddleIndex]->RBody);
         break;
 
-    case SDLK_r: // reset ball
+    case SDLK_r: // reset game
       m_physics->moveObject(objs, m_physics->getBallIndex(),
-			    4,0,12);
+			                    -6,5,5);
+      ballsRemaining = MAX_BALLS;
+      score = 0;
       break;
 
       default:
@@ -444,10 +449,16 @@ long long Engine::GetCurrentTimeMillis()
 void Engine::LoseBall()
 {
   std::cout << "-1 ball\n";
+  ballsRemaining--;
   m_physics->lostBall = false;
   //move ball to starting position
-  m_physics->moveObject(objs, m_physics->getBallIndex(),
-			-6,5,5);
+  // if(ballsRemaining <= 0)
+  // {
+  //   //game over
+  // }
+  // else
+    m_physics->moveObject(objs, m_physics->getBallIndex(),
+			                    -6,5,5);
 }
 
 /* 

@@ -88,12 +88,39 @@ void Physics::Update() {
 	  lostBall = true;
 }
 
-void Physics::Update(std::vector<Object*>& objs) {
+void Physics::Update(std::vector<Object*>& objs, unsigned int& score) {
   dynamicsWorld->stepSimulation(1.0f/20.f, 10); //sped up simulation speed
-
   
   btTransform trans; // Stores transformations
   btScalar m[16]; // 4x4 matrix to store transformations
+
+  //check for collisions with bumpers
+  //code modified from https://www.raywenderlich.com/2606-bullet-physics-tutorial-getting-started#toc-anchor-010
+  // int numManifolds = _world->getDispatcher()->getNumManifolds();
+  // for (int i=0;i<numManifolds;i++)
+  // {
+	//   btPersistentManifold* contactManifold =  _world->getDispatcher()->getManifoldByIndexInternal(i);
+
+  //   int numContacts = contactManifold->getNumContacts();
+  //   if (numContacts > 0)
+  //   {
+  //     const btCollisionObject* b0 = contactManifold->getBody0();
+  //     const btCollisionObject* b1 = contactManifold->getBody1();
+
+  //     Object* obj0 = (Object*)b0->getUserPointer();
+  //     Object* obj1 = (Object*)b1->getUserPointer();
+      
+  //     //the ball is the only object bumping into things,
+  //     //so if either object in the collision is a bumper,
+  //     //the score should increase
+  //     if (obj0->getKeyname() == bumper || obj1->getKeyname() == bumper)
+  //     {
+  //       score += 100;
+  //       std::cout << "Score: " << score << std::endl;
+  //     }
+
+  //   }
+  // }
 
   // Update the position of every object
   for(int i = 0; i < objs.size(); i++) {

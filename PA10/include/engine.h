@@ -32,6 +32,8 @@ class Engine
     const int MAX_BALLS = 3; //The maximum number of balls the player starts with in a game
     int ballsRemaining; //The number of balls the player has remaining before game over
 
+    unsigned int score;
+
     void outputObjects() const;
     int getIndexOf(const std::string& key); // Returns index from 0-objs.size();
 

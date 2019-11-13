@@ -23,9 +23,7 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
     shape = new btBoxShape(newShape.getBtVector3()); // 1 1 1
     break;
   case sphere:
-    physicsObject = new btCollisionObject();
     shape = new btSphereShape(newShape.extents[0]);
-    physicsObject->setCollisionShape(shape);
     break;
   case plane:
     shape = new btBoxShape(newShape.getBtVector3());
@@ -58,6 +56,12 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
     else
       textured = true;
   }
+
+  physicsObject = new btCollisionObject();
+  if(newShape.shapeName == mesh)
+    physicsObject->setCollisionShape(shape);
+
+  //physicsObject->setUserPointer(bumper);
 
   // Set up vertices and indices for rendering this object
   glGenBuffers(1, &VB);
