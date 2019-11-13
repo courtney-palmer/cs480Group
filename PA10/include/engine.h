@@ -26,6 +26,8 @@ class Engine
     void LoseBall();
 
     int shaderToggle = 0;
+    int buffer;
+    int bufferMax;
 
     const int MAX_BALLS = 3; //The maximum number of balls the player starts with in a game
     int ballsRemaining; //The number of balls the player has remaining before game over

@@ -51,4 +51,9 @@ NOTES:
 'm'      | Decrease specular light <br/>
 'n'      | Increase specular light<br/>
 
+### Pinball Controls
+'p' 	 | Right Paddle<br/>
+'i'	 | Left Paddle<br/>
+'o'	 | Reset Ball Position<br/>
+
 ## Extra Credit

@@ -61,6 +61,11 @@ class Object
     //btCollisionShape getCollisionShape() {return *shape;}
 
     bool isTextured() const { return textured; }
+
+    float x, y, z; // position automatically updated in physics
+    // setPosition is for communication between physics and graphics
+    void setPosition(float a, float b, float c) { x=a;y=b;z=c; }
+    
 };
 
 #endif /* OBJECT_H */

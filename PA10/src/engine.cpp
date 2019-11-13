@@ -101,6 +101,43 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      0, 0, 0,
 		      3);
+
+   struct ShapeInfo backInfo(mesh);
+  temp = new Object("backBoard.obj", backInfo, "board", "harris.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      0, 0, 0,
+		      3);
+
+  // adding a series of bumpers
+  struct ShapeInfo bumperInfo1(mesh);
+  temp = new Object("bumper.obj", bumperInfo1, "board", "wood.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      -1, -1, 0,
+		      3);
+
+  struct ShapeInfo bumperInfo2(mesh);
+  temp = new Object("bumper.obj", bumperInfo2, "board", "wood.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      2, -1, 0,
+		      3);
+
+    struct ShapeInfo bumperInfo3(mesh);
+  temp = new Object("bumper.obj", bumperInfo3, "board", "wood.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      1, -1, 5,
+		      3);
+
+  struct ShapeInfo plungerInfo(mesh);
+  temp = new Object("plunger.obj", plungerInfo, "board");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      0,0,0,
+		      3);
+
   //add thin box to be ball loss trigger
   // struct ShapeInfo lossTrigInfo(mesh);
   // temp = new Object("collisionDetection.obj", lossTrigInfo);
@@ -112,11 +149,11 @@ bool Engine::Initialize(char **argv)
   //objs[trigIndex]->physicsObject->setUserPointer(lossTag);
 
   // Add ball
-  struct ShapeInfo ballInfo(sphere, 0.5, 0.5, 0.5);
+  struct ShapeInfo ballInfo(sphere, 0.4, 0.4, 0.4);
   temp = new Object("pinball.obj", ballInfo, "pinball", "wood.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
-		     0,5,0,
+		     -6,5,5,
 		     1);
   ballIndex = objs.size()-1;
   //objs[ballIndex]->physicsObject->setUserPointer(ballTag);
@@ -141,7 +178,7 @@ bool Engine::Initialize(char **argv)
   struct ShapeInfo rPaddleInfo(mesh);
   temp = new Object("rightPaddle.obj", rPaddleInfo, "rPaddle");
   objs.push_back(temp);
-    m_physics->AddShape(temp,
+  m_physics->AddShape(temp,
 		      -2.45, 0, -4.6,
 		      2);
   rPaddleIndex = objs.size()-1;
@@ -150,9 +187,12 @@ bool Engine::Initialize(char **argv)
   temp = new Object("leftPaddle.obj", lPaddleInfo, "lPaddle");
   objs.push_back(temp);
     m_physics->AddShape(temp,
-          4.7, 0, -4.6,
-		      2);
+			4.7, 0, -4.6,
+			2);
   lPaddleIndex = objs.size()-1;
+
+  buffer = 0;
+  bufferMax = 1;
 
   // ========================= End Object Creation :> =================
 
@@ -176,7 +216,16 @@ void Engine::Run()
     }
 
     // Update physics
-    m_physics->Update();
+    m_physics->Update(objs);
+
+    // run 10x less than m_physics->update
+    if(buffer >= bufferMax) {
+      m_physics->updatePaddle(objs[rPaddleIndex]->RBody, true);
+      m_physics->updatePaddle(objs[lPaddleIndex]->RBody, false);
+      buffer = 0;
+    }
+    else
+      buffer++;
     //m_physics->Update(objs, ballIndex, trigIndex);
 
     // Update Graphics, send in physics instance and each single object.
@@ -188,30 +237,12 @@ void Engine::Run()
     m_graphics->Render(objs);
 
      //Check to see if a ball has been lost
-     if(m_physics->lostBall == true)
-       LoseBall();
+    if(m_physics->lostBall == true) {
+      LoseBall();
+    }
 
-    // btCollisionObject* obj = objs[ballIndex]->physicsObject;
-    // btRigidBody* body = btRigidBody::upcast(obj);
-    // btTransform trans;
-
-    // if(body && body->getMotionState()) {
-    //   body->getMotionState()->getWorldTransform(trans);
-    // }
-    // else {
-    //   trans = obj->getWorldTransform();
-    // }
-
-    // std::cout << "World position of object: " << float(trans.getOrigin().getX()) << " "
-	  //     << trans.getOrigin().getY() << " "
-	  //     << trans.getOrigin().getZ() << std::endl;
-
-    // if(trans.getOrigin().getZ() >= zCoordTrigger)
-    // {
-    //   //lose a ball
-    //   LoseBall();
-    // }
-
+     //outputObjects();
+     
     // Swap to the Window
     m_window->Swap();
   }
@@ -219,6 +250,7 @@ void Engine::Run()
 
 void Engine::Keyboard()
 {
+  float ballForce = 0.0f;
   if(m_event.type == SDL_QUIT)
   {
     m_running = false;
@@ -235,15 +267,15 @@ void Engine::Keyboard()
       m_running = false; //quit the program
       break;
 
-      case SDLK_p:
-        objs[rPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-        m_physics->movePaddle(getDT(), "right", objs[rPaddleIndex]->RBody, true);
-      break;
+      // case SDLK_p:
+      //   objs[rPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+      //   m_physics->movePaddle(getDT(), "right", objs[rPaddleIndex]->RBody, true);
+      // break;
 
-      case SDLK_o:
-        objs[lPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-        m_physics->movePaddle(getDT(), "left", objs[lPaddleIndex]->RBody, true);
-      break;
+      // case SDLK_o:
+      //   objs[lPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+      //   m_physics->movePaddle(getDT(), "left", objs[lPaddleIndex]->RBody, true);
+      // break;
 
       //toggle to vert shader
       case SDLK_v:
@@ -302,7 +334,7 @@ void Engine::Keyboard()
       //////Input to move cube
       case SDLK_UP:
         // Example of original code :
-        // m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
+        //pinball m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
         // m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 10));
         objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
         objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(vel.getX(), vel.getY(), 10));
@@ -328,6 +360,23 @@ void Engine::Keyboard()
         objs[dynamicCubeIndex]->RBody->applyCentralImpulse(btVector3(vel.getX(), 10, vel.getZ()));
         break;
 
+    case SDLK_p: // Right paddle
+        std::cout << "p" << std::endl;
+        objs[rPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+        m_physics->movePaddle(getDT(), "right", objs[rPaddleIndex]->RBody);
+        break;
+
+    case SDLK_i: // Left Paddle
+      std::cout << "i" << std::endl;
+        objs[lPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+        m_physics->movePaddle(getDT(), "left", objs[lPaddleIndex]->RBody);
+        break;
+
+    case SDLK_o: // reset ball
+      m_physics->moveObject(objs, m_physics->getBallIndex(),
+			    4,0,12);
+      break;
+
       default:
         break;
     }
@@ -338,16 +387,16 @@ void Engine::Keyboard()
     switch(m_event.key.keysym.sym)
     {
       
-      case SDLK_p:
-      std::cout << "p released" << std::endl;
-      objs[rPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-       m_physics->movePaddle(getDT(), "right", objs[rPaddleIndex]->RBody, false);
-      break;
+      // case SDLK_p:
+      // std::cout << "p released" << std::endl;
+      // objs[rPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+      //  m_physics->movePaddle(getDT(), "right", objs[rPaddleIndex]->RBody, false);
+      // break;
 
       case SDLK_o:
-        objs[lPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-        m_physics->movePaddle(getDT(), "left", objs[lPaddleIndex]->RBody, false);
-      break;
+        objs[ballIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+        m_physics->applyPlungerForce(vel, objs[ballIndex]->RBody, ballForce);
+        break;
 
       ////// When an arrow key is released, make sure cube stops moving in the given direction
       ////// However, the cube's velocity in other directions should stay the same
@@ -392,9 +441,11 @@ long long Engine::GetCurrentTimeMillis()
 
 void Engine::LoseBall()
 {
-  std::cout << "Lost Ball" << std::endl;
+  std::cout << "-1 ball\n";
   m_physics->lostBall = false;
   //move ball to starting position
+  m_physics->moveObject(objs, m_physics->getBallIndex(),
+			-6,5,5);
 }
 
 /* 
@@ -403,7 +454,11 @@ void Engine::LoseBall()
 void Engine::outputObjects() const {
   std::cout << "== Objects in engine ==" << std::endl;
   for(int i = 0; i < objs.size(); i++) {
-    std::cout << i << ": " << objs[i]->getKeyname() << std::endl;
+    std::cout << i << ": " << objs[i]->getKeyname()
+	      << " x" << objs[i]->x
+	      << " y" << objs[i]->y
+	      << " z" << objs[i]->z
+	      << std::endl;
   }
   std::cout << "=======================" << std::endl;
 }
