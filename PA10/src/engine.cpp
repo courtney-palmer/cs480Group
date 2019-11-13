@@ -154,6 +154,9 @@ bool Engine::Initialize(char **argv)
 			2);
   lPaddleIndex = objs.size()-1;
 
+  buffer = 0;
+  bufferMax = 1;
+
   // ========================= End Object Creation :> =================
 
   // No errors
@@ -177,6 +180,15 @@ void Engine::Run()
 
     // Update physics
     m_physics->Update(objs);
+
+    // run 10x less than m_physics->update
+    if(buffer >= bufferMax) {
+      m_physics->updatePaddle(objs[rPaddleIndex]->RBody, true);
+      m_physics->updatePaddle(objs[lPaddleIndex]->RBody, false);
+      buffer = 0;
+    }
+    else
+      buffer++;
     //m_physics->Update(objs, ballIndex, trigIndex);
 
     // Update Graphics, send in physics instance and each single object.
@@ -300,11 +312,22 @@ void Engine::Keyboard()
         objs[dynamicCubeIndex]->RBody->applyCentralImpulse(btVector3(vel.getX(), 10, vel.getZ()));
         break;
 
-      case SDLK_p:
+    case SDLK_p: // Right paddle
         std::cout << "p" << std::endl;
         objs[rPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
         m_physics->movePaddle(getDT(), "right", objs[rPaddleIndex]->RBody);
         break;
+
+    case SDLK_i: // Left Paddle
+      std::cout << "i" << std::endl;
+        objs[lPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+        m_physics->movePaddle(getDT(), "left", objs[lPaddleIndex]->RBody);
+        break;
+
+    case SDLK_o: // reset ball
+      m_physics->moveObject(objs, m_physics->getBallIndex(),
+			    4,0,12);
+      break;
 
       default:
         break;

@@ -59,7 +59,7 @@ bool Physics::Initialize()
     return false;
   }
 
-  dynamicsWorld->setGravity(btVector3(0, -9.81, -1)); //sets gravity, last value sets gravit at an angle
+  dynamicsWorld->setGravity(btVector3(0, -9.81, -3)); //sets gravity, last value sets gravit at an angle
 
   // Set ballIndex
 
@@ -83,8 +83,6 @@ void Physics::Update() {
 	  trans = obj->getWorldTransform();
   }
 
-  //std::cout << "origin is: " << trans.getOrigin().getZ() << " and z coord is: " << zCoordTrigger << std::endl;
-
   // Check if the ball has been lost
   if (trans.getOrigin().getZ() <= zCoordTrigger)
 	  lostBall = true;
@@ -96,10 +94,12 @@ void Physics::Update(std::vector<Object*>& objs) {
   
   btTransform trans; // Stores transformations
   btScalar m[16]; // 4x4 matrix to store transformations
+
   // Update the position of every object
   for(int i = 0; i < objs.size(); i++) {
     objs[i]->RBody->getMotionState()->getWorldTransform(trans);
     trans.getOpenGLMatrix(m);
+
     objs[i]->setPosition( (float)m[12], (float)m[13], (float)m[14] ); // store updated position
 
     // Find pinball too
@@ -123,13 +123,6 @@ void Physics::moveObject(std::vector<Object*>& objs, int objIndex,
     std::cout << "Index not valid\n";
     return;
   }
-
-  /*
-  btVector3 newPos;
-  newPos.setX( btScalar(x) );
-  newPos.setY( btScalar(y) );
-  newPos.setZ( btScalar(z) );
-  */
 
   btTransform trans; // to store transform
   btScalar m[16];
@@ -234,40 +227,90 @@ void Physics::movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody 
   if(LeftOrRight == "left"){ //update left paddle with physics
     std::cout << "updating left paddle" << std::endl;
 
-    /*
+    
     RBody->getWorldTransform().getBasis().getEulerZYX(z, y, x);
     RBody->getMotionState()->getWorldTransform( turn );
-       y += dt * M_PI/250;
-        // std::cout << "This is after: " << y << std::endl;
-        if( y > 1.55 )
-      {
-        y = 1.5;     
-      }
-      quat.setEulerZYX( 0, y , 0 );
-      turn.setRotation(quat);
-      RBody->getMotionState( )->setWorldTransform( turn );
-    */
-
+    //y += dt * M_PI/250;
+    y += 0.45;
+    if( y > 1.55 )
+    {
+      y = 1.5;     
+    }
+    quat.setEulerZYX( 0, y , 0 );
+    turn.setRotation(quat);
+    RBody->getMotionState( )->setWorldTransform( turn );
+    RBody->setWorldTransform(turn);
   }
   
   else if(LeftOrRight == "right"){ //update right paddle with physics
     std::cout << "updating right paddle" << std::endl;
-    /*
+    
     RBody->getWorldTransform().getBasis().getEulerZYX(z, y, x);
     RBody->getMotionState()->getWorldTransform( turn );
-      y -= dt * M_1_PI/250; //controls the rotation size increment
+      y -= 0.45; //controls the rotation size increment
       if( y < -1.55 ){ //if past 90 degrees, set to 90 degrees
         y = -1.5;     
       }
       quat.setEulerZYX( 0, y , 0 );
       turn.setRotation(quat);
       RBody->getMotionState( )->setWorldTransform( turn );
+      RBody->setWorldTransform(turn);
+
+    /*
+    // Get initial transformation
+    btTransform trans;
+    RBody->getMotionState()->getWorldTransform(trans);
+
+    // Apply transformation
+    btQuaternion rotation(1,0,1,0);
+    // Rotate
+    trans.setRotation(rotation);
+
+    // Apply to Rigid body & motion state
+    RBody->setWorldTransform(trans);
+    RBody->getMotionState()->setWorldTransform(trans);
     */
-    
   }
 
   else{
     std::cout << "Paddle " << LeftOrRight << "not Specified" << std::endl;
   }
 
+}
+
+/*
+  Returns paddle back to original position over time
+  Called by Engine on both paddles
+ */
+void Physics::updatePaddle(btRigidBody* body, bool right) {
+  btTransform turn;
+  btQuaternion quat;  
+  btScalar x, y, z;
+
+  const int maxAngle = 0.3;
+
+  if(right) {
+    body->getWorldTransform().getBasis().getEulerZYX(z, y, x);
+    body->getMotionState()->getWorldTransform( turn );
+    y += 0.05; //controls the rotation size increment
+    if( y >= maxAngle  ){ //if past 90 degrees, set to 90 degrees
+      y = maxAngle;     
+    }
+    quat.setEulerZYX( 0, y , 0 );
+    turn.setRotation(quat);
+    body->getMotionState( )->setWorldTransform( turn );
+    body->setWorldTransform(turn);
+  }
+  else {
+    body->getWorldTransform().getBasis().getEulerZYX(z, y, x);
+    body->getMotionState()->getWorldTransform( turn );
+    y -= 0.05; //controls the rotation size increment
+    if( y <= -maxAngle  ){ //if past 90 degrees, set to 90 degrees
+      y = -maxAngle;     
+    }
+    quat.setEulerZYX( 0, y , 0 );
+    turn.setRotation(quat);
+    body->getMotionState( )->setWorldTransform( turn );
+    body->setWorldTransform(turn);
+  }
 }

@@ -24,7 +24,10 @@ class Physics
     void OutputCollisionObjects() const;
 
     void movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody *RBody);
+    void updatePaddle(btRigidBody* body, bool right); // Returns paddle to original position
+    btTransform ogLPaddleTrans, ogRPaddleTrans;
     void resetPaddle(std::string LeftOrRight,  btRigidBody *RBody);
+    
     btDiscreteDynamicsWorld *dynamicsWorld;
 
     void setBallIndex(int i) {ballIndex = i;}
