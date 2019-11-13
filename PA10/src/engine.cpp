@@ -142,7 +142,7 @@ bool Engine::Initialize(char **argv)
   temp = new Object("rightPaddle.obj", rPaddleInfo, "rPaddle");
   objs.push_back(temp);
     m_physics->AddShape(temp,
-		      0, 0, 0,
+		      -2.45, 0, -4.6,
 		      2);
   rPaddleIndex = objs.size()-1;
 
@@ -150,7 +150,7 @@ bool Engine::Initialize(char **argv)
   temp = new Object("leftPaddle.obj", lPaddleInfo, "lPaddle");
   objs.push_back(temp);
     m_physics->AddShape(temp,
-		      0, 0, 0,
+          4.7, 0, -4.6,
 		      2);
   lPaddleIndex = objs.size()-1;
 
@@ -321,7 +321,7 @@ void Engine::Keyboard()
       case SDLK_p:
         std::cout << "p" << std::endl;
         objs[rPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-        m_physics->movePaddle(getDT(), "left", objs[rPaddleIndex]->RBody);
+        m_physics->movePaddle(getDT(), "right", objs[rPaddleIndex]->RBody);
         break;
 
       default:

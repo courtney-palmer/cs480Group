@@ -20,7 +20,7 @@ class Physics
     void OutputCollisionObjects() const;
 
     void movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody *RBody);
-
+    void resetPaddle(std::string LeftOrRight,  btRigidBody *RBody);
     btDiscreteDynamicsWorld *dynamicsWorld;
 
     bool lostBall;

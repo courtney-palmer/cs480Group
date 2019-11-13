@@ -82,7 +82,7 @@ void Physics::Update() {
 	  trans = obj->getWorldTransform();
   }
 
-  std::cout << "origin is: " << trans.getOrigin().getZ() << " and z coord is: " << zCoordTrigger << std::endl;
+  //std::cout << "origin is: " << trans.getOrigin().getZ() << " and z coord is: " << zCoordTrigger << std::endl;
 
   if (trans.getOrigin().getZ() <= zCoordTrigger)
 	  lostBall = true;
@@ -171,14 +171,7 @@ void Physics::movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody 
   
     RBody->getWorldTransform().getBasis().getEulerZYX(z, y, x);
     RBody->getMotionState()->getWorldTransform( turn );
-    //std::cout << "This is before: " << y << std::endl;
-    // if( y >= 1.5f && leftPaddleUp )
-    // {
-    //   leftPaddleUp = false;
-    // }
-    // else if( leftPaddleUp )
-    // {
-      y += dt * M_PI/250;
+       y += dt * M_PI/250;
         // std::cout << "This is after: " << y << std::endl;
         if( y > 1.55 )
       {
@@ -187,25 +180,7 @@ void Physics::movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody 
       quat.setEulerZYX( 0, y , 0 );
       turn.setRotation(quat);
       RBody->getMotionState( )->setWorldTransform( turn );
-    // }
-    // else if( y <= btRadians( 0 ) ) 
-    // {
-      // y = btRadians( 0 );
-      // ///std::cout << "This is after: " << y << std::endl;
-      // quat.setEulerZYX( 0, y , 0 );
-      // turn.setRotation(quat);
 
-      // RBody->getMotionState( )->setWorldTransform( turn );
-    // }
-    // else
-    // {
-    //   y -= dt * M_PI/250;
-    //   //std::cout << "This is after: " << y << std::endl;
-    //   quat.setEulerZYX( 0, y , 0 );
-    //   turn.setRotation(quat);
-
-    //   RBody->getMotionState( )->setWorldTransform( turn );
-    // }
   }
   
   else if(LeftOrRight == "right"){ //update right paddle with physics
@@ -213,41 +188,13 @@ void Physics::movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody 
   
     RBody->getWorldTransform().getBasis().getEulerZYX(z, y, x);
     RBody->getMotionState()->getWorldTransform( turn );
-    //std::cout << "This is before: " << y << std::endl;
-    // if( y >= -1.5f)
-    // {
-    //   rightPaddleUp = false;
-    // }
-    // else if( rightPaddleUp )
-    // {
-    //   y -= dt * M_PI/250;
-    //     //std::cout << "This is after: " << y << std::endl;
-    //     if( y < -1.55 )
-    //   {
-    //     y = -1.5;     
-    //   }
-    //   quat.setEulerZYX( 0, y , 0 );
-    //   turn.setRotation(quat);
-    //   RBody->getMotionState( )->setWorldTransform( turn );
-    // }
-    // else if( y <= btRadians( 0 ) ) 
-    // {
-      y = btRadians( 0 );
-      ///std::cout << "This is after: " << y << std::endl;
+      y -= dt * M_1_PI/250; //controls the rotation size increment
+      if( y < -1.55 ){ //if past 90 degrees, set to 90 degrees
+        y = -1.5;     
+      }
       quat.setEulerZYX( 0, y , 0 );
       turn.setRotation(quat);
-
       RBody->getMotionState( )->setWorldTransform( turn );
-    // }
-    // else
-    // {
-    //   y -= dt * M_PI/250;
-    //   //std::cout << "This is after: " << y << std::endl;
-    //   quat.setEulerZYX( 0, y , 0 );
-    //   turn.setRotation(quat);
-
-    //   RBody->getMotionState( )->setWorldTransform( turn );
-    // }
   }
 
   else{
