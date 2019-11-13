@@ -4,7 +4,7 @@ Physics::Physics()
 {
 	lostBall = false;
 	ballIndex = 0;
-	zCoordTrigger = -3.0f;
+	zCoordTrigger = -5.5f;
 }
 
 Physics::~Physics()
@@ -59,12 +59,13 @@ bool Physics::Initialize()
     return false;
   }
 
-  dynamicsWorld->setGravity(btVector3(0, -9.81, 0)); //sets gravity, last value sets gravit at an angle
+  dynamicsWorld->setGravity(btVector3(0, -9.81, -1)); //sets gravity, last value sets gravit at an angle
+
+  // Set ballIndex
 
   return true;
 }
 
-// Step through dynamics world simulation and output for debugging purposes
 void Physics::Update() {
   dynamicsWorld->stepSimulation(1.0f/20.f, 10); //sped up simulation speed
 
@@ -84,8 +85,72 @@ void Physics::Update() {
 
   //std::cout << "origin is: " << trans.getOrigin().getZ() << " and z coord is: " << zCoordTrigger << std::endl;
 
+  // Check if the ball has been lost
   if (trans.getOrigin().getZ() <= zCoordTrigger)
 	  lostBall = true;
+}
+
+void Physics::Update(std::vector<Object*>& objs) {
+  dynamicsWorld->stepSimulation(1.0f/20.f, 10); //sped up simulation speed
+
+  
+  btTransform trans; // Stores transformations
+  btScalar m[16]; // 4x4 matrix to store transformations
+  // Update the position of every object
+  for(int i = 0; i < objs.size(); i++) {
+    objs[i]->RBody->getMotionState()->getWorldTransform(trans);
+    trans.getOpenGLMatrix(m);
+    objs[i]->setPosition( (float)m[12], (float)m[13], (float)m[14] ); // store updated position
+
+    // Find pinball too
+    if(objs[i]->getKeyname() == "pinball") {
+      setBallIndex(i);
+    }
+  }
+    
+  // Check if the ball has been lost  
+  if (objs[ballIndex]->z <= zCoordTrigger) {
+	  lostBall = true;
+  }
+}
+
+void Physics::moveObject(std::vector<Object*>& objs, int objIndex,
+			 float x, float y, float z) {
+  // Check if objIndex is valid first
+  if(objIndex >= 0 &&
+     objIndex < objs.size()) {}
+  else {
+    std::cout << "Index not valid\n";
+    return;
+  }
+
+  /*
+  btVector3 newPos;
+  newPos.setX( btScalar(x) );
+  newPos.setY( btScalar(y) );
+  newPos.setZ( btScalar(z) );
+  */
+
+  btTransform trans; // to store transform
+  btScalar m[16];
+  
+  objs[objIndex]->RBody->getMotionState()->getWorldTransform(trans);
+  trans.getOpenGLMatrix(m);
+
+  // Change transformation matrix values
+  m[12] = x; m[13] = y; m[14] = z;
+
+  // Re-set the transform
+  trans.setFromOpenGLMatrix(m);
+  objs[objIndex]->RBody->getMotionState()->setWorldTransform(trans);
+  objs[objIndex]->RBody->setWorldTransform(trans);
+  objs[objIndex]->RBody->setLinearVelocity( btVector3(0,0,0) );
+  objs[objIndex]->RBody->setAngularVelocity( btVector3(0,0,0) );
+
+  // Store updated position
+  objs[objIndex]->setPosition( x,y,z );
+  
+
 }
 
 /* Add btCollisionObject given by newly initialized object to physics->dynamicsWorld
@@ -168,7 +233,8 @@ void Physics::movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody 
   
   if(LeftOrRight == "left"){ //update left paddle with physics
     std::cout << "updating left paddle" << std::endl;
-  
+
+    /*
     RBody->getWorldTransform().getBasis().getEulerZYX(z, y, x);
     RBody->getMotionState()->getWorldTransform( turn );
        y += dt * M_PI/250;
@@ -180,12 +246,13 @@ void Physics::movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody 
       quat.setEulerZYX( 0, y , 0 );
       turn.setRotation(quat);
       RBody->getMotionState( )->setWorldTransform( turn );
+    */
 
   }
   
   else if(LeftOrRight == "right"){ //update right paddle with physics
     std::cout << "updating right paddle" << std::endl;
-  
+    /*
     RBody->getWorldTransform().getBasis().getEulerZYX(z, y, x);
     RBody->getMotionState()->getWorldTransform( turn );
       y -= dt * M_1_PI/250; //controls the rotation size increment
@@ -195,6 +262,8 @@ void Physics::movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody 
       quat.setEulerZYX( 0, y , 0 );
       turn.setRotation(quat);
       RBody->getMotionState( )->setWorldTransform( turn );
+    */
+    
   }
 
   else{

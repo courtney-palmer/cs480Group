@@ -141,7 +141,7 @@ bool Engine::Initialize(char **argv)
   struct ShapeInfo rPaddleInfo(mesh);
   temp = new Object("rightPaddle.obj", rPaddleInfo, "rPaddle");
   objs.push_back(temp);
-    m_physics->AddShape(temp,
+  m_physics->AddShape(temp,
 		      -2.45, 0, -4.6,
 		      2);
   rPaddleIndex = objs.size()-1;
@@ -150,8 +150,8 @@ bool Engine::Initialize(char **argv)
   temp = new Object("leftPaddle.obj", lPaddleInfo, "lPaddle");
   objs.push_back(temp);
     m_physics->AddShape(temp,
-          4.7, 0, -4.6,
-		      2);
+			4.7, 0, -4.6,
+			2);
   lPaddleIndex = objs.size()-1;
 
   // ========================= End Object Creation :> =================
@@ -176,7 +176,7 @@ void Engine::Run()
     }
 
     // Update physics
-    m_physics->Update();
+    m_physics->Update(objs);
     //m_physics->Update(objs, ballIndex, trigIndex);
 
     // Update Graphics, send in physics instance and each single object.
@@ -188,30 +188,12 @@ void Engine::Run()
     m_graphics->Render(objs);
 
      //Check to see if a ball has been lost
-     if(m_physics->lostBall == true)
-       LoseBall();
+    if(m_physics->lostBall == true) {
+      LoseBall();
+    }
 
-    // btCollisionObject* obj = objs[ballIndex]->physicsObject;
-    // btRigidBody* body = btRigidBody::upcast(obj);
-    // btTransform trans;
-
-    // if(body && body->getMotionState()) {
-    //   body->getMotionState()->getWorldTransform(trans);
-    // }
-    // else {
-    //   trans = obj->getWorldTransform();
-    // }
-
-    // std::cout << "World position of object: " << float(trans.getOrigin().getX()) << " "
-	  //     << trans.getOrigin().getY() << " "
-	  //     << trans.getOrigin().getZ() << std::endl;
-
-    // if(trans.getOrigin().getZ() >= zCoordTrigger)
-    // {
-    //   //lose a ball
-    //   LoseBall();
-    // }
-
+     //outputObjects();
+     
     // Swap to the Window
     m_window->Swap();
   }
@@ -376,9 +358,11 @@ long long Engine::GetCurrentTimeMillis()
 
 void Engine::LoseBall()
 {
-  std::cout << "Lost Ball" << std::endl;
+  std::cout << "-1 ball\n";
   m_physics->lostBall = false;
   //move ball to starting position
+  m_physics->moveObject(objs, m_physics->getBallIndex(),
+			0,0,5);
 }
 
 /* 
@@ -387,7 +371,11 @@ void Engine::LoseBall()
 void Engine::outputObjects() const {
   std::cout << "== Objects in engine ==" << std::endl;
   for(int i = 0; i < objs.size(); i++) {
-    std::cout << i << ": " << objs[i]->getKeyname() << std::endl;
+    std::cout << i << ": " << objs[i]->getKeyname()
+	      << " x" << objs[i]->x
+	      << " y" << objs[i]->y
+	      << " z" << objs[i]->z
+	      << std::endl;
   }
   std::cout << "=======================" << std::endl;
 }
