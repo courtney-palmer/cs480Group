@@ -235,6 +235,16 @@ void Engine::Keyboard()
       m_running = false; //quit the program
       break;
 
+      case SDLK_p:
+        objs[rPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+        m_physics->movePaddle(getDT(), "right", objs[rPaddleIndex]->RBody, true);
+      break;
+
+      case SDLK_o:
+        objs[lPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+        m_physics->movePaddle(getDT(), "left", objs[lPaddleIndex]->RBody, true);
+      break;
+
       //toggle to vert shader
       case SDLK_v:
         std::cout << "v" << std::endl;
@@ -249,9 +259,9 @@ void Engine::Keyboard()
 
       // toggle flat shading
       case SDLK_c:
-	std::cout << "flat" << std::endl;
-	m_graphics->toggleShader(2);
-	break;
+        std::cout << "flat" << std::endl;
+        m_graphics->toggleShader(2);
+        break;
 
       case SDLK_u: // increase ambient lighting
         std::cout << "Ambience: " << m_graphics->ambience.x << " " <<  m_graphics->ambience.y << " " <<  m_graphics->ambience.z << std::endl;
@@ -318,12 +328,6 @@ void Engine::Keyboard()
         objs[dynamicCubeIndex]->RBody->applyCentralImpulse(btVector3(vel.getX(), 10, vel.getZ()));
         break;
 
-      case SDLK_p:
-        std::cout << "p" << std::endl;
-        objs[rPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-        m_physics->movePaddle(getDT(), "right", objs[rPaddleIndex]->RBody);
-        break;
-
       default:
         break;
     }
@@ -333,6 +337,18 @@ void Engine::Keyboard()
     // handle key down events here
     switch(m_event.key.keysym.sym)
     {
+      
+      case SDLK_p:
+      std::cout << "p released" << std::endl;
+      objs[rPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+       m_physics->movePaddle(getDT(), "right", objs[rPaddleIndex]->RBody, false);
+      break;
+
+      case SDLK_o:
+        objs[lPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+        m_physics->movePaddle(getDT(), "left", objs[lPaddleIndex]->RBody, false);
+      break;
+
       ////// When an arrow key is released, make sure cube stops moving in the given direction
       ////// However, the cube's velocity in other directions should stay the same
       case SDLK_UP:

@@ -19,10 +19,11 @@ class Physics
 
     void OutputCollisionObjects() const;
 
-    void movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody *RBody);
-    void resetPaddle(std::string LeftOrRight,  btRigidBody *RBody);
+    void movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody *RBody, bool isKeyDown);
+  
     btDiscreteDynamicsWorld *dynamicsWorld;
-
+    float rightBumperAngle = 0.6f;
+    float leftBumperAngle = 0.6f;
     bool lostBall;
 	int ballIndex;
 	float zCoordTrigger; //If the ball hits this coordinate on the z axis, it is lost

@@ -159,42 +159,51 @@ void Physics::OutputCollisionObjects() const {
   std::cout << std::endl;
 }
 
-void Physics::movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody *RBody){
+void Physics::movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody *RBody, bool isKeyDown){
   
+    rightBumperAngle -= 0.2f;
+    if(rightBumperAngle < -1.5f){
+      rightBumperAngle = -1.5f;
+    }
+    leftBumperAngle += 0.2f;
+    std::cout << leftBumperAngle << std::endl;
+    if(leftBumperAngle > 1.5f){
+      leftBumperAngle = 1.5f;
+    }
     btTransform turn;
     turn.setIdentity();
     btQuaternion quat;  
     btScalar x, y, z;
   
   if(LeftOrRight == "left"){ //update left paddle with physics
-    std::cout << "updating left paddle" << std::endl;
-  
-    RBody->getWorldTransform().getBasis().getEulerZYX(z, y, x);
-    RBody->getMotionState()->getWorldTransform( turn );
-       y += dt * M_PI/250;
-        // std::cout << "This is after: " << y << std::endl;
-        if( y > 1.55 )
-      {
-        y = 1.5;     
-      }
-      quat.setEulerZYX( 0, y , 0 );
+    RBody->getMotionState()->getWorldTransform(turn);
+    quat.setEuler(leftBumperAngle, 0.0, 0.0);
+    turn.setRotation(quat);
+    RBody->getMotionState()->setWorldTransform(turn);
+    RBody->setMotionState(RBody->getMotionState());
+
+    if(isKeyDown == false){
+      quat.setEuler(0.0, 0.0, 0.0);
       turn.setRotation(quat);
-      RBody->getMotionState( )->setWorldTransform( turn );
+      RBody->getMotionState()->setWorldTransform(turn);
+      RBody->setMotionState(RBody->getMotionState());
+    }   
 
   }
   
   else if(LeftOrRight == "right"){ //update right paddle with physics
-    std::cout << "updating right paddle" << std::endl;
-  
-    RBody->getWorldTransform().getBasis().getEulerZYX(z, y, x);
-    RBody->getMotionState()->getWorldTransform( turn );
-      y -= dt * M_1_PI/250; //controls the rotation size increment
-      if( y < -1.55 ){ //if past 90 degrees, set to 90 degrees
-        y = -1.5;     
-      }
-      quat.setEulerZYX( 0, y , 0 );
+    RBody->getMotionState()->getWorldTransform(turn);    
+    quat.setEuler(rightBumperAngle, 0.0, 0.0);
+    turn.setRotation(quat);
+    RBody->getMotionState()->setWorldTransform(turn);
+    RBody->setMotionState(RBody->getMotionState());
+
+    if(isKeyDown == false){
+      quat.setEuler(0.0, 0.0, 0.0);
       turn.setRotation(quat);
-      RBody->getMotionState( )->setWorldTransform( turn );
+      RBody->getMotionState()->setWorldTransform(turn);
+      RBody->setMotionState(RBody->getMotionState());
+    }   
   }
 
   else{

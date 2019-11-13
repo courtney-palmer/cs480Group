@@ -39,7 +39,7 @@ class Graphics
     Object *cube; //dynamic
     Object *ball; //dynamic
     Object *lPaddle;
-    Object * rPaddle;
+    Object *rPaddle;
     
     std::vector<Shader*> shaders;
     int shaderIndex;

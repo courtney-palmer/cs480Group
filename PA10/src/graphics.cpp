@@ -217,69 +217,6 @@ void Graphics::Update(Physics *p, Object *o)
 
 }
 
-void Graphics::Render()
-{
-  std::cout << "Entered render method" << std::endl;
-  
-  //clear the screen
-  glClearColor(0.0, 0.0, 0.2, 1.0);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  std::cout << "Enabling shader" << std::endl;
-  
-  // Start the correct program
-  m_shader->Enable();
-
-  std::cout << "Shader enabled?" << std::endl;
-
-  // Send in the projection and view to the shader
-  glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
-  glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
-
-  //render light stuff
-  glUniform4f(m_shader->GetUniformLocation("LightPosition"), -5.0f, -5.0f, 0.0f, 0.0f);
-  glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z,
-	      1.0f);
-  glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z,
-	      1.0f);
-  glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), specular.x, specular.y, specular.z,
-	      1.0f);
-  glUniform1f(m_shader->GetUniformLocation("Shininess"), 100.0f);
-
-  // Render the objects
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(cube->GetModel()));
-  cube->Render();
-
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(board->GetModel()));
-  board->Render();
-
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(cylinder->GetModel()));
-  cylinder->Render();
-
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ball->GetModel()));
-  ball->Render();
-
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(lamp->GetModel()));
-  // lamp->Render();
-
-  // glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(lPaddle->GetModel()));
-  // lPaddle->Render();
-
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(rPaddle->GetModel()));
-  rPaddle->Render();
-
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(lPaddle->GetModel()));
-  lPaddle->Render();
-
-  // Get any errors from OpenGL
-  auto error = glGetError();
-  if ( error != GL_NO_ERROR )
-  {
-    string val = ErrorString( error );
-    cout << "Error initializing OpenGL! " << error << ", " << val << endl;
-  }
-}
-
 void Graphics::Render(std::vector<Object*>& objs)
 {
   //clear the screen
@@ -297,7 +234,7 @@ void Graphics::Render(std::vector<Object*>& objs)
 
   //std::cout << "Using shader " << shaderIndex << std::endl;
   if(shaderIndex != 2) {
-    //glUniform4f(m_shader->GetUniformLocation("LightPosition"),  7, 6, 10, 0.0f);
+    glUniform4f(m_shader->GetUniformLocation("LightPosition"),  7, 6, 10, 0.0f);
     glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z, 1.0f);
     glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z, 1.0f);
     glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), specular.x, specular.y, specular.z, 1.0f);
