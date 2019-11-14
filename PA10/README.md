@@ -54,6 +54,10 @@ NOTES:
 ### Pinball Controls
 'p' 	 | Right Paddle<br/>
 'i'	 | Left Paddle<br/>
-'o'	 | Reset Ball Position<br/>
+'o'	 | Trigger Plunger<br/>
+'r'	 | Reset Game<br/>
+'t'	 | Top Down Camera view<br/>
+'z'	 | Default Camera view<br/>
+'x'	 | Follow Ball<br/>
 
 ## Extra Credit
