@@ -69,6 +69,7 @@ bool Engine::Initialize(char **argv)
   // create ShapeInfo struct > use struct to initialize object
   // push object into objs array  > add object to physics world  
 
+  /*
   // add moveable cube
   struct ShapeInfo info(box, 1, 1, 1); // 1,1,1 represents size of collision shape
   Object* temp = new Object("cubeTest.obj", info, "block", "wood.jpg"); // temp holds next object to be stored
@@ -78,23 +79,16 @@ bool Engine::Initialize(char **argv)
 		      1);  // this value is static vs dynamic. true - dynamic
   // Used in Keyboard() to refer to array index of object that will be moved
   dynamicCubeIndex = objs.size()-1;
+  */
   
-  std::cout << "Adding Board\n";
-  // add board/platform : static
-  // struct ShapeInfo boardInfo(mesh);
-  // temp = new Object("board.obj", boardInfo);
-  // objs.push_back(temp);
-  // m_physics->AddShape(temp,
-	// 	      0, 0, 0,
-	// 	      false);
+  // Add invisible wall on top
+  struct ShapeInfo invWallInfo(mesh);
+  Object* temp = new Object("boardwwalls.obj", invWallInfo, "pinballCover", "wood.jpg");
+  m_physics->AddShape(temp,
+	 	      0,0,0,
+	 	      3);
 
-  // // Add invisible wall on top
-  // temp = new Object("board.obj", boardInfo);
-  // m_physics->AddShape(temp,
-	// 	      0,0,0,
-	// 	      false);
-
-  // Add walls : Static
+  // Add BOARD : Static
   struct ShapeInfo wallInfo(mesh);
   temp = new Object("pboard.obj", wallInfo, "board", "harris.jpg");
   objs.push_back(temp);
@@ -108,6 +102,22 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      0, 0, 0,
 		      3);
+
+  // Add cones to side
+  struct ShapeInfo c1(mesh);
+  temp = new Object("lCone.obj", c1, "cone1", "wood.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      7, -0.5, 5,
+		      3);
+  objs.back()->physicsObject->setUserPointer(objs.back());
+
+  temp = new Object("rCone.obj", c1, "cone2", "wood.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      -5, -0.5, 5,
+		      3);
+  objs.back()->physicsObject->setUserPointer(objs.back());
 
   // adding a series of bumpers
   struct ShapeInfo bumperInfo1(mesh);
@@ -133,7 +143,8 @@ bool Engine::Initialize(char **argv)
 		      1, -1, 5,
 		      3);
   objs.back()->physicsObject->setUserPointer(objs.back());
-  
+
+  // Add plunger
   struct ShapeInfo plungerInfo(mesh);
   temp = new Object("plunger.obj", plungerInfo, "plunger");
   objs.push_back(temp);
@@ -141,16 +152,6 @@ bool Engine::Initialize(char **argv)
 		      0,0,5,
 		      3);
   plungerIndex = objs.size()-1;
-
-  //add thin box to be ball loss trigger
-  // struct ShapeInfo lossTrigInfo(mesh);
-  // temp = new Object("collisionDetection.obj", lossTrigInfo);
-  // objs.push_back(temp);
-  // m_physics->AddShape(temp,
-	// 	      0, 1, 0,
-	// 	      false);
-  // trigIndex = objs.size()-1;
-  //objs[trigIndex]->physicsObject->setUserPointer(lossTag);
 
   // Add ball
   struct ShapeInfo ballInfo(sphere, 0.4, 0.4, 0.4);
@@ -160,27 +161,10 @@ bool Engine::Initialize(char **argv)
 		     -6,5,5,
 		     1);
   ballIndex = objs.size()-1;
-  //objs[ballIndex]->physicsObject->setUserPointer(ballTag);
 
-  // Add cylinder
-  // struct ShapeInfo cylindInfo(cylind, 1, 1, 1);
-  // temp = new Object("trueCyliner.obj", cylindInfo);
-  // objs.push_back(temp);
-  // m_physics->AddShape(temp,
-	// 	     0,0,15,
-	// 	     true);
-
-
-  // std::cout << "adding paddles" << std::endl;
-  // struct ShapeInfo lPaddleInfo(mesh);
-  // temp = new Object("LeftPaddle.obj", lPaddleInfo);
-  // objs.push_back(temp);
-  //   m_physics->AddShape(temp,
-	// 	      0, 0, 0,
-	// 	      false);
-
+  // Add paddles
   struct ShapeInfo rPaddleInfo(mesh);
-  temp = new Object("rightPaddle.obj", rPaddleInfo, "rPaddle");
+  temp = new Object("rPaddle.obj", rPaddleInfo, "rPaddle");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      -2.45, 0, -4.6,
@@ -188,7 +172,7 @@ bool Engine::Initialize(char **argv)
   rPaddleIndex = objs.size()-1;
 
     struct ShapeInfo lPaddleInfo(mesh);
-  temp = new Object("leftPaddle.obj", lPaddleInfo, "lPaddle");
+  temp = new Object("lPaddle.obj", lPaddleInfo, "lPaddle");
   objs.push_back(temp);
     m_physics->AddShape(temp,
 			4.7, 0, -4.6,
@@ -197,6 +181,7 @@ bool Engine::Initialize(char **argv)
 
   buffer = 0;
   bufferMax = 1;
+  followBall = false;
 
   // ========================= End Object Creation :> =================
 
@@ -245,7 +230,12 @@ void Engine::Run()
       LoseBall();
     }
 
-     //outputObjects();
+    // Update camera to follow ball if necessary
+    if(followBall) {
+      m_graphics->m_camera->Update(objs[ballIndex]->x, objs[ballIndex]->y + 10, objs[ballIndex]->z,
+				   objs[ballIndex]->x, objs[ballIndex]->y, objs[ballIndex]->z,
+				   0,0,1);
+    }
      
     // Swap to the Window
     m_window->Swap();
@@ -399,9 +389,23 @@ void Engine::Keyboard()
 
     case SDLK_r: // reset game
       m_physics->moveObject(objs, m_physics->getBallIndex(),
-			                    -6,5,5);
+			    -6,5,5);
       ballsRemaining = MAX_BALLS;
       score = 0;
+      break;
+
+    case SDLK_t: // Set camera to top down view
+      m_graphics->m_camera->Update(0,30,-10,
+				   0,0,0,
+				   0,0,1);
+      break;
+    case SDLK_z: // Set camera to normal view
+      m_graphics->m_camera->Update(0, 15, -20,
+				   0,0,0,
+				   0,0,1);
+      break;
+    case SDLK_x: // Follow ball
+      toggleFollowBall();
       break;
 
       default:
@@ -529,4 +533,12 @@ int Engine::getIndexOf(const std::string& key) {
       return i;
   }
   return -1; // Key not found 
+}
+
+bool Engine::toggleFollowBall() {
+  if(followBall)
+    followBall = false;
+  else
+    followBall = true;
+  return followBall;    
 }

@@ -37,12 +37,14 @@ class Engine
     void outputObjects() const;
     int getIndexOf(const std::string& key); // Returns index from 0-objs.size();
 
+    bool toggleFollowBall();
+    bool followBall;
+
   private:
     std::vector<Object*> objs;
     unsigned int dynamicCubeIndex;
     unsigned int ballIndex;
     unsigned int plungerIndex;
-
     unsigned int rPaddleIndex;
     unsigned int lPaddleIndex;
     

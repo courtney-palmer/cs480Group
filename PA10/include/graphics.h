@@ -45,8 +45,6 @@ class Graphics
     int shaderIndex;
     Shader *m_shader;
 
-    //Object *lamp;
-
     glm::vec3 ambience = glm::vec3(1.0f, 1.0f, 1.0f);
     glm::vec3 specular  = glm::vec3(1.0f, 1.0f, 1.0f);
     glm::vec3 diffuse  = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -70,10 +68,9 @@ class Graphics
     float spotLightAngle;
     float theta;
 
+    Camera *m_camera;
   private:
     std::string ErrorString(GLenum error);
-
-    Camera *m_camera;
 
     GLint m_projectionMatrix;
     GLint m_viewMatrix;
