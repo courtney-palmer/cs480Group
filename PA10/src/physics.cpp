@@ -244,8 +244,49 @@ void Physics::OutputCollisionObjects() const {
   std::cout << std::endl;
 }
 
-void Physics::applyPlungerForce(btRigidBody *RBody){
-  RBody->applyCentralImpulse(btVector3(btVector3(0.0f, 0.0f, 20.0f)));
+void Physics::applyPlungerForce(btRigidBody *RBody, float plungerPull, float plungerForce){
+  btTransform trans;
+
+  if( plungerForce < 20 && ballLaunched == false)
+  { 
+    std::cout << plungerPull << std::endl;
+    plungerPull -= .2;
+    if(plungerPull < 3){
+      plungerPull = 3;
+    }
+
+    RBody->getMotionState()->getWorldTransform(trans);
+    trans.setOrigin(btVector3(0.0f, 0.0f, plungerPull));
+    RBody->getMotionState()->setWorldTransform(trans);
+    RBody->setMotionState(RBody->getMotionState());
+    //plunger->model = glm::make_mat4(m);
+    plungerForce += 1;
+  }
+  else if(ballLaunched == false){
+    btTransform trans;
+    std::cout << "b" << std::endl;
+    plungerPull = 5;
+    RBody->applyCentralImpulse(btVector3(0.0f, 0.0f, plungerForce));
+    plungerForce = 0.0f;
+    RBody->getMotionState()->setWorldTransform(trans);
+    trans.setOrigin(btVector3(0.0f, 0.0f, plungerPull));
+    RBody->getMotionState()->setWorldTransform(trans);
+    RBody->setMotionState(RBody->getMotionState());
+  }
+}
+
+void Physics::releasePlunger(btRigidBody *RBody, float plungerPull, float plungerForce){
+  if(ballLaunched == false){
+    btTransform trans;
+    std::cout << "b" << std::endl;
+    plungerPull = 5;
+    RBody->applyCentralImpulse(btVector3(0.0f, 0.0f, plungerForce));
+    plungerForce = 0.0f;
+    RBody->getMotionState()->setWorldTransform(trans);
+    trans.setOrigin(btVector3(0.0f, 0.0f, plungerPull));
+    RBody->getMotionState()->setWorldTransform(trans);
+    RBody->setMotionState(RBody->getMotionState());
+  }
 }
 
 void Physics::movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody *RBody){

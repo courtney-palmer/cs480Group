@@ -96,7 +96,7 @@ bool Engine::Initialize(char **argv)
 
   // Add walls : Static
   struct ShapeInfo wallInfo(mesh);
-  temp = new Object("pBoard.obj", wallInfo, "board", "harris.jpg");
+  temp = new Object("pboard.obj", wallInfo, "board", "harris.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      0, 0, 0,
@@ -138,7 +138,7 @@ bool Engine::Initialize(char **argv)
   temp = new Object("plunger.obj", plungerInfo, "plunger");
   objs.push_back(temp);
   m_physics->AddShape(temp,
-		      0,0,0,
+		      0,0,5,
 		      3);
   plungerIndex = objs.size()-1;
 
@@ -254,6 +254,7 @@ void Engine::Run()
 
 void Engine::Keyboard()
 {
+   btTransform trans;
   //float ballForce = 0.0f;
   if(m_event.type == SDL_QUIT)
   {
@@ -276,10 +277,30 @@ void Engine::Keyboard()
       //   m_physics->movePaddle(getDT(), "right", objs[rPaddleIndex]->RBody, true);
       // break;
 
-      // case SDLK_o:
-      //   objs[lPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-      //   m_physics->movePaddle(getDT(), "left", objs[lPaddleIndex]->RBody, true);
-      // break;
+     case SDLK_o:
+        objs[ballIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+        objs[plungerIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+
+        if( m_physics->plungerForce < 20 && m_physics->ballLaunched == false)
+        { 
+          std::cout << m_physics->plungerPull << std::endl;
+          m_physics->plungerPull -= .2;
+          if(m_physics->plungerPull < 0){
+            m_physics->plungerPull = 0;
+          }
+
+          objs[plungerIndex]->RBody->getMotionState()->getWorldTransform(trans);
+          trans.setOrigin(btVector3(0.0f, 0.0f, m_physics->plungerPull));
+          objs[plungerIndex]->RBody->getMotionState()->setWorldTransform(trans);
+          objs[plungerIndex]->RBody->setMotionState(objs[plungerIndex]->RBody->getMotionState());
+          //plunger->model = glm::make_mat4(m);
+          m_physics->plungerForce += 1;
+          std::cout << m_physics->plungerPull << std::endl;
+        }
+
+
+        //m_physics->applyPlungerForce(objs[plungerIndex]->RBody, m_physics->plungerPull, m_physics->plungerForce);
+       break;
 
       //toggle to vert shader
       case SDLK_v:
@@ -401,8 +422,34 @@ void Engine::Keyboard()
 
       case SDLK_o:
         objs[ballIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-        //m_physics->applyPlungerForce(vel, objs[ballIndex]->RBody, ballForce);
-        m_physics->applyPlungerForce(objs[ballIndex]->RBody);
+        objs[plungerIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+        
+      if(m_physics->ballLaunched == false){
+        btTransform trans;
+        std::cout << "b" << std::endl;
+
+        //apply physics to ball
+        objs[ballIndex]->RBody->applyCentralImpulse(btVector3(0.0,0.0, m_physics->plungerForce));
+        m_physics->plungerForce = 0;
+
+        objs[ballIndex]->RBody->getMotionState()->getWorldTransform(trans);
+        trans.setOrigin(btVector3(-6.0f, 5.0f, m_physics->plungerPull));
+        objs[ballIndex]->RBody->getMotionState()->setWorldTransform(trans);
+        objs[ballIndex]->RBody->setMotionState(objs[ballIndex]->RBody->getMotionState());
+
+        //apply physics to plunger
+        m_physics->plungerPull = 5;
+        objs[plungerIndex]->RBody->getMotionState()->getWorldTransform(trans);
+        objs[plungerIndex]->RBody->applyCentralImpulse(btVector3(0.0f, 0.0f, m_physics->plungerForce));
+        m_physics->plungerForce = 0.0f;
+        objs[plungerIndex]->RBody->getMotionState()->setWorldTransform(trans);
+        trans.setOrigin(btVector3(0.0f, 0.0f, m_physics->plungerPull));
+        objs[plungerIndex]->RBody->getMotionState()->setWorldTransform(trans);
+        objs[plungerIndex]->RBody->setMotionState(objs[plungerIndex]->RBody->getMotionState());
+        std::cout << "location at: " << "0,0, " << m_physics->plungerPull << std::endl;
+      }
+        
+        
         break;
 
       ////// When an arrow key is released, make sure cube stops moving in the given direction

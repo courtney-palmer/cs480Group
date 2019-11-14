@@ -34,7 +34,12 @@ class Physics
     int getBallIndex() const {return ballIndex;}
 
     //void applyPlungerForce(btVector3 vel, btRigidBody *RBody, float ballForce);
-    void applyPlungerForce(btRigidBody *RBody);
+    void applyPlungerForce(btRigidBody *RBody, float plungerPull, float plungerForce);
+    void releasePlunger(btRigidBody *RBody, float plungerPull, float plungerForce);
+    float plungerForce = 0;
+    float plungerPull = 5;
+    bool ballLaunched = false;
+
 
     bool lostBall;
     int ballIndex;
