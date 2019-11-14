@@ -85,7 +85,7 @@ bool Engine::Initialize(char **argv)
   struct ShapeInfo invWallInfo(mesh);
   Object* temp = new Object("boardwwalls.obj", invWallInfo, "pinballCover", "wood.jpg");
   m_physics->AddShape(temp,
-	 	      0,0,0,
+	 	      0,1,0,
 	 	      3);
 
   // Add BOARD : Static
@@ -158,7 +158,7 @@ bool Engine::Initialize(char **argv)
   temp = new Object("pinball.obj", ballInfo, "pinball", "wood.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
-		     -6,5,5,
+		     -6,0,5,
 		     1);
   ballIndex = objs.size()-1;
 
@@ -389,7 +389,7 @@ void Engine::Keyboard()
 
     case SDLK_r: // reset game
       m_physics->moveObject(objs, m_physics->getBallIndex(),
-			    -6,5,5);
+			    -6,0,5);
       ballsRemaining = MAX_BALLS;
       score = 0;
       break;
@@ -437,7 +437,7 @@ void Engine::Keyboard()
         m_physics->plungerForce = 0;
 
         objs[ballIndex]->RBody->getMotionState()->getWorldTransform(trans);
-        trans.setOrigin(btVector3(-6.0f, 5.0f, m_physics->plungerPull));
+        trans.setOrigin(btVector3(-6.0f, 0.0f, m_physics->plungerPull));
         objs[ballIndex]->RBody->getMotionState()->setWorldTransform(trans);
         objs[ballIndex]->RBody->setMotionState(objs[ballIndex]->RBody->getMotionState());
 
@@ -509,7 +509,7 @@ void Engine::LoseBall()
   // }
   // else
     m_physics->moveObject(objs, m_physics->getBallIndex(),
-			                    -6,5,5);
+			                    -6,0,5);
 }
 
 /* 
