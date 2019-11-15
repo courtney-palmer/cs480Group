@@ -34,16 +34,17 @@ NOTES:
 </ul>-->
 
 ## Controls
-### Cube
+<!--### Cube
 'up'      | Move forward<br/>
 'down'    | Move backward<br/>
 'left'    | Move left<br/>
 'right'   | Move right<br/>
-'space'   | Jump
+'space'   | Jump-->
 
 ### Lighting
 'f'      | Use fragment lighting shader<br/>
 'v'      | Use vertex lighting shader<br/>
+'c'      | Use flat lighting shader<br/>
 'y'      | Decrease ambient light <br/>
 'u'      | Increase ambient light<br/>
 'j'      | Decrease diffuse light <br/>
@@ -52,9 +53,9 @@ NOTES:
 'n'      | Increase specular light<br/>
 
 ### Pinball Controls
-'p' 	 | Right Paddle<br/>
+'p'  | Right Paddle<br/>
 'i'	 | Left Paddle<br/>
-'o'	 | Trigger Plunger<br/>
+'o'	 | Trigger Plunger - hold o to pull back further<br/>
 'r'	 | Reset Game<br/>
 't'	 | Top Down Camera view<br/>
 'z'	 | Default Camera view<br/>

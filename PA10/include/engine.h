@@ -42,7 +42,7 @@ class Engine
 
   private:
     std::vector<Object*> objs;
-    unsigned int dynamicCubeIndex;
+    //unsigned int dynamicCubeIndex;
     unsigned int ballIndex;
     unsigned int plungerIndex;
     unsigned int rPaddleIndex;
@@ -62,8 +62,10 @@ class Engine
     long long m_currentTimeMillis;
     bool m_running;
 
-    btVector3 vel;
-    btVector3 pos;
+    //btVector3 vel;
+    //btVector3 pos;
+    float counter;
+    bool playing;
 };
 
 #endif // ENGINE_H

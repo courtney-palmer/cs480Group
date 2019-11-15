@@ -59,7 +59,9 @@ bool Engine::Initialize(char **argv)
   m_currentTimeMillis = GetCurrentTimeMillis();
 
   ballsRemaining = MAX_BALLS;
+  playing = false;
   score = 0;
+  counter = 0.0f;
 
   // ============= Create the objects ===============================
   // note : Objects in obj array have graphics and physics components
@@ -234,9 +236,22 @@ void Engine::Run()
     // Render, send in objs vector array
     m_graphics->Render(objs);
 
+    if(playing)
+    {
      //Check to see if a ball has been lost
-    if(m_physics->lostBall == true) {
-      LoseBall();
+      if(m_physics->lostBall == true) {
+        LoseBall();
+      }
+      else
+      {
+        counter += getDT();
+        if(counter >= 1000)
+        {
+          score += 100;
+          counter = 0;
+        }
+        std::cout << "Score: " << score << std::endl;
+      }
     }
 
     // Update camera to follow ball if necessary
@@ -261,9 +276,9 @@ void Engine::Keyboard()
   }
   else if (m_event.type == SDL_KEYDOWN)
   {
-    vel = btVector3(objs[dynamicCubeIndex]->RBody->getLinearVelocity().getX(), 
-                    objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), 
-                    objs[dynamicCubeIndex]->RBody->getLinearVelocity().getZ());
+    // vel = btVector3(objs[dynamicCubeIndex]->RBody->getLinearVelocity().getX(), 
+    //                 objs[dynamicCubeIndex]->RBody->getLinearVelocity().getY(), 
+    //                 objs[dynamicCubeIndex]->RBody->getLinearVelocity().getZ());
     // handle key down events here
     switch(m_event.key.keysym.sym)
     {
@@ -296,7 +311,7 @@ void Engine::Keyboard()
           m_physics->plungerForce += 1;
           std::cout << m_physics->plungerPull << std::endl;
         }
-
+        playing = true;
 
         //m_physics->applyPlungerForce(objs[plungerIndex]->RBody, m_physics->plungerPull, m_physics->plungerForce);
        break;
@@ -355,34 +370,6 @@ void Engine::Keyboard()
         m_graphics->specular.y -= 0.05f;
         m_graphics->specular.z -= 0.05f;
         break;
-      //////Input to move cube
-      case SDLK_UP:
-        // Example of original code :
-        //pinball m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
-        // m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 10));
-        objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-        objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(vel.getX(), vel.getY(), 10));
-        break;
-
-      case SDLK_DOWN:
-        objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-        objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(vel.getX(), vel.getY(), -10));
-        break;
-
-      case SDLK_LEFT:
-        objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-        objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(10, vel.getY(), vel.getZ()));
-        break;
-
-      case SDLK_RIGHT:
-        objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-        objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(-10, vel.getY(), vel.getZ()));
-        break;
-
-      case SDLK_SPACE:
-        objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-        objs[dynamicCubeIndex]->RBody->applyCentralImpulse(btVector3(vel.getX(), 10, vel.getZ()));
-        break;
 
     case SDLK_p: // Right paddle
         std::cout << "p" << std::endl;
@@ -401,6 +388,8 @@ void Engine::Keyboard()
 			    -6,0,5);
       ballsRemaining = MAX_BALLS;
       score = 0;
+      counter = 0;
+      playing = false;
       break;
 
     case SDLK_t: // Set camera to top down view
@@ -416,6 +405,35 @@ void Engine::Keyboard()
     case SDLK_x: // Follow ball
       toggleFollowBall();
       break;
+
+      //////Input to move cube
+      // case SDLK_UP:
+      //   // Example of original code :
+      //   //pinball m_graphics->cube->RBody->setActivationState(DISABLE_DEACTIVATION);
+      //   // m_graphics->cube->RBody->setLinearVelocity(btVector3(0, 0, 10));
+      //   objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+      //   objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(vel.getX(), vel.getY(), 10));
+      //   break;
+
+      // case SDLK_DOWN:
+      //   objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+      //   objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(vel.getX(), vel.getY(), -10));
+      //   break;
+
+      // case SDLK_LEFT:
+      //   objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+      //   objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(10, vel.getY(), vel.getZ()));
+      //   break;
+
+      // case SDLK_RIGHT:
+      //   objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+      //   objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(-10, vel.getY(), vel.getZ()));
+      //   break;
+
+      // case SDLK_SPACE:
+      //   objs[dynamicCubeIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+      //   objs[dynamicCubeIndex]->RBody->applyCentralImpulse(btVector3(vel.getX(), 10, vel.getZ()));
+      //   break;
 
       default:
         break;
@@ -467,21 +485,21 @@ void Engine::Keyboard()
 
       ////// When an arrow key is released, make sure cube stops moving in the given direction
       ////// However, the cube's velocity in other directions should stay the same
-      case SDLK_UP:
-	      objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(vel.getX(), vel.getY(), 0));
-        break;
+      // case SDLK_UP:
+	    //   objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(vel.getX(), vel.getY(), 0));
+      //   break;
 
-      case SDLK_DOWN:
-	      objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(vel.getX(), vel.getY(), 0));
-        break;
+      // case SDLK_DOWN:
+	    //   objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(vel.getX(), vel.getY(), 0));
+      //   break;
 
-      case SDLK_LEFT:
-	      objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, vel.getY(), vel.getZ()));
-        break;
+      // case SDLK_LEFT:
+	    //   objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, vel.getY(), vel.getZ()));
+      //   break;
 
-      case SDLK_RIGHT:
-	      objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, vel.getY(), vel.getZ()));
-        break;
+      // case SDLK_RIGHT:
+	    //   objs[dynamicCubeIndex]->RBody->setLinearVelocity(btVector3(0, vel.getY(), vel.getZ()));
+      //   break;
 
       default:
         break;
@@ -511,12 +529,13 @@ void Engine::LoseBall()
   std::cout << "-1 ball\n";
   ballsRemaining--;
   m_physics->lostBall = false;
-  //move ball to starting position
-  // if(ballsRemaining <= 0)
-  // {
-  //   //game over
-  // }
-  // else
+  playing = false;
+  if(ballsRemaining <= 0)
+  {
+    std::cout << "Final Score: " << score << std::endl;
+    std::cout << "Press R to Restart." << std::endl;
+  }
+  else //move ball to starting position
     m_physics->moveObject(objs, m_physics->getBallIndex(),
 			                    -6,0,5);
 }
