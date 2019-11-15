@@ -94,7 +94,7 @@ bool Engine::Initialize(char **argv)
 
   // Add BOARD : Static
   struct ShapeInfo wallInfo(mesh);
-  Object* temp = new Object("pboard.obj", wallInfo, "board", "harris.jpg");
+  Object* temp = new Object("pboard.obj", wallInfo, "board", "galaxy.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      0, 0, 0,
@@ -111,14 +111,14 @@ bool Engine::Initialize(char **argv)
 
   // Add cones to side
   struct ShapeInfo c1(mesh);
-  temp = new Object("lCone.obj", c1, "cone", "wood.jpg");
+  temp = new Object("lCone.obj", c1, "cone1", "steel.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      7, -0.5, 5,
 		      3);
   objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
-  temp = new Object("rCone.obj", c1, "cone", "wood.jpg");
+  temp = new Object("rCone.obj", c1, "cone2", "steel.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      -5, -0.5, 5,
@@ -127,7 +127,7 @@ bool Engine::Initialize(char **argv)
 
   // adding a series of bumpers
   struct ShapeInfo bumperInfo1(mesh);
-  temp = new Object("bumper.obj", bumperInfo1, "bumper", "wood.jpg");
+  temp = new Object("bumper.obj", bumperInfo1, "bumper1", "redGalaxy.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      -1, -1, 0,
@@ -136,7 +136,7 @@ bool Engine::Initialize(char **argv)
   //std::cout << (Object*)objs.back()->physicsObject->getUserPointer() << std::endl;
 
   struct ShapeInfo bumperInfo2(mesh);
-  temp = new Object("bumper.obj", bumperInfo2, "bumper", "wood.jpg");
+  temp = new Object("bumper.obj", bumperInfo2, "bumper2", "redGalaxy.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      2, -1, 0,
@@ -144,7 +144,7 @@ bool Engine::Initialize(char **argv)
   objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   struct ShapeInfo bumperInfo3(mesh);
-  temp = new Object("bumper.obj", bumperInfo3, "bumper", "wood.jpg");
+  temp = new Object("bumper.obj", bumperInfo3, "bumper3", "redGalaxy.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      1, -1, 5,
@@ -173,7 +173,7 @@ bool Engine::Initialize(char **argv)
 
   // Add paddles
   struct ShapeInfo rPaddleInfo(mesh);
-  temp = new Object("rPaddle.obj", rPaddleInfo, "rPaddle");
+  temp = new Object("rPaddle.obj", rPaddleInfo, "rPaddle", "steel.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      -2.45, 0, -4.6,
@@ -182,7 +182,7 @@ bool Engine::Initialize(char **argv)
   objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
     struct ShapeInfo lPaddleInfo(mesh);
-  temp = new Object("lPaddle.obj", lPaddleInfo, "lPaddle");
+  temp = new Object("lPaddle.obj", lPaddleInfo, "lPaddle", "steel.jpg");
   objs.push_back(temp);
     m_physics->AddShape(temp,
 			4.7, 0, -4.6,

@@ -59,7 +59,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
 
   // Set camera above the pinball board
   m_camera->Update(0, 15,-20,
-		   0, 0,0,
+		   0, 8,0,
 		   0,0,1);
 
   shaderIndex = 0;
