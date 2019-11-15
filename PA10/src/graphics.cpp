@@ -59,7 +59,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
 
   // Set camera above the pinball board
   m_camera->Update(0, 15,-20,
-		   0, 0,0,
+		   0, 8,0,
 		   0,0,1);
 
   shaderIndex = 0;
@@ -219,6 +219,7 @@ void Graphics::Update(Physics *p, Object *o)
 
 void Graphics::Render(std::vector<Object*>& objs)
 {
+  
   //clear the screen
   glClearColor(0.0, 0.0, 0.2, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

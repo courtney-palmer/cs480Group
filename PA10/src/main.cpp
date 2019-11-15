@@ -22,6 +22,7 @@ int main(int argc, char **argv)
     return 1;
   }
   engine->Run();
+  std::cout << "b" << std::endl;
   delete engine;
   engine = NULL;
   return 0;
