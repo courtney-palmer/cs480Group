@@ -7,7 +7,7 @@ Christine Vaughan
 
 ## Project Description
 <!-- In Project 9, we added lighting effects to PA8. We added per-vertex lighting and per-fragment lighting, with the shaders swappable with a keystroke. The parameters of the lighting can be adjusted. -->
-Building upon project 9, we created an interactive pinball game. The Pinball machine displays various graphical applications such as modeling objects in blender, mapping textures, applying lighting, and applying physics. 
+Building upon project 9, we created an interactive pinball game. The Pinball machine displays various graphical applications such as Modeling objects in blender, mapping textures, applying lighting, and applying physics. 
 
 ## Cmake Instructions
 The building of the project is done using CMake, installation with apt-get or brew may be necessary. Later use with CMake and Shader files will be require the copy of a directory where those files are stored (ex. shaders). To do this in the ```add_custom_target``` function place 

@@ -232,7 +232,6 @@ void Engine::Run()
     for(int i = 0; i < objs.size(); i++) {
       m_graphics->Update(m_physics, objs[i]);
     }
-
     // Render, send in objs vector array
     m_graphics->Render(objs);
 
@@ -457,7 +456,6 @@ void Engine::Keyboard()
         
       if(m_physics->ballLaunched == false){
         btTransform trans;
-        std::cout << "b" << std::endl;
 
         //apply physics to ball
         objs[ballIndex]->RBody->applyCentralImpulse(btVector3(0.0,0.0, m_physics->plungerForce));

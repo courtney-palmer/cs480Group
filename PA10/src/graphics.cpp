@@ -284,7 +284,7 @@ void Graphics::Render(std::vector<Object*>& objs)
   if ( error != GL_NO_ERROR )
   {
     string val = ErrorString( error );
-    cout << "Error initializing OpenGL! " << error << ", " << val << endl;
+    //cout << "Error initializing OpenGL! " << error << ", " << val << endl;
   }
 }
 
