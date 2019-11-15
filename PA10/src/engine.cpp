@@ -84,9 +84,11 @@ bool Engine::Initialize(char **argv)
   // Add invisible wall on top
   struct ShapeInfo invWallInfo(mesh);
   Object* temp = new Object("boardwwalls.obj", invWallInfo, "pinballCover", "wood.jpg");
+  objs.push_back(temp);
   m_physics->AddShape(temp,
 	 	      0,1,0,
 	 	      3);
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // Add BOARD : Static
   struct ShapeInfo wallInfo(mesh);
@@ -95,6 +97,7 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      0, 0, 0,
 		      3);
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
    struct ShapeInfo backInfo(mesh);
   temp = new Object("backBoard.obj", backInfo, "backboard", "harris.jpg");
@@ -102,47 +105,49 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      0, 0, 0,
 		      3);
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // Add cones to side
   struct ShapeInfo c1(mesh);
-  temp = new Object("lCone.obj", c1, "cone1", "wood.jpg");
+  temp = new Object("lCone.obj", c1, "cone", "wood.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      7, -0.5, 5,
 		      3);
-  objs.back()->physicsObject->setUserPointer(objs.back());
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
-  temp = new Object("rCone.obj", c1, "cone2", "wood.jpg");
+  temp = new Object("rCone.obj", c1, "cone", "wood.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      -5, -0.5, 5,
 		      3);
-  objs.back()->physicsObject->setUserPointer(objs.back());
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // adding a series of bumpers
   struct ShapeInfo bumperInfo1(mesh);
-  temp = new Object("bumper.obj", bumperInfo1, "bumper1", "wood.jpg");
+  temp = new Object("bumper.obj", bumperInfo1, "bumper", "wood.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      -1, -1, 0,
 		      3);
-  objs.back()->physicsObject->setUserPointer(objs.back());
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+  //std::cout << (Object*)objs.back()->physicsObject->getUserPointer() << std::endl;
 
   struct ShapeInfo bumperInfo2(mesh);
-  temp = new Object("bumper.obj", bumperInfo2, "bumper2", "wood.jpg");
+  temp = new Object("bumper.obj", bumperInfo2, "bumper", "wood.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      2, -1, 0,
 		      3);
-  objs.back()->physicsObject->setUserPointer(objs.back());
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   struct ShapeInfo bumperInfo3(mesh);
-  temp = new Object("bumper.obj", bumperInfo3, "bumper3", "wood.jpg");
+  temp = new Object("bumper.obj", bumperInfo3, "bumper", "wood.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      1, -1, 5,
 		      3);
-  objs.back()->physicsObject->setUserPointer(objs.back());
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // Add plunger
   struct ShapeInfo plungerInfo(mesh);
@@ -152,6 +157,7 @@ bool Engine::Initialize(char **argv)
 		      0,0,5,
 		      3);
   plungerIndex = objs.size()-1;
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // Add ball
   struct ShapeInfo ballInfo(sphere, 0.4, 0.4, 0.4);
@@ -161,6 +167,7 @@ bool Engine::Initialize(char **argv)
 		     -6,0,5,
 		     1);
   ballIndex = objs.size()-1;
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // Add paddles
   struct ShapeInfo rPaddleInfo(mesh);
@@ -170,6 +177,7 @@ bool Engine::Initialize(char **argv)
 		      -2.45, 0, -4.6,
 		      2);
   rPaddleIndex = objs.size()-1;
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
     struct ShapeInfo lPaddleInfo(mesh);
   temp = new Object("lPaddle.obj", lPaddleInfo, "lPaddle");
@@ -178,6 +186,7 @@ bool Engine::Initialize(char **argv)
 			4.7, 0, -4.6,
 			2);
   lPaddleIndex = objs.size()-1;
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   buffer = 0;
   bufferMax = 1;
@@ -191,6 +200,7 @@ bool Engine::Initialize(char **argv)
 
 void Engine::Run()
 {
+  std::cout << "running" << std::endl;
   m_running = true;
 
   while(m_running)
@@ -206,6 +216,7 @@ void Engine::Run()
 
     // Update physics
     m_physics->Update(objs, score);
+    std::cout << "physics updated" << std::endl;
 
     // run 10x less than m_physics->update
     if(buffer >= bufferMax) {
