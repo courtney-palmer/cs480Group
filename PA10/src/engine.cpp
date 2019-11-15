@@ -34,18 +34,16 @@ bool Engine::Initialize(char **argv)
   {
     printf("window failed to initialize.\n");
     return false;
-  }
-  std::cout << "Window loaded" << std::endl;
-  
+  }  
+
   // Start the graphics
   m_graphics = new Graphics();
   if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, argv)) //initialize new instance of Objects here
   {
     printf("The graphics failed to initialize.\n");
     return false;
-  }
-  std::cout << "Graphics loaded" << std::endl;
- 
+  } 
+
  // Start the physics
    m_physics = new Physics();
    if(!m_physics->Initialize()) //set the 5 components of a physics world here
@@ -53,7 +51,6 @@ bool Engine::Initialize(char **argv)
      printf("The physics failed to initialize.\n");
      return false;
    }
-   std::cout << "Physics loaded" << std::endl;
 
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
@@ -296,7 +293,7 @@ void Engine::Keyboard()
 
         if( m_physics->plungerForce < 20 && m_physics->ballLaunched == false)
         { 
-          std::cout << m_physics->plungerPull << std::endl;
+          //std::cout << m_physics->plungerPull << std::endl;
           m_physics->plungerPull -= .2;
           if(m_physics->plungerPull < 0){
             m_physics->plungerPull = 0;
@@ -308,7 +305,7 @@ void Engine::Keyboard()
           objs[plungerIndex]->RBody->setMotionState(objs[plungerIndex]->RBody->getMotionState());
           //plunger->model = glm::make_mat4(m);
           m_physics->plungerForce += 1;
-          std::cout << m_physics->plungerPull << std::endl;
+          //std::cout << m_physics->plungerPull << std::endl;
         }
         playing = true;
 
@@ -317,67 +314,72 @@ void Engine::Keyboard()
 
       //toggle to vert shader
       case SDLK_v:
-        std::cout << "v" << std::endl;
         m_graphics->toggleShader(0);
         break;
 
       //toggle to frag shader
       case SDLK_f:
-        std::cout << "f" << std::endl;
         m_graphics->toggleShader(1);
         break;
 
       // toggle flat shading
       case SDLK_c:
-        std::cout << "flat" << std::endl;
         m_graphics->toggleShader(2);
         break;
 
       case SDLK_u: // increase ambient lighting
-        std::cout << "Ambience: " << m_graphics->ambience.x << " " <<  m_graphics->ambience.y << " " <<  m_graphics->ambience.z << std::endl;
+        //std::cout << "Ambience: " << m_graphics->ambience.x << " " <<  m_graphics->ambience.y << " " <<  m_graphics->ambience.z << std::endl;
         m_graphics->ambience.x += 0.05f;
         m_graphics->ambience.y += 0.05f;
         m_graphics->ambience.z += 0.05f;
         break;
       case SDLK_y: //decrease ambient lighting
-        std::cout <<  "Ambience: " << m_graphics->ambience.x << " " <<  m_graphics->ambience.y << " " <<  m_graphics->ambience.z << std::endl;
+        //std::cout <<  "Ambience: " << m_graphics->ambience.x << " " <<  m_graphics->ambience.y << " " <<  m_graphics->ambience.z << std::endl;
         m_graphics->ambience.x -= 0.05f;
         m_graphics->ambience.y -= 0.05f;
         m_graphics->ambience.z -= 0.05f;
         break;
       case SDLK_h: //increase cubes diffuse lighting
-        std::cout << "Cube Diffuse: " <<  m_graphics->diffuse.x << " " <<  m_graphics->diffuse.y << " " <<  m_graphics->diffuse.z << std::endl;
+        //std::cout << "Cube Diffuse: " <<  m_graphics->diffuse.x << " " <<  m_graphics->diffuse.y << " " <<  m_graphics->diffuse.z << std::endl;
         m_graphics->diffuse.x += 0.05f;
         m_graphics->diffuse.y += 0.05f;
         m_graphics->diffuse.z += 0.05f;
         break;
       case SDLK_j: //decrease cubes diffuse lighting
-        std::cout << "Cube Diffuse: " <<  m_graphics->diffuse.x << " " <<  m_graphics->diffuse.y << " " <<  m_graphics->diffuse.z << std::endl;
+        //std::cout << "Cube Diffuse: " <<  m_graphics->diffuse.x << " " <<  m_graphics->diffuse.y << " " <<  m_graphics->diffuse.z << std::endl;
         m_graphics->diffuse.x -= 0.05f;
         m_graphics->diffuse.y -= 0.05f;
         m_graphics->diffuse.z -= 0.05f;
         break;
       case SDLK_n: //increase cubes specular lighting
-        std::cout << "Cube Specular: " <<  m_graphics->specular.x << " " <<  m_graphics->specular.y << " " <<  m_graphics->specular.z << std::endl;
+        //std::cout << "Cube Specular: " <<  m_graphics->specular.x << " " <<  m_graphics->specular.y << " " <<  m_graphics->specular.z << std::endl;
         m_graphics->specular.x += 0.05f;
         m_graphics->specular.y += 0.05f;
         m_graphics->specular.z += 0.05f;
         break;
       case SDLK_m: //decrease cubes specular lighting
-        std::cout << "Cube Specular: " <<  m_graphics->specular.x << " " <<  m_graphics->specular.y << " " <<  m_graphics->specular.z << std::endl;
+        //std::cout << "Cube Specular: " <<  m_graphics->specular.x << " " <<  m_graphics->specular.y << " " <<  m_graphics->specular.z << std::endl;
         m_graphics->specular.x -= 0.05f;
         m_graphics->specular.y -= 0.05f;
         m_graphics->specular.z -= 0.05f;
         break;
 
-    case SDLK_p: // Right paddle
-        std::cout << "p" << std::endl;
+    case SDLK_p: // Right paddle (right handed)
         objs[rPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
         m_physics->movePaddle(getDT(), "right", objs[rPaddleIndex]->RBody);
         break;
 
-    case SDLK_i: // Left Paddle
-      std::cout << "i" << std::endl;
+    case SDLK_i: // Left Paddle (right handed)
+        objs[lPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+        m_physics->movePaddle(getDT(), "left", objs[lPaddleIndex]->RBody);
+        break;
+
+    case SDLK_e: // Right paddle (left handed)
+        objs[rPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+        m_physics->movePaddle(getDT(), "right", objs[rPaddleIndex]->RBody);
+        break;
+
+    case SDLK_q: // Left Paddle (left handed)
         objs[lPaddleIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
         m_physics->movePaddle(getDT(), "left", objs[lPaddleIndex]->RBody);
         break;
@@ -475,7 +477,7 @@ void Engine::Keyboard()
         trans.setOrigin(btVector3(0.0f, 0.0f, m_physics->plungerPull));
         objs[plungerIndex]->RBody->getMotionState()->setWorldTransform(trans);
         objs[plungerIndex]->RBody->setMotionState(objs[plungerIndex]->RBody->getMotionState());
-        std::cout << "location at: " << "0,0, " << m_physics->plungerPull << std::endl;
+        //std::cout << "location at: " << "0,0, " << m_physics->plungerPull << std::endl;
       }
         
         

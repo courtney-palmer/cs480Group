@@ -221,9 +221,6 @@ void Physics::AddShape(Object* obj, float x, float y, float z, int bodyType)
   btRigidBody *rigidBody = new btRigidBody(shapeRigidBodyCI);
   
   if(bodyType == 2){
-    std::cout << "kinematic object" << std::endl;
-    //obj->RBody->isKinematicObject();
-    
     int flags = rigidBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT;
     rigidBody->setCollisionFlags(flags);
 
@@ -266,7 +263,7 @@ void Physics::applyPlungerForce(btRigidBody *RBody, float plungerPull, float plu
 
   if( plungerForce < 20 && ballLaunched == false)
   { 
-    std::cout << plungerPull << std::endl;
+    //std::cout << plungerPull << std::endl;
     plungerPull -= .2;
     if(plungerPull < 3){
       plungerPull = 3;
@@ -281,7 +278,6 @@ void Physics::applyPlungerForce(btRigidBody *RBody, float plungerPull, float plu
   }
   else if(ballLaunched == false){
     btTransform trans;
-    std::cout << "b" << std::endl;
     plungerPull = 5;
     RBody->applyCentralImpulse(btVector3(0.0f, 0.0f, plungerForce));
     plungerForce = 0.0f;
@@ -295,7 +291,6 @@ void Physics::applyPlungerForce(btRigidBody *RBody, float plungerPull, float plu
 void Physics::releasePlunger(btRigidBody *RBody, float plungerPull, float plungerForce){
   if(ballLaunched == false){
     btTransform trans;
-    std::cout << "b" << std::endl;
     plungerPull = 5;
     RBody->applyCentralImpulse(btVector3(0.0f, 0.0f, plungerForce));
     plungerForce = 0.0f;
@@ -313,10 +308,7 @@ void Physics::movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody 
     btQuaternion quat;  
     btScalar x, y, z;
   
-  if(LeftOrRight == "left"){ //update left paddle with physics
-    std::cout << "updating left paddle" << std::endl;
-
-    
+  if(LeftOrRight == "left"){ //update left paddle with physics   
     RBody->getWorldTransform().getBasis().getEulerZYX(z, y, x);
     RBody->getMotionState()->getWorldTransform( turn );
     //y += dt * M_PI/250;
@@ -332,8 +324,6 @@ void Physics::movePaddle(unsigned int dt, std::string LeftOrRight,  btRigidBody 
   }
   
   else if(LeftOrRight == "right"){ //update right paddle with physics
-    std::cout << "updating right paddle" << std::endl;
-    
     RBody->getWorldTransform().getBasis().getEulerZYX(z, y, x);
     RBody->getMotionState()->getWorldTransform( turn );
       y -= 0.45; //controls the rotation size increment

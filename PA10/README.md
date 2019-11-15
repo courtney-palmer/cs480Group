@@ -53,12 +53,15 @@ NOTES:
 'n'      | Increase specular light<br/>
 
 ### Pinball Controls
-'p'  | Right Paddle<br/>
-'i'	 | Left Paddle<br/>
-'o'	 | Trigger Plunger - hold o to pull back further<br/>
-'r'	 | Reset Game<br/>
-'t'	 | Top Down Camera view<br/>
-'z'	 | Default Camera view<br/>
-'x'	 | Follow Ball<br/>
+'p'/'e'  | Right Paddle<br/>
+'i'/'q'	 | Left Paddle<br/>
+'o'	     | Trigger Plunger - hold o to pull back further<br/>
+'r'	     | Reset Game<br/>
+'t'	     | Top Down Camera view<br/>
+'z'	     | Default Camera view<br/>
+'x'	     | Follow Ball<br/>
 
 ## Extra Credit
+Plunger moves back further and intensity of force it exerts on the ball changes based on how long you hold the 'o' key.
+The game can be reset by pushing the 'r' button.
+Flat shading can be used by pressing 'c'.

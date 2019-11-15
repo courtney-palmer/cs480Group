@@ -188,7 +188,7 @@ bool Object::loadModel(std::string objFileName) {
 
   if(objTriMesh != nullptr) {
     shape = new btBvhTriangleMeshShape(objTriMesh, true);
-    std::cout << "Shape for triangle mesh succesfully assigned" << std::endl;
+    //std::cout << "Shape for triangle mesh succesfully assigned" << std::endl;
   }
   
   return true;

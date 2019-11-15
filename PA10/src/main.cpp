@@ -12,7 +12,7 @@
 int main(int argc, char **argv)
 {
   // Start an engine and run it then cleanup after
-  Engine *engine = new Engine("Pinball", 800, 980);
+  Engine *engine = new Engine("Pinball");
 
   if(!engine->Initialize(argv))
   {
@@ -22,7 +22,6 @@ int main(int argc, char **argv)
     return 1;
   }
   engine->Run();
-  std::cout << "b" << std::endl;
   delete engine;
   engine = NULL;
   return 0;
