@@ -219,7 +219,6 @@ void Graphics::Update(Physics *p, Object *o)
 
 void Graphics::Render(std::vector<Object*>& objs)
 {
-  
   //clear the screen
   glClearColor(0.0, 0.0, 0.2, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -285,7 +284,7 @@ void Graphics::Render(std::vector<Object*>& objs)
   if ( error != GL_NO_ERROR )
   {
     string val = ErrorString( error );
-    cout << "Error initializing OpenGL! " << error << ", " << val << endl;
+    //cout << "Error initializing OpenGL! " << error << ", " << val << endl;
   }
 }
 

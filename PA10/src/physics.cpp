@@ -1,4 +1,5 @@
 #include "physics.h"
+#include <string>
 
 Physics::Physics()
 {
@@ -90,37 +91,53 @@ void Physics::Update() {
 
 void Physics::Update(std::vector<Object*>& objs, unsigned int& score) {
   dynamicsWorld->stepSimulation(1.0f/20.f, 10); //sped up simulation speed
-  
-  btTransform trans; // Stores transformations
-  btScalar m[16]; // 4x4 matrix to store transformations
 
   //check for collisions with bumpers
   //code modified from https://www.raywenderlich.com/2606-bullet-physics-tutorial-getting-started#toc-anchor-010
-  // int numManifolds = _world->getDispatcher()->getNumManifolds();
+  // int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
+  // std::cout << "int manifolds" << std::endl;
   // for (int i=0;i<numManifolds;i++)
   // {
-	//   btPersistentManifold* contactManifold =  _world->getDispatcher()->getManifoldByIndexInternal(i);
-
+  //   std::cout << "i = " << i << std::endl;
+	//   btPersistentManifold* contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+  //   std::cout << "btPersistentManifold* contactManifold" << std::endl;
   //   int numContacts = contactManifold->getNumContacts();
+  //   std::cout << "int numContacts" << std::endl;
   //   if (numContacts > 0)
   //   {
+  //     std::cout << "numContacts > 0" << std::endl;
   //     const btCollisionObject* b0 = contactManifold->getBody0();
+  //     std::cout << "getBody0" << std::endl;
   //     const btCollisionObject* b1 = contactManifold->getBody1();
+  //     std::cout << "getBody1" << std::endl;
 
-  //     Object* obj0 = (Object*)b0->getUserPointer();
-  //     Object* obj1 = (Object*)b1->getUserPointer();
+  //     //std::cout << ((Object*)(b0->getUserPointer()))->getKeyname() << std::endl;
+
+  //     // Object* obj0 = (Object*)b0->getUserPointer();
+  //     // std::cout << "getUserPointer0" << std::endl;
+  //     // Object* obj1 = (Object*)b1->getUserPointer();
+  //     // std::cout << "getUserPointer1" << std::endl;
       
   //     //the ball is the only object bumping into things,
   //     //so if either object in the collision is a bumper,
   //     //the score should increase
-  //     if (obj0->getKeyname() == bumper || obj1->getKeyname() == bumper)
-  //     {
-  //       score += 100;
-  //       std::cout << "Score: " << score << std::endl;
-  //     }
+  //     std::string s0(((Object*)(b0->getUserPointer()))->getKeyname());
+  //     std::string s1(((Object*)(b1->getUserPointer()))->getKeyname());
+  //     std::cout << "assigned string names" << std::endl;
+  //     std::cout << s0 << std::endl;
+  //     std::cout << s1 << std::endl;
+  //     // if (obj0.getKeyname() == "bumper" || obj1.getKeyname() == "bumper")
+  //     // {
+  //     //   std::cout << "one object is a bumper" << std::endl;
+  //     //   score += 100;
+  //     //   std::cout << "Score: " << score << std::endl;
+  //     // }
 
   //   }
   // }
+
+  btTransform trans; // Stores transformations
+  btScalar m[16]; // 4x4 matrix to store transformations
 
   // Update the position of every object
   for(int i = 0; i < objs.size(); i++) {

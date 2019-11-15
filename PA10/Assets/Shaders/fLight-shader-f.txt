@@ -17,8 +17,10 @@ void main(void)
 {
 	// Normalize the input lighting vectors
     
-	vec3 N = normalize(fN);
-    vec3 E = normalize(fE);
+    vec3 pos = (viewMatrix * modelMatrix * vec4(fE, 1.0)).xyz;
+    
+    vec3 N = normalize( viewMatrix * modelMatrix * vec4(fN, 0.0) ).xyz;
+    vec3 E = normalize(-pos);
     vec3 L = normalize(fL);
 
     vec3 H = normalize( L + E );   
