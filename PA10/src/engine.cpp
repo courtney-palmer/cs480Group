@@ -82,17 +82,17 @@ bool Engine::Initialize(char **argv)
   */
   
   // Add invisible wall on top
-  struct ShapeInfo invWallInfo(mesh);
-  Object* temp = new Object("boardwwalls.obj", invWallInfo, "pinballCover", "wood.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-	 	      0,1,0,
-	 	      3);
-  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+  // struct ShapeInfo invWallInfo(mesh);
+  // Object* temp = new Object("boardwwalls.obj", invWallInfo, "pinballCover", "wood.jpg");
+  // objs.push_back(temp);
+  // m_physics->AddShape(temp,
+	//  	      0,1,0,
+	//  	      3);
+  // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // Add BOARD : Static
   struct ShapeInfo wallInfo(mesh);
-  temp = new Object("pboard.obj", wallInfo, "board", "harris.jpg");
+  Object* temp = new Object("pboard.obj", wallInfo, "board", "harris.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      0, 0, 0,
@@ -200,7 +200,6 @@ bool Engine::Initialize(char **argv)
 
 void Engine::Run()
 {
-  std::cout << "running" << std::endl;
   m_running = true;
 
   while(m_running)
@@ -216,7 +215,6 @@ void Engine::Run()
 
     // Update physics
     m_physics->Update(objs, score);
-    std::cout << "physics updated" << std::endl;
 
     // run 10x less than m_physics->update
     if(buffer >= bufferMax) {
