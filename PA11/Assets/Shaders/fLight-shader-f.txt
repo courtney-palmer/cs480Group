@@ -1,0 +1,42 @@
+#version 330
+
+smooth in vec3 fN;
+smooth in vec3 fL;
+smooth in vec3 fE;
+smooth in vec3 color;
+smooth in vec2 texture;
+uniform sampler2D sampler;
+
+uniform vec4 AmbientProduct, DiffuseProduct, SpecularProduct;
+uniform mat4 viewMatrix;
+uniform mat4 modelMatrix;
+uniform vec4 LightPosition;
+uniform float Shininess;
+
+void main(void)
+{
+	// Normalize the input lighting vectors
+    
+    vec3 pos = (viewMatrix * modelMatrix * vec4(fE, 1.0)).xyz;
+    
+    vec3 N = normalize( viewMatrix * modelMatrix * vec4(fN, 0.0) ).xyz;
+    vec3 E = normalize(-pos);
+    vec3 L = normalize(fL);
+
+    vec3 H = normalize( L + E );   
+    vec4 ambient = AmbientProduct;
+    
+    float Kd = max(dot(L, N), 0.0);
+    vec4 diffuse = Kd*DiffuseProduct;
+    
+    float Ks = pow(max(dot(N, H), 0.0), Shininess);
+    vec4 specular = Ks*SpecularProduct;
+
+    // discard the specular highlight if the light's behind the vertex
+    if( dot(L, N) < 0.0 ) specular = vec4(0.0, 0.0, 0.0, 1.0);
+    
+    gl_FragColor = (ambient + diffuse + specular) * (vec4(color, 1.0) * texture2D(sampler, texture));
+    gl_FragColor.a = 1.0;
+}
+
+
