@@ -12,7 +12,7 @@
 int main(int argc, char **argv)
 {
   // Start an engine and run it then cleanup after
-  Engine *engine = new Engine("Disk Drop", 800, 600);
+  Engine *engine = new Engine("Disk Drop");
 
   if(!engine->Initialize(argv))
   {

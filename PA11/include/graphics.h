@@ -24,22 +24,17 @@ class Graphics
     bool Initialize(int width, int height, char **argv);
     bool loadShaders(char **argv);
     bool addShaders(std::string vFileName, std::string fFileName);
-    void Update(Physics *p, Object *o);
+    void toggleShader(int tog);
     int getActiveShaderIndex() const {return shaderIndex;}
 
-    //void Render();
-    void Render(std::vector<Object*>& objs);
-    void RenderLight(Shader* shader, glm::vec4 lPos, glm::vec4 ambProd, glm::vec4 difProd, glm::vec4 specProd, float shine);
-    
-    void toggleShader(int tog);
+    //void Update(Physics *p, Object *o);
+    void Update(Object *o);
 
+    void Render(std::vector<Object*>& objs);
     // === Attributes ===
     Object *board; //static
-    Object *cylinder; //static
-    Object *cube; //dynamic
-    Object *ball; //dynamic
-    Object *lPaddle;
-    Object *rPaddle;
+    Object *basket; //kinematic
+    Object *disk; //dynamic
     
     std::vector<Shader*> shaders;
     int shaderIndex;
@@ -48,21 +43,22 @@ class Graphics
     glm::vec3 ambience = glm::vec3(1.0f, 1.0f, 1.0f);
     glm::vec3 specular  = glm::vec3(1.0f, 1.0f, 1.0f);
     glm::vec3 diffuse  = glm::vec3(1.0f, 1.0f, 1.0f);
-    glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 lightPos = glm::vec3(7.0f, 6.0f, 10.0f);
+    float shininess = 100.0f;
 
- struct Light{
-    glm::vec3 direction;
-    glm::vec3 position;
-    float cutoff;
-    
-    glm::vec3 ambience;
-    glm::vec3 diffuse;
-    glm::vec3 spectular;
+    struct Light{
+        glm::vec3 direction;
+        glm::vec3 position;
+        float cutoff;
+        
+        glm::vec3 ambience;
+        glm::vec3 diffuse;
+        glm::vec3 spectular;
 
-    float constant;
-    float linear;
-    float quadratic;
-  };
+        float constant;
+        float linear;
+        float quadratic;
+      };
 
     Light spotLight;
     float spotLightAngle;

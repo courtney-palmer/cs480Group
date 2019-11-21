@@ -23,30 +23,16 @@ class Engine
     void Keyboard();
     unsigned int getDT();
     long long GetCurrentTimeMillis();
-    void LoseBall();
 
     int shaderToggle = 0;
     int buffer;
     int bufferMax;
 
-    const int MAX_BALLS = 3; //The maximum number of balls the player starts with in a game
-    int ballsRemaining; //The number of balls the player has remaining before game over
-
-    unsigned int score;
-
     void outputObjects() const;
     int getIndexOf(const std::string& key); // Returns index from 0-objs.size();
 
-    bool toggleFollowBall();
-    bool followBall;
-
   private:
     std::vector<Object*> objs;
-    //unsigned int dynamicCubeIndex;
-    unsigned int ballIndex;
-    unsigned int plungerIndex;
-    unsigned int rPaddleIndex;
-    unsigned int lPaddleIndex;
     
     // Window related variables
     Window *m_window;    
@@ -62,10 +48,11 @@ class Engine
     long long m_currentTimeMillis;
     bool m_running;
 
-    //btVector3 vel;
-    //btVector3 pos;
-    float counter;
-    bool playing;
+    //Game Logic
+    unsigned int score;
+    unsigned int timer; //should be in milliseconds, to work with getDT()
+    const unsigned int MAX_TIME = 60000; //ms
+    bool playing; //determines whether the game is currently running - should the timer be counting down?
 };
 
 #endif // ENGINE_H

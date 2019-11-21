@@ -61,8 +61,6 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
   if(newShape.shapeName == mesh)
     physicsObject->setCollisionShape(shape);
 
-  //physicsObject->setUserPointer(bumper);
-
   // Set up vertices and indices for rendering this object
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -70,10 +68,7 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
   
   glGenBuffers(1, &IB);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
-
-  //velocity = btVector3(0.0f, 0.0f, 0.0f);
-  
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);  
   //showMeshData(); // Used for debugging.
   return;
 }
@@ -219,26 +214,14 @@ bool Object::loadTexture(std::string textFileName) {
   image = new Magick::Image("../Assets/Textures/" + textFileName);
   image->write(&blob, "RGBA");
 
-  if(textFileName.find("Ring") != std::string::npos ||
-     textFileName.find("ring") != std::string::npos) {
-    
-    // Insert custom texture or something?
-    
-    glGenTextures(1, &texture[index]);
-    glBindTexture(GL_TEXTURE_2D, texture[index]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
-  } else {
-    //generate texture in OpenGL
-    glGenTextures(1, &texture[index]);
-    glBindTexture(GL_TEXTURE_2D, texture[index]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    delete image;
-  }
+  //generate texture in OpenGL
+  glGenTextures(1, &texture[index]);
+  glBindTexture(GL_TEXTURE_2D, texture[index]);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->columns(), image->rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, blob.data());
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  delete image;
+
   return true;
 }
 
@@ -285,12 +268,11 @@ void Object::Render()
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0); //position
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,color)); //color
   glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,normal)); //normal
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,texture)); // texture
+  glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,texture)); // texture
   
   // Draw Each Mesh
   for(int i = 0; i < meshData.size(); i++)
   {
-    
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * meshData[i].meshSize, &Vertices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * meshData[i].meshSize, &Indices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
 
@@ -300,15 +282,6 @@ void Object::Render()
     }
 
     glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
-
-    /*
-    //bind texture
-    if(textured) {
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, texture[i]);
-      glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
-    }
-    */
   }
 
   glDisableVertexAttribArray(0);

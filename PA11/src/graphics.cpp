@@ -57,12 +57,8 @@ bool Graphics::Initialize(int width, int height, char **argv)
     return false;
   }
 
-  // Set camera above the pinball board
-  m_camera->Update(0, 18,-15,
-		   0, 6,0,
-		   0,0,1);
-
   shaderIndex = 0;
+
   // Load Shaders
   if(!loadShaders(argv)) {
     std::cout << "Shaders Failed to Initialize" << std::endl;
@@ -97,8 +93,6 @@ bool Graphics::Initialize(int width, int height, char **argv)
   //enable depth testing
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
-
-  lightPos = glm::vec3(15, 15, 10); //exactly matches lamp object position
 
   return true;
 }
@@ -202,19 +196,16 @@ bool Graphics::addShaders(std::string vFileName, std::string fFileName) {
   return true;
 }
 
-void Graphics::Update(Physics *p, Object *o)
+//void Graphics::Update(Physics *p, Object *o)
+void Graphics::Update(Object *o)
 {
  // Update the object
   btTransform trans; //supports rigid movement like transformations and rotations
   btScalar m[16]; //4x4 matrix
 
-  //p->dynamicsWorld->stepSimulation(1.f/60.f, 10); //dictates how quick simulation runs
-  // step simulation moved to physics update
-  //p->Update();
   o->RBody->getMotionState()->getWorldTransform(trans);
   trans.getOpenGLMatrix(m);
   o->model = glm::make_mat4(m);
-
 }
 
 void Graphics::Render(std::vector<Object*>& objs)
@@ -238,45 +229,13 @@ void Graphics::Render(std::vector<Object*>& objs)
 
   //////////////////////////////// -- RENDERING LIGHT THNIGS -- ////////////////////////////////
 
-  //std::cout << "Using shader " << shaderIndex << std::endl;
   if(shaderIndex != 2) {
-    glUniform4f(m_shader->GetUniformLocation("LightPosition"),  7, 6, 10, 0.0f);
+    glUniform4f(m_shader->GetUniformLocation("LightPosition"),  lightPos.x, lightPos.y, lightPos.z, 0.0f);
     glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z, 1.0f);
     glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z, 1.0f);
     glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), specular.x, specular.y, specular.z, 1.0f);
-    glUniform1f(m_shader->GetUniformLocation("Shininess"), 100.0f);
+    glUniform1f(m_shader->GetUniformLocation("Shininess"), shininess);
   }
-
-  /*  
-    lightingShader.use(); 
-    lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f); 
-    lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f); 
-    lightingShader.setVec3("lightPos", lightPos); 
-    lightingShader.setVec3("viewPos", camera.Position); 
-
-
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f); 
-    glm::mat4 view = camera.GetViewMatrix(); 
-    lightingShader.setMat4("projection", projection); 
-    lightingShader.setMat4("view", view); 
-
-
-    glm::mat4 model = glm::mat4(1.0f); 
-    lightingShader.setMat4("model", model); 
-
-
-    lampShader.use(); 
-    lampShader.setMat4("projection", projection); 
-    lampShader.setMat4("view", view); 
-    model = glm::mat4(1.0f); 
-    model = glm::translate(model, lightPos); 
-    model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube 
-    lampShader.setMat4("model", model); 
-
-    glBindVertexArray(lightVAO); 
-    glDrawArrays(GL_TRIANGLES, 0, 36); 
-
-  */
   //////////////////////////////// -- END OF RENDERING LIGHT THNIGS -- ////////////////////////////////
 
   // Get any errors from OpenGL
@@ -284,15 +243,8 @@ void Graphics::Render(std::vector<Object*>& objs)
   if ( error != GL_NO_ERROR )
   {
     string val = ErrorString( error );
-    //cout << "Error initializing OpenGL! " << error << ", " << val << endl;
+    cout << "Error initializing OpenGL! " << error << ", " << val << endl;
   }
-}
-
-void Graphics::RenderLight(Shader* shader, glm::vec4 lPos, glm::vec4 ambProd, glm::vec4 difProd, glm::vec4 specProd, float shine){
-  // glUniform4f(shader->GetUniformLocation("LightPosition"),  lPos);
-  // glUniform4f(shader->GetUniformLocation("AmbientProduct"), difProd);
-  // glUniform4f(shader->GetUniformLocation("SpecularProduct"), specProd);
-  // glUniform1f(shader->GetUniformLocation("Shininess"), shine);
 }
 
 string Graphics::ErrorString(GLenum error)
@@ -329,21 +281,12 @@ string Graphics::ErrorString(GLenum error)
 
 void Graphics::toggleShader(int tog)
 {
-  // DEBUG : Show shaders
-  //  for(int i = 0; i < shaders.size(); i++) {
-  //  }
-  std::cout << "Shaders: " << shaders.size() << std::endl;
-
   // Check if tog is within range
   if(tog < shaders.size() && tog >= 0) {
     shaderIndex = tog;
     m_shader = shaders[tog];
   }
-  else {
-    shaderIndex = 0;
-    m_shader = shaders[tog];
-    std::cout << "Not a valid shader toggle value. Changing to per vertex lighting instead." << std::endl;
-  }
-  
+  else
+    std::cout << "Not a valid shader toggle value." << std::endl;
 }
 
