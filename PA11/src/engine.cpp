@@ -73,7 +73,7 @@ bool Engine::Initialize(char **argv)
   //                                x, y, z are initial coordinates, bodyType: 1 = dynamic, 2 = kinematic, 3 = static
   //                                note: mesh cannot be dynamic
 
-  // Add board : Static
+  // Add board : Static (type 3)
   struct ShapeInfo boardInfo(mesh);
   Object* temp = new Object("board.obj", boardInfo, "board", "wood.jpg");
   objs.push_back(temp);
@@ -81,10 +81,50 @@ bool Engine::Initialize(char **argv)
 		      0, 0, 0,
 		      3);
   
-  // Add basket : Kinematic
+  // Add Pegs : Static (type 3)
+  struct ShapeInfo pegInfo1(mesh);
+  temp = new Object("peg.obj", pegInfo1, "peg", "metal.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      0, 0, 0,
+		      3);
 
-  // Add disks : Dynamic
+  struct ShapeInfo pegInfo2(mesh);
+  temp = new Object("peg.obj", pegInfo2, "peg", "metal.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      3, 0, 0,
+		      3);
+  
+    struct ShapeInfo pegInfo3(mesh);
+  temp = new Object("peg.obj", pegInfo3, "peg", "metal.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      -3, 0, 0,
+		      3);
 
+    struct ShapeInfo pegInfo4(mesh);
+  temp = new Object("peg.obj", pegInfo4, "peg", "metal.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      6, 0, 0,
+		      3);
+  
+    struct ShapeInfo pegInfo5(mesh);
+  temp = new Object("peg.obj", pegInfo5, "peg", "metal.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      36, 0, 0,
+		      2);
+  // Add basket : Kinematic (type 2)
+
+  // Add disks : Dynamic (type 1)
+  struct ShapeInfo diskInfo(mesh);
+  temp = new Object("disk.obj", diskInfo, "disk", "harris.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      0, 5, -1,
+		      1);
   // ========================= End Object Creation :> =================
 
   buffer = 0;

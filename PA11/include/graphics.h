@@ -35,6 +35,7 @@ class Graphics
     Object *board; //static
     Object *basket; //kinematic
     Object *disk; //dynamic
+    Object *peg;
     
     std::vector<Shader*> shaders;
     int shaderIndex;

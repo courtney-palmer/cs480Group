@@ -66,7 +66,7 @@ bool Physics::Initialize()
 }
 
 void Physics::Update(std::vector<Object*>& objs, unsigned int& score) {
-  dynamicsWorld->stepSimulation(1.0f/20.f, 10); //sped up simulation speed
+  dynamicsWorld->stepSimulation(1.0f/100.f, 10); //sped up simulation speed
 
   //check for collisions with basket
   //code modified from https://www.raywenderlich.com/2606-bullet-physics-tutorial-getting-started#toc-anchor-010
