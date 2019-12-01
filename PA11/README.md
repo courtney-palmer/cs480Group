@@ -33,6 +33,7 @@ NOTES:
 </ul>-->
 
 ## Controls
+
 ### Shaders
 'f'      | Use fragment lighting shader<br/>
 'v'      | Use vertex lighting shader<br/>
@@ -45,6 +46,10 @@ NOTES:
 'h'      | Increase diffuse light<br/>
 'm'      | Decrease specular light <br/>
 'n'      | Increase specular light<br/>
+
+### Game
+'right'  | Move basket right
+'left'   | Move basket left
 
 <!--### Pinball Controls
 'p'/'e'  | Right Paddle<br/>

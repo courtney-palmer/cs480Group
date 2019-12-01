@@ -80,7 +80,7 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      0, 0, 0,
 		      3);
-  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+//  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // Add Pegs : Static (type 3)
   struct ShapeInfo pegInfo1(mesh);
@@ -97,7 +97,7 @@ objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
   m_physics->AddShape(temp,
 		      3, 0, 0,
 		      3);
-  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+//  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
     struct ShapeInfo pegInfo3(mesh);
   temp = new Object("peg.obj", pegInfo3, "peg", "metal.jpg");
@@ -113,7 +113,7 @@ objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
   m_physics->AddShape(temp,
 		      6, 0, 0,
 		      3);
-  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+//  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   struct ShapeInfo pegInfo5(mesh);
   temp = new Object("peg.obj", pegInfo5, "peg", "metal.jpg");
@@ -121,7 +121,7 @@ objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
   m_physics->AddShape(temp,
 		      6, 0, 0,
 		      2);
-  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+//  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // Add basket : Kinematic (type 2)
   struct ShapeInfo bucketInfo(mesh);
@@ -130,7 +130,8 @@ objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
   m_physics->AddShape(temp,
 		      0, -7, 0,
 		      3);
-  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+  basketIndex = objs.size() - 1;
+//  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // Add disks : Dynamic (type 1)
   struct ShapeInfo diskInfo(cylind, 1, 1, 1);
@@ -139,7 +140,7 @@ objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
   m_physics->AddShape(temp,
 		      0, 6, 0,
 		      1);
-  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+//  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // ========================= End Object Creation :> =================
 
@@ -262,15 +263,34 @@ void Engine::Keyboard()
         m_graphics->specular.z -= 0.05f;
         break;
 
+	/**************************GAME CONTROLS**************************/
+	  case SDLK_LEFT:
+		  objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+		  objs[basketIndex]->RBody->setLinearVelocity(btVector3(10, 0, 0));
+		  break;
+	  case SDLK_RIGHT:
+		  objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+		  objs[basketIndex]->RBody->setLinearVelocity(btVector3(-10, 0, 0));
+		  break;
+
       default:
         break;
     }
   }
   else if (m_event.type == SDL_KEYUP)
   {
-    // handle key down events here
+    // handle key up events here
     switch(m_event.key.keysym.sym)
     {
+		/**************************GAME CONTROLS**************************/
+		case SDLK_LEFT:
+			objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+			objs[basketIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
+			break;
+		case SDLK_RIGHT:
+			objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+			objs[basketIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
+		break;
       default:
         break;
     }
