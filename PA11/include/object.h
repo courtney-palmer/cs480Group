@@ -7,7 +7,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/color4.h>
-
+#include "BulletCollision/CollisionDispatch/btGhostObject.h"
 const std::string NA("NA"); // Constant to define n/a text file name
 
 class Object
