@@ -89,7 +89,7 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      0, 0, 0,
 		      3);
-objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+//objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   struct ShapeInfo pegInfo2(mesh);
   temp = new Object("peg.obj", pegInfo2, "peg", "metal.jpg");
@@ -105,7 +105,7 @@ objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
   m_physics->AddShape(temp,
 		      -3, 0, 0,
 		      3);
-objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+//objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   struct ShapeInfo pegInfo4(mesh);
   temp = new Object("peg.obj", pegInfo4, "peg", "metal.jpg");
@@ -266,11 +266,19 @@ void Engine::Keyboard()
 	/**************************GAME CONTROLS**************************/
 	  case SDLK_LEFT:
 		  objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-		  objs[basketIndex]->RBody->setLinearVelocity(btVector3(10, 0, 0));
+		  btTransform newTrans;
+		  objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
+		  newTrans.getOrigin() += btVector3(0.2, 0, 0);
+		  objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
+		  //objs[basketIndex]->RBody->setLinearVelocity(btVector3(10, 0, 0));
 		  break;
 	  case SDLK_RIGHT:
 		  objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-		  objs[basketIndex]->RBody->setLinearVelocity(btVector3(-10, 0, 0));
+		  btTransform newTrans;
+		  objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
+		  newTrans.getOrigin() += btVector3(-0.2, 0, 0);
+		  objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
+		  //objs[basketIndex]->RBody->setLinearVelocity(btVector3(-10, 0, 0));
 		  break;
 
       default:
@@ -283,14 +291,15 @@ void Engine::Keyboard()
     switch(m_event.key.keysym.sym)
     {
 		/**************************GAME CONTROLS**************************/
-		case SDLK_LEFT:
-			objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-			objs[basketIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
-			break;
-		case SDLK_RIGHT:
-			objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-			objs[basketIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
-		break;
+		//case SDLK_LEFT:
+		//	objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+		//	objs[basketIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
+		//	break;
+		//case SDLK_RIGHT:
+		//	objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+		//	objs[basketIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
+		//	break;
+
       default:
         break;
     }
