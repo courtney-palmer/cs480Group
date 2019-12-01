@@ -58,7 +58,7 @@ bool Physics::Initialize()
     return false;
   }
 
-  dynamicsWorld->setGravity(btVector3(0, -9.81, -3)); //sets gravity, last value sets gravit at an angle
+  dynamicsWorld->setGravity(btVector3(0, -9.81, 0)); //sets gravity, last value sets gravit at an angle
 
   // Set ballIndex
 
@@ -66,7 +66,7 @@ bool Physics::Initialize()
 }
 
 void Physics::Update(std::vector<Object*>& objs, unsigned int& score) {
-  dynamicsWorld->stepSimulation(1.0f/100.f, 10); //sped up simulation speed
+  dynamicsWorld->stepSimulation(1.0f/30.f, 10); //sped up simulation speed
 
   //check for collisions with basket
   //code modified from https://www.raywenderlich.com/2606-bullet-physics-tutorial-getting-started#toc-anchor-010

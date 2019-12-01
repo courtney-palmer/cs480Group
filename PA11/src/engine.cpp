@@ -80,7 +80,8 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      0, 0, 0,
 		      3);
-  
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+
   // Add Pegs : Static (type 3)
   struct ShapeInfo pegInfo1(mesh);
   temp = new Object("peg.obj", pegInfo1, "peg", "metal.jpg");
@@ -88,6 +89,7 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      0, 0, 0,
 		      3);
+objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   struct ShapeInfo pegInfo2(mesh);
   temp = new Object("peg.obj", pegInfo2, "peg", "metal.jpg");
@@ -95,36 +97,50 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      3, 0, 0,
 		      3);
-  
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+
     struct ShapeInfo pegInfo3(mesh);
   temp = new Object("peg.obj", pegInfo3, "peg", "metal.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      -3, 0, 0,
 		      3);
+objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
-    struct ShapeInfo pegInfo4(mesh);
+  struct ShapeInfo pegInfo4(mesh);
   temp = new Object("peg.obj", pegInfo4, "peg", "metal.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      6, 0, 0,
 		      3);
-  
-    struct ShapeInfo pegInfo5(mesh);
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+
+  struct ShapeInfo pegInfo5(mesh);
   temp = new Object("peg.obj", pegInfo5, "peg", "metal.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
-		      36, 0, 0,
+		      6, 0, 0,
 		      2);
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+
   // Add basket : Kinematic (type 2)
+  struct ShapeInfo bucketInfo(mesh);
+  temp = new Object("bucket.obj", bucketInfo, "bucket", "steel.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      0, -7, 0,
+		      3);
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // Add disks : Dynamic (type 1)
-  struct ShapeInfo diskInfo(mesh);
+  struct ShapeInfo diskInfo(cylind, 1, 1, 1);
   temp = new Object("disk.obj", diskInfo, "disk", "harris.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
-		      0, 5, -1,
+		      0, 6, 0,
 		      1);
+  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+
   // ========================= End Object Creation :> =================
 
   buffer = 0;
