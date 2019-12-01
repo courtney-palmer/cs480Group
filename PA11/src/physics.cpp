@@ -65,7 +65,8 @@ bool Physics::Initialize()
   return true;
 }
 
-void Physics::Update(std::vector<Object*>& objs, unsigned int& score) {
+void Physics::Update(std::vector<Object
+*>& objs, unsigned int& score) {
   dynamicsWorld->stepSimulation(1.0f/30.f, 10); //sped up simulation speed
 
   //check for collisions with basket

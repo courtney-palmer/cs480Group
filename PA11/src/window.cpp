@@ -38,8 +38,11 @@ bool Window::Initialize(const string &name, int* width, int* height)
   //use for fullscreen
   if (*height == 0 && *width == 0)
   {
-    *height = current.h;
-    *width = current.w;
+    //UNcommend for full screen
+    // *height = current.h;
+    // *width = current.w;
+    *height = 600;
+    *width = 800;
   }
 
   gWindow = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, *width, *height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );

@@ -80,7 +80,7 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      0, 0, 0,
 		      3);
-//  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+  // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // Add Pegs : Static (type 3)
   struct ShapeInfo pegInfo1(mesh);
@@ -89,7 +89,7 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      0, 0, 0,
 		      3);
-objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+// objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   struct ShapeInfo pegInfo2(mesh);
   temp = new Object("peg.obj", pegInfo2, "peg", "metal.jpg");
@@ -97,7 +97,7 @@ objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
   m_physics->AddShape(temp,
 		      3, 0, 0,
 		      3);
-//  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+  // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
     struct ShapeInfo pegInfo3(mesh);
   temp = new Object("peg.obj", pegInfo3, "peg", "metal.jpg");
@@ -105,7 +105,7 @@ objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
   m_physics->AddShape(temp,
 		      -3, 0, 0,
 		      3);
-objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+// objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   struct ShapeInfo pegInfo4(mesh);
   temp = new Object("peg.obj", pegInfo4, "peg", "metal.jpg");
@@ -113,34 +113,42 @@ objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
   m_physics->AddShape(temp,
 		      6, 0, 0,
 		      3);
-//  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+  // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   struct ShapeInfo pegInfo5(mesh);
   temp = new Object("peg.obj", pegInfo5, "peg", "metal.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
-		      6, 0, 0,
-		      2);
-//  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+		      -6, 0, 0,
+		      3);
+ // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // Add basket : Kinematic (type 2)
   struct ShapeInfo bucketInfo(mesh);
   temp = new Object("bucket.obj", bucketInfo, "bucket", "steel.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
-		      0, -7, 0,
-		      3);
+		      0, -7, -3,
+		      );
   basketIndex = objs.size() - 1;
-//  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+ // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+
+// add invisible wall
+  // struct ShapeInfo invWallInfo(mesh);
+  // temp = new Object("board.obj", invWallInfo);
+  // objs.push_back(temp);
+  // m_physics->AddShape(temp,
+	//  	      0,0,1,
+	//  	      3);
 
   // Add disks : Dynamic (type 1)
   struct ShapeInfo diskInfo(cylind, 1, 1, 1);
   temp = new Object("disk.obj", diskInfo, "disk", "harris.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
-		      0, 6, 0,
+		      0, 3, 0,
 		      1);
-//  objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+ // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // ========================= End Object Creation :> =================
 
@@ -265,13 +273,17 @@ void Engine::Keyboard()
 
 	/**************************GAME CONTROLS**************************/
 	  case SDLK_LEFT:
+      std::cout << "left!" << std::endl;
 		  objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
 		  objs[basketIndex]->RBody->setLinearVelocity(btVector3(10, 0, 0));
-		  break;
+
+      break;
 	  case SDLK_RIGHT:
+      std::cout << "right!" << std::endl;
 		  objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
 		  objs[basketIndex]->RBody->setLinearVelocity(btVector3(-10, 0, 0));
-		  break;
+		 
+      break;
 
       default:
         break;
