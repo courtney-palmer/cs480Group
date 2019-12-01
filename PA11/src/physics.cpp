@@ -65,12 +65,13 @@ bool Physics::Initialize()
   return true;
 }
 
-void Physics::Update(std::vector<Object
-*>& objs, unsigned int& score) {
+void Physics::Update(std::vector<Object*>& objs,
+		     unsigned int& score) {
   dynamicsWorld->stepSimulation(1.0f/30.f, 10); //sped up simulation speed
 
   //check for collisions with basket
   //code modified from https://www.raywenderlich.com/2606-bullet-physics-tutorial-getting-started#toc-anchor-010
+
   // int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
   // std::cout << "int manifolds" << std::endl;
   // for (int i=0;i<numManifolds;i++)
@@ -115,13 +116,12 @@ void Physics::Update(std::vector<Object
 
   btTransform trans; // Stores transformations
   btScalar m[16]; // 4x4 matrix to store transformations
-
   // Update the position of every object
   for(int i = 0; i < objs.size(); i++) {
     objs[i]->RBody->getMotionState()->getWorldTransform(trans);
     trans.getOpenGLMatrix(m);
 
-    objs[i]->setPosition( (float)m[12], (float)m[13], (float)m[14] ); // store updated position
+    objs[i]->setPosition( (float)m[12], (float)m[13], (float)m[14] ); // store updated position for each obj in objs
   }
 }
 

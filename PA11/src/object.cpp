@@ -17,7 +17,7 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
 
 //////////////////// BULLET STUFF //////////////////////
   objTriMesh = nullptr; // Used to store btTriangleMesh if it will be used
-  shape = nullptr;      // Will be used to store collision shape when initialized
+  shape = nullptr;      // Will be used to store collision shape when initialized // btCollisionShape* shape
   switch(newShape.shapeName) {
   case box:
     shape = new btBoxShape(newShape.getBtVector3()); // 1 1 1
@@ -37,7 +37,21 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
     // particularly the parts w/ if (objTriMesh != nullptr)
     objTriMesh = new btTriangleMesh();
     break;
+
+  case ghostObject_mesh: // Added object to make this a ghostObject
+    physicsObject = new btGhostObject();
+    objTriMesh = new btTriangleMesh();
+    physicsObject->setCollisionShape(shape);
   }
+
+  physicsObject = new btCollisionObject();
+
+  /* Allow option for btGhostObject
+     btGhostObject can be used to quickly detect if _anything_ is colliding with it through function 
+     getNumOverlappingObjects() which returns the number of objects overlapping with the ghost object
+     physicsObject = new btGhostObject();
+   */
+
 
   // LOAD MODEL
   if(!loadModel(objFileName)) {
@@ -57,7 +71,6 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
       textured = true;
   }
 
-  physicsObject = new btCollisionObject();
   if(newShape.shapeName == mesh)
     physicsObject->setCollisionShape(shape);
 
@@ -94,24 +107,25 @@ bool Object::loadModel(std::string objFileName) {
   //  std::cout << "Number of meshes: " << meshNumber << std::endl; // DEBUG
   
   // === Retrieve Vertices(position & color) & Indices in each Mesh ===
-  // Loop through each mesh found
   for(unsigned int meshNums = 0; meshNums < meshNumber; meshNums++)
   {
-    mesh = scene->mMeshes[meshNums]; //holds current mesh
+    mesh = scene->mMeshes[meshNums]; // retrieve current mesh from scene
     // Store mesh size and the mesh starting index (as stored in Vertices)
     meshData.push_back( meshInfo(mesh->mNumFaces*3, Indices.size())); 
 
     //    std::cout << "Mesh " << meshNums << " num vertices: " << mesh->mNumFaces*3
     //	      << " & Starting index: " << Indices.size() << std::endl; // DEBUG
 
+    // Temporary vertexes are buffers between assimp input to object
+    glm::vec3 colorVert (0.0f, 0.0f, 0.0f); // initialize a temporary color vertex
+    glm::vec3 normVert (0.0f, 0.0f, 0.0f); //initialize a temporary normal vertex
+    glm::vec2 uvVert (0,0); // initialize temporary uv vertex
+
     // === Obtain Color values from .mtl if relevant ===
     aiColor4D colorVal (0.0f, 0.0f, 0.0f, 1.0f); //r, g, b, a, (a controls transparency)
     scene->mMaterials[meshNums +1]->Get(AI_MATKEY_COLOR_DIFFUSE, colorVal); 
     aiMaterial *mtrl; // define a material type (stores materials)
     mtrl = scene->mMaterials[mesh->mMaterialIndex]; //retrieve current mesh materials
-    glm::vec3 colorVert (0.0f, 0.0f, 0.0f); // initialize a temporary color vertex
-    glm::vec3 normVert (0.0f, 0.0f, 0.0f); //initialize a temporary normal vertex
-    glm::vec2 uvVert (0,0); // initialize temporary uv vertex
 
     if(mtrl != NULL)
     {
@@ -121,7 +135,6 @@ bool Object::loadModel(std::string objFileName) {
         colorVert.y = colorVal.g;
         colorVert.z = colorVal.b;
       }
-      // std::cout << "colors for mesh " << meshNums << " is: " << colorVert.x << " "<< colorVert.y << " " << colorVert.z << std::endl; // DEBUG
     }  
 
     // === Get INDICES (and vertices) from MESH ===
@@ -129,8 +142,7 @@ bool Object::loadModel(std::string objFileName) {
 
     for(int f = 0; f < faceNumber; f++) //traverse each face, save the 3 indices
     {
-      aiFace* face = &mesh->mFaces[f]; // get the current face
-
+      aiFace* face = &mesh->mFaces[f]; // store current face from assimp mesh
       btVector3 triArray[3]; // For use w/ bullet triangle mesh
       
       // Use index value to load vertex values from mVertices
@@ -155,7 +167,6 @@ bool Object::loadModel(std::string objFileName) {
           normVert.x = vert.x;
           normVert.y = vert.y;
           normVert.z = vert.z;
-	  //	  std::cout << "Normals loaded\n";
         }
 
 	// if collision shape is triangle mesh, load indices into there too
@@ -168,10 +179,9 @@ bool Object::loadModel(std::string objFileName) {
         Vertex *tempVertex = new Vertex(tempPos, colorVert, normVert, uvVert); 
         Vertices.push_back(*tempVertex); // push back position and color vector into Vertices
 
-	//	std::cout << Vertices.size() << " vertices\n"; // DEBUG
-	
       } // End for : "Process every triangle face and store into indices and vertices
 
+      // If the object type was a mesh then triArray[3] should have been filled, so store new triangle in the obj mesh
       if(objTriMesh != nullptr) {
 	objTriMesh->addTriangle(triArray[0], triArray[1], triArray[2]);
       }
@@ -238,21 +248,19 @@ Object::~Object()
   delete shape;
   delete objTriMesh;
   delete RBody;
-
-
-  // DLM CHANGE : aka I'm making the changes in the DLM so they are untested, just fyi
-  
 }
 
 /*
-  model is set to identity matrix every update so the same transformation
-  is not consistently applied?
+  Obsolete
  */
 void Object::Update()
 {
   //model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
+/*
+  Returns model in 4x4 matrix form
+ */
 glm::mat4 Object::GetModel()
 {
   return model;
@@ -276,11 +284,12 @@ void Object::Render()
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * meshData[i].meshSize, &Vertices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * meshData[i].meshSize, &Indices[meshData[i].meshStartIndex], GL_STATIC_DRAW);
 
+    // Apply texture
     if(textured) {
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, texture[i]);
     }
-
+    
     glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
   }
 
@@ -290,8 +299,10 @@ void Object::Render()
   glDisableVertexAttribArray(3);
 }
 
+/*
+  display mesh info for debugging purposes
+ */
 void Object::showMeshData() const {
-// display mesh info for debugging purposes
   for(int i = 0; i < meshData.size(); i++) 
   {
     std::cout << "Mesh " << i << ": " << std::endl

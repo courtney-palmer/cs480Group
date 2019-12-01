@@ -31,6 +31,7 @@ class Graphics
     void Update(Object *o);
 
     void Render(std::vector<Object*>& objs);
+
     // === Attributes ===
     Object *board; //static
     Object *basket; //kinematic

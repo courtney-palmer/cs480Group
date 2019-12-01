@@ -50,7 +50,8 @@ enum Shape //for use with bullet
 	sphere,
 	plane,
 	cylind,
-	mesh
+	mesh,
+	ghostObject_mesh
 };
 
 struct ShapeInfo { // Goes along with shape

@@ -178,16 +178,8 @@ void Engine::Run()
     // Update physics
     m_physics->Update(objs, score);
 
-    // run 10x less than m_physics->update
-    // if(buffer >= bufferMax) {
-    //   buffer = 0;
-    // }
-    // else
-    //   buffer++;
-
     // Update Graphics, send in physics instance and each single object.
     for(int i = 0; i < objs.size(); i++) {
-      //m_graphics->Update(m_physics, objs[i]);
       m_graphics->Update(objs[i]);
     }
     // Render, send in objs vector array

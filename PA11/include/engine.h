@@ -46,6 +46,7 @@ class Engine
     Physics *m_physics;
     unsigned int m_DT;
     long long m_currentTimeMillis;
+
     bool m_running;
 
     //Game Logic
@@ -54,7 +55,7 @@ class Engine
     const unsigned int MAX_TIME = 60000; //ms
     bool playing; //determines whether the game is currently running - should the timer be counting down?
 
-	int basketIndex, diskIndex;
+    int basketIndex, diskIndex;
 };
 
 #endif // ENGINE_H

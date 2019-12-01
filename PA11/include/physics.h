@@ -16,7 +16,8 @@ class Physics
     void Update(std::vector<Object*>& objs, unsigned int& score);
     
     // default : obj starts at origin as dynamic collision object
-    void AddShape(Object* obj,float x = 0, float y = 0, float z = 0, int bodyType = 0);
+    void AddShape(Object* obj,float x = 0, float y = 0, float z = 0,
+		  int bodyType = 0);
 
     void moveObject(std::vector<Object*>& objs, int objIndex,
 		    float x, float y, float z);
