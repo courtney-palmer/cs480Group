@@ -1,6 +1,6 @@
-
 #include "engine.h"
 #include "camera.h"
+#include "stdlib.h"
 
 Engine::Engine(string name, int width, int height)
 {
@@ -142,12 +142,13 @@ bool Engine::Initialize(char **argv)
 	//  	      3);
 
   // Add disks : Dynamic (type 1)
-  struct ShapeInfo diskInfo(cylind, 1, 1, 1);
-  temp = new Object("disk.obj", diskInfo, "disk", "harris.jpg");
+  struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
+  temp = new Object("disk.obj", diskInfo, "disk", "galaxy.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
-		      0, 3, 0,
+		      0, 6, -3,
 		      1);
+  diskIndex = objs.size()-1;
  // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // ========================= End Object Creation :> =================
@@ -200,6 +201,7 @@ void Engine::Run()
 void Engine::Keyboard()
 {
   btTransform newTrans;
+  int randSpawnVal = 0;
   if(m_event.type == SDL_QUIT)
   {
     m_running = false;
@@ -291,6 +293,12 @@ void Engine::Keyboard()
 		  objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
 		  //objs[basketIndex]->RBody->setLinearVelocity(btVector3(-10, 0, 0));
 		  break;
+
+    case SDLK_r: //restart disk
+      randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6 
+      m_physics->moveObject(objs, diskIndex,
+			    randSpawnVal, 6, -3);
+      std::cout << "restart!" << std::endl;
 
       default:
         break;

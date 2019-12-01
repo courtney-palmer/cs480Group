@@ -54,8 +54,7 @@ class Engine
     const unsigned int MAX_TIME = 60000; //ms
     bool playing; //determines whether the game is currently running - should the timer be counting down?
 
-	int basketIndex;
-
+	int basketIndex, diskIndex;
 };
 
 #endif // ENGINE_H
