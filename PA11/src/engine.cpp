@@ -89,7 +89,6 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      0, 0, 0,
 		      3);
-//objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   struct ShapeInfo pegInfo2(mesh);
   temp = new Object("peg.obj", pegInfo2, "peg", "metal.jpg");
@@ -97,15 +96,13 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      3, 0, 0,
 		      3);
-  // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
-    struct ShapeInfo pegInfo3(mesh);
+  struct ShapeInfo pegInfo3(mesh);
   temp = new Object("peg.obj", pegInfo3, "peg", "metal.jpg");
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      -3, 0, 0,
 		      3);
-//objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   struct ShapeInfo pegInfo4(mesh);
   temp = new Object("peg.obj", pegInfo4, "peg", "metal.jpg");
@@ -113,7 +110,6 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      6, 0, 0,
 		      3);
-  // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   struct ShapeInfo pegInfo5(mesh);
   temp = new Object("peg.obj", pegInfo5, "peg", "metal.jpg");
@@ -121,6 +117,66 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp,
 		      -6, 0, 0,
 		      3);
+  
+  struct ShapeInfo pegInfo6(mesh);
+  temp = new Object("peg.obj", pegInfo6, "peg", "metal.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      9, 0, 0,
+		      3);
+  
+  struct ShapeInfo pegInfo7(mesh);
+  temp = new Object("peg.obj", pegInfo7, "peg", "metal.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      -9, 0, 0,
+		      3);
+
+//////////////// Starting Upper row
+
+  struct ShapeInfo pegInfo8(mesh);
+  temp = new Object("peg.obj", pegInfo8, "peg", "metal.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      -7.5, 3, 0,
+		      3);
+
+  struct ShapeInfo pegInfo9(mesh);
+  temp = new Object("peg.obj", pegInfo9, "peg", "metal.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      -4.5, 3, 0,
+		      3);
+
+  struct ShapeInfo pegInfo10(mesh);
+  temp = new Object("peg.obj", pegInfo10, "peg", "metal.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      -1.5, 3, 0,
+		      3);
+
+  struct ShapeInfo pegInfo11(mesh);
+  temp = new Object("peg.obj", pegInfo11, "peg", "metal.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      1.5, 3, 0,
+		      3);
+
+  struct ShapeInfo pegInfo12(mesh);
+  temp = new Object("peg.obj", pegInfo12, "peg", "metal.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      4.5, 3, 0,
+		      3);
+  
+  struct ShapeInfo pegInfo13(mesh);
+  temp = new Object("peg.obj", pegInfo13, "peg", "metal.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      7.5, 3, 0,
+		      3);
+  
+
  // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
   // Add basket : Kinematic (type 2)
@@ -134,11 +190,11 @@ bool Engine::Initialize(char **argv)
  // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
 // add invisible wall
-  // struct ShapeInfo invWallInfo(mesh);
-  // temp = new Object("board.obj", invWallInfo);
+  // struct ShapeInfo invWallInfo(box);
+  // temp = new Object("invisibleBox.obj", invWallInfo);
   // objs.push_back(temp);
   // m_physics->AddShape(temp,
-	//  	      0,0,1,
+	//  	      0,0,-3.5,
 	//  	      3);
 
   // Add disks : Dynamic (type 1)
@@ -268,20 +324,18 @@ void Engine::Keyboard()
 
 	/**************************GAME CONTROLS**************************/
 	  case SDLK_LEFT:
-      std::cout << "left!" << std::endl;
 		  objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
 		  
 		  objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
-		  newTrans.getOrigin() += btVector3(0.2, 0, 0);
+		  newTrans.getOrigin() += btVector3(1, 0, 0);
 		  objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
 		  //objs[basketIndex]->RBody->setLinearVelocity(btVector3(10, 0, 0));
 		  break;
 	  case SDLK_RIGHT:
-      std::cout << "right!" << std::endl;
 		  objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
 		  
 		  objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
-		  newTrans.getOrigin() += btVector3(-0.2, 0, 0);
+		  newTrans.getOrigin() += btVector3(-1, 0, 0);
 		  objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
 		  //objs[basketIndex]->RBody->setLinearVelocity(btVector3(-10, 0, 0));
 		  break;
