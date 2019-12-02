@@ -27,6 +27,8 @@
 
 //Bullet
 #include <btBulletDynamicsCommon.h>
+//Allows GhostObject
+#include "BulletCollision/CollisionDispatch/btGhostObject.h"
 
 // Image Magick
 #include <Magick++.h>

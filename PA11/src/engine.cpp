@@ -82,6 +82,9 @@ bool Engine::Initialize(char **argv)
 		      3);
   // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
+  // Try to add ghost object
+  //  struct ShapeInfo ghostTest(ghostObject
+  
   // Add Pegs : Static (type 3)
   struct ShapeInfo pegInfo1(mesh);
   temp = new Object("peg.obj", pegInfo1, "peg", "metal.jpg");
