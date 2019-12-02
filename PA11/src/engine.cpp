@@ -67,7 +67,7 @@ bool Engine::Initialize(char **argv)
   // Format is as follows: 
   // create ShapeInfo struct > ShapeInfo(Shape s, float x=0, float y=0, float z=0) - x, y, z are size, unneeded for mesh
   // use struct to initialize object > Object(const std::string& objFileName, const ShapeInfo& newShape,
-	//                                        	const std::string& key = NA, const std::string& texFileName = NA)
+  //                                        	const std::string& key = NA, const std::string& texFileName = NA)
   // push object into objs array
   // add object to physics world > void AddShape(Object* obj,float x = 0, float y = 0, float z = 0, int bodyType = 0)
   //                                x, y, z are initial coordinates, bodyType: 1 = dynamic, 2 = kinematic, 3 = static
@@ -82,8 +82,15 @@ bool Engine::Initialize(char **argv)
 		      3);
   // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
 
+  /* WIP
   // Try to add ghost object
-  //  struct ShapeInfo ghostTest(ghostObject
+  struct ShapeInfo ghostTest(ghostObject_mesh);
+  temp = new Object("bucket.obj", ghostTest, "ghost", "wood.jpg");
+  objs.push_back(temp);
+  m_physics->AddShape(temp, 0,-5,-3, 3);
+  */
+  
+  
   
   // Add Pegs : Static (type 3)
   struct ShapeInfo pegInfo1(mesh);
