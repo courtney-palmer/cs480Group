@@ -38,20 +38,24 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
     objTriMesh = new btTriangleMesh();
     break;
 
+    // Basically implementing the option of ghostObjects could make collisions really convenient if it gets working
+    // See src/BulletCollision/CollisionDispatch/btGhostObject.h in bullet github for methods
+    //     btGhostObject can be used to quickly detect if _anything_ is colliding with it through function 
+    //     getNumOverlappingObjects() which returns the number of objects overlapping with the ghost object
   case ghostObject_mesh: // Added object to make this a ghostObject
     physicsObject = new btGhostObject();
     objTriMesh = new btTriangleMesh();
-    physicsObject->setCollisionShape(shape);
+    // btGhostObject
+    physicsObject->setCollisionShape(shape); // shape should still be nullptr at this point
+    break;
+    /* things to be checked for it:
+       - if the model still loads as intended
+       - if objects do indeed just pass through it also as expected
+       - basically test what needs to be initialized in order to create a ghostObject object
+     */
   }
 
   physicsObject = new btCollisionObject();
-
-  /* Allow option for btGhostObject
-     btGhostObject can be used to quickly detect if _anything_ is colliding with it through function 
-     getNumOverlappingObjects() which returns the number of objects overlapping with the ghost object
-     physicsObject = new btGhostObject();
-   */
-
 
   // LOAD MODEL
   if(!loadModel(objFileName)) {
