@@ -6,11 +6,14 @@ Courtney Palmer<br/><br/>
 Christine Vaughan
 
 ## NOTES
-make a christas tree shaped peg setup, as time progresses more disks will appear at a time. Maybe some fall faster than others (change weights), 
-We want to delete disks when they disappear from the screen, add an invisible top to the board, 
-Could change the angle of the board
-life system or a timer based system
-want scoring
+make a christas tree shaped peg setup <br/>
+as time progresses more disks will appear at a time<br/>
+Maybe some fall faster than others (change weights)<br/>
+We want to delete disks when they disappear from the screen<br/> 
+add an invisible top to the board<br/>
+Could change the angle of the board<br/>
+life system or a timer based system<br/>
+scoring<br/>
 
 ## Project Description
 For our final project, we built a disk drop game.

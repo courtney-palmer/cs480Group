@@ -179,6 +179,8 @@ void Physics::moveObject(std::vector<Object*>& objs, int objIndex,
   
   objs[objIndex]->RBody->getMotionState()->getWorldTransform(trans);
   trans.getOpenGLMatrix(m);
+  // trans.setVelocity(); //set velocity back to 0
+  // trans.setRotation(btQuaternion(btVector3(0.0, 0.0, 0.0), 90)); //set an objects rotation back to 0. 
 
   // Change transformation matrix values
   m[12] = x; m[13] = y; m[14] = z;

@@ -224,7 +224,13 @@ void Graphics::Render(std::vector<Object*>& objs)
   // Render the objects
   for(int i = 0; i < objs.size(); i++) {
     glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(objs[i]->GetModel()));
-    objs[i]->Render();
+    if(objs[i]->getKeyname() == "peg" ){ //if an object is a peg
+      //std::cout << "rendering peg things" << std::endl;
+      objs[i]->Render(5); //render 5 instances of this object
+    }
+    else{
+      objs[i]->Render(1); //otherwise render each object once
+    }
   }
 
   //////////////////////////////// -- RENDERING LIGHT THNIGS -- ////////////////////////////////

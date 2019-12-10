@@ -38,9 +38,11 @@ bool Window::Initialize(const string &name, int* width, int* height)
   //use for fullscreen
   if (*height == 0 && *width == 0)
   {
-    //UNcommend for full screen
+   // uncomment for full screen
     // *height = current.h;
     // *width = current.w;
+
+    // uncomment the following for windowed size
     *height = 600;
     *width = 800;
   }

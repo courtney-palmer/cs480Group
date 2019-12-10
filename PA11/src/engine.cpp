@@ -26,6 +26,17 @@ Engine::~Engine()
   m_graphics = NULL;
 }
 
+
+void Engine::createObject(const std::string& objFileName, const ShapeInfo& newShape,
+	        const std::string& key, const std::string& texFileName,
+          const float& x, const float& y, const float& z, const float& Rtype){
+  Object* temp = new Object(objFileName, newShape, key, texFileName);
+  objs.push_back(temp);
+  m_physics->AddShape(temp,
+		      x, y, z,
+		      Rtype);
+}
+
 bool Engine::Initialize(char **argv)
 {
   // Start a window
@@ -73,14 +84,25 @@ bool Engine::Initialize(char **argv)
   //                                x, y, z are initial coordinates, bodyType: 1 = dynamic, 2 = kinematic, 3 = static
   //                                note: mesh cannot be dynamic
 
+
+  // add invisible wall
+  // struct ShapeInfo invWallInfo(box, 100, 100, 1);
+  // createObject("testCube.obj", invWallInfo, "box", "NA", 0, 0, -8.5, 3);
+
   // Add board : Static (type 3)
   struct ShapeInfo boardInfo(mesh);
-  Object* temp = new Object("board.obj", boardInfo, "board", "wood.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      0, 0, 0,
-		      3);
-  // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+  createObject("board.obj", boardInfo, "board", "wood.jpg", 0, 0, 0, 3);
+
+  // Add disks : Dynamic (type 1)
+  struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
+  createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 6, -3, 1);
+  diskIndex = objs.size()-1;
+
+  // Add basket : Kinematic (type 2)
+  struct ShapeInfo bucketInfo(mesh);
+  createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -7, -3, 2);
+  basketIndex = objs.size() - 1;
+ 
 
   /* WIP
   // Try to add ghost object
@@ -94,128 +116,45 @@ bool Engine::Initialize(char **argv)
   
   // Add Pegs : Static (type 3)
   struct ShapeInfo pegInfo1(mesh);
-  temp = new Object("peg.obj", pegInfo1, "peg", "metal.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      0, 0, 0,
-		      3);
+  createObject("peg.obj", pegInfo1, "peg", "metal.jpg", -9, 0, 0, 3);
 
   struct ShapeInfo pegInfo2(mesh);
-  temp = new Object("peg.obj", pegInfo2, "peg", "metal.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      3, 0, 0,
-		      3);
+  createObject("peg.obj", pegInfo2, "peg", "metal.jpg", -6, 0, 0, 3);
 
   struct ShapeInfo pegInfo3(mesh);
-  temp = new Object("peg.obj", pegInfo3, "peg", "metal.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      -3, 0, 0,
-		      3);
+  createObject("peg.obj", pegInfo3, "peg", "metal.jpg", -3, 0, 0, 3);
 
   struct ShapeInfo pegInfo4(mesh);
-  temp = new Object("peg.obj", pegInfo4, "peg", "metal.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      6, 0, 0,
-		      3);
+  createObject("peg.obj", pegInfo4, "peg", "metal.jpg", 0, 0, 0, 3);
 
   struct ShapeInfo pegInfo5(mesh);
-  temp = new Object("peg.obj", pegInfo5, "peg", "metal.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      -6, 0, 0,
-		      3);
+  createObject("peg.obj", pegInfo5, "peg", "metal.jpg", 3, 0, 0, 3);
   
   struct ShapeInfo pegInfo6(mesh);
-  temp = new Object("peg.obj", pegInfo6, "peg", "metal.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      9, 0, 0,
-		      3);
+  createObject("peg.obj", pegInfo6, "peg", "metal.jpg", 6, 0, 0, 3);
   
   struct ShapeInfo pegInfo7(mesh);
-  temp = new Object("peg.obj", pegInfo7, "peg", "metal.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      -9, 0, 0,
-		      3);
+  createObject("peg.obj", pegInfo7, "peg", "metal.jpg", 9, 0, 0, 3);
 
-//////////////// Starting Upper row
+  //////////////// Starting Upper row
 
   struct ShapeInfo pegInfo8(mesh);
-  temp = new Object("peg.obj", pegInfo8, "peg", "metal.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      -7.5, 3, 0,
-		      3);
+  createObject("peg.obj", pegInfo8, "peg", "metal.jpg", -7.5, 3, 0, 3);
 
   struct ShapeInfo pegInfo9(mesh);
-  temp = new Object("peg.obj", pegInfo9, "peg", "metal.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      -4.5, 3, 0,
-		      3);
+  createObject("peg.obj", pegInfo9, "peg", "metal.jpg", -4.5, 3, 0, 3);
 
   struct ShapeInfo pegInfo10(mesh);
-  temp = new Object("peg.obj", pegInfo10, "peg", "metal.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      -1.5, 3, 0,
-		      3);
+  createObject("peg.obj", pegInfo10, "peg", "metal.jpg", -1.5, 3, 0, 3);
 
   struct ShapeInfo pegInfo11(mesh);
-  temp = new Object("peg.obj", pegInfo11, "peg", "metal.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      1.5, 3, 0,
-		      3);
+  createObject("peg.obj", pegInfo11, "peg", "metal.jpg", 1.5, 3, 0, 3);
 
   struct ShapeInfo pegInfo12(mesh);
-  temp = new Object("peg.obj", pegInfo12, "peg", "metal.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      4.5, 3, 0,
-		      3);
+  createObject("peg.obj", pegInfo12, "peg", "metal.jpg", 4.5, 3, 0, 3);
   
   struct ShapeInfo pegInfo13(mesh);
-  temp = new Object("peg.obj", pegInfo13, "peg", "metal.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      7.5, 3, 0,
-		      3);
-  
-
- // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
-
-  // Add basket : Kinematic (type 2)
-  struct ShapeInfo bucketInfo(mesh);
-  temp = new Object("bucket.obj", bucketInfo, "bucket", "steel.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      0, -7, -3,
-		      2);
-  basketIndex = objs.size() - 1;
- // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
-
-// add invisible wall
-  // struct ShapeInfo invWallInfo(box);
-  // temp = new Object("invisibleBox.obj", invWallInfo);
-  // objs.push_back(temp);
-  // m_physics->AddShape(temp,
-	//  	      0,0,-3.5,
-	//  	      3);
-
-  // Add disks : Dynamic (type 1)
-  struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
-  temp = new Object("disk.obj", diskInfo, "disk", "galaxy.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp,
-		      0, 6, -3,
-		      1);
-  diskIndex = objs.size()-1;
- // objs.back()->physicsObject->setUserPointer(objs[objs.size()-1]);
+  createObject("peg.obj", pegInfo13, "peg", "metal.jpg", 7.5, 3, 0, 3);
 
   // ========================= End Object Creation :> =================
 
@@ -354,8 +293,7 @@ void Engine::Keyboard()
       randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6 
       m_physics->moveObject(objs, diskIndex,
 			    randSpawnVal, 6, -3);
-      std::cout << "restart!" << std::endl;
-
+      
       default:
         break;
     }

@@ -29,9 +29,14 @@ class Engine
     void outputObjects() const;
     int getIndexOf(const std::string& key); // Returns index from 0-objs.size();
 
-  private:
     std::vector<Object*> objs;
-    
+
+    void createObject(const std::string& objFileName, const ShapeInfo& newShape,
+	        const std::string& key, const std::string& texFileName,
+          const float& x, const float& y, const float& z, const float& Rtype);
+
+  private:
+
     // Window related variables
     Window *m_window;    
     string m_WINDOW_NAME;

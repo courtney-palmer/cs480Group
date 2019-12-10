@@ -19,40 +19,40 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
   objTriMesh = nullptr; // Used to store btTriangleMesh if it will be used
   shape = nullptr;      // Will be used to store collision shape when initialized // btCollisionShape* shape
   switch(newShape.shapeName) {
-  case box:
-    shape = new btBoxShape(newShape.getBtVector3()); // 1 1 1
-    break;
-  case sphere:
-    shape = new btSphereShape(newShape.extents[0]);
-    break;
-  case plane:
-    shape = new btBoxShape(newShape.getBtVector3());
-    break;
-  case cylind:
-    shape = new btCylinderShape(newShape.getBtVector3());
-    break;
-  case mesh:
-    // if mesh, the object cannot be a dynamic object, and it has to be
-    // initialized. See loadModel() for loading in the mesh
-    // particularly the parts w/ if (objTriMesh != nullptr)
-    objTriMesh = new btTriangleMesh();
-    break;
+    case box:
+      shape = new btBoxShape(newShape.getBtVector3()); // 1 1 1
+      break;
+    case sphere:
+      shape = new btSphereShape(newShape.extents[0]);
+      break;
+    case plane:
+      shape = new btBoxShape(newShape.getBtVector3());
+      break;
+    case cylind:
+      shape = new btCylinderShape(newShape.getBtVector3());
+      break;
+    case mesh:
+      // if mesh, the object cannot be a dynamic object, and it has to be
+      // initialized. See loadModel() for loading in the mesh
+      // particularly the parts w/ if (objTriMesh != nullptr)
+      objTriMesh = new btTriangleMesh();
+      break;
 
-    // Basically implementing the option of ghostObjects could make collisions really convenient if it gets working
-    // See src/BulletCollision/CollisionDispatch/btGhostObject.h in bullet github for methods
-    //     btGhostObject can be used to quickly detect if _anything_ is colliding with it through function 
-    //     getNumOverlappingObjects() which returns the number of objects overlapping with the ghost object
-  case ghostObject_mesh: // Added object to make this a ghostObject
-    physicsObject = new btGhostObject();
-    objTriMesh = new btTriangleMesh();
-    // btGhostObject
-    physicsObject->setCollisionShape(shape); // shape should still be nullptr at this point
-    break;
-    /* things to be checked for it:
-       - if the model still loads as intended
-       - if objects do indeed just pass through it also as expected
-       - basically test what needs to be initialized in order to create a ghostObject object
-     */
+      // Basically implementing the option of ghostObjects could make collisions really convenient if it gets working
+      // See src/BulletCollision/CollisionDispatch/btGhostObject.h in bullet github for methods
+      //     btGhostObject can be used to quickly detect if _anything_ is colliding with it through function 
+      //     getNumOverlappingObjects() which returns the number of objects overlapping with the ghost object
+    case ghostObject_mesh: // Added object to make this a ghostObject
+      physicsObject = new btGhostObject();
+      objTriMesh = new btTriangleMesh();
+      // btGhostObject
+      physicsObject->setCollisionShape(shape); // shape should still be nullptr at this point
+      break;
+      /* things to be checked for it:
+        - if the model still loads as intended
+        - if objects do indeed just pass through it also as expected
+        - basically test what needs to be initialized in order to create a ghostObject object
+      */
   }
 
   physicsObject = new btCollisionObject();
@@ -63,7 +63,7 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
   }
 
   if(texFileName == NA) {
-    //std::cout << "No Texture to load." << std::endl;
+    std::cout << "No Texture to load." << std::endl;
     textured = false;
   }
   else {
@@ -270,7 +270,7 @@ glm::mat4 Object::GetModel()
   return model;
 }
 
-void Object::Render()
+void Object::Render(int numElms)
 {
   glEnableVertexAttribArray(0); // position attribute
   glEnableVertexAttribArray(1); // color attribute
@@ -294,7 +294,8 @@ void Object::Render()
       glBindTexture(GL_TEXTURE_2D, texture[i]);
     }
     
-    glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
+    //glenum mode, glsizei count, glenum type, const void* indices, number of objects
+    glDrawElementsInstanced(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0, numElms);
   }
 
   glDisableVertexAttribArray(0);
