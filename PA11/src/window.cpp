@@ -1,6 +1,6 @@
 #include <window.h>
 
-Mix_Music* Window::backgroundMusic;
+//Mix_Music* Window::backgroundMusic;
 
 Window::Window()
 {
@@ -10,24 +10,24 @@ Window::Window()
 Window::~Window()
 {
   SDL_StopTextInput();
-  Mix_FreeMusic(Window::backgroundMusic);
+  //Mix_FreeMusic(Window::backgroundMusic);
   SDL_DestroyWindow(gWindow);
   gWindow = NULL;
   SDL_Quit();
 }
 
-void Window::PlayMusic(bool isPlaying)
-{
-  if(isPlaying)
-  {
-    Mix_PlayMusic(backgroundMusic,-1);;
-    isPlayingMusic = true;
-  } else
-  {
-    Mix_HaltMusic();
-    isPlayingMusic = false;
-  }
-}
+// void Window::PlayMusic(bool isPlaying)
+// {
+//   if(isPlaying)
+//   {
+//     Mix_PlayMusic(backgroundMusic,-1);;
+//     isPlayingMusic = true;
+//   } else
+//   {
+//     Mix_HaltMusic();
+//     isPlayingMusic = false;
+//   }
+// }
 
 bool Window::Initialize(const string &name, int* width, int* height)
 {
@@ -38,17 +38,17 @@ bool Window::Initialize(const string &name, int* width, int* height)
     return false;
   }
 
-  if (MIX_INIT_MP3 != (Mix_Init(MIX_INIT_MP3))) {
-    printf("Could not initialize mixer (result:).\n");
-    printf("Mix_Init: %s\n", Mix_GetError());
+  // if (MIX_INIT_MP3 != (Mix_Init(MIX_INIT_MP3))) {
+  //   printf("Could not initialize mixer (result:).\n");
+  //   printf("Mix_Init: %s\n", Mix_GetError());
     // return false;
-  }
+  //}
 
   // Sound Initialization
-  Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024);
-  Window::backgroundMusic = Mix_LoadMUS(BACKGROUND_MUSIC);
-  Mix_AllocateChannels(16);
-  Mix_PlayMusic(backgroundMusic,-1);
+  // Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024);
+  // Window::backgroundMusic = Mix_LoadMUS(BACKGROUND_MUSIC);
+  // Mix_AllocateChannels(16);
+  // Mix_PlayMusic(backgroundMusic,-1);
 
   // Start OpenGL for SDL
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
