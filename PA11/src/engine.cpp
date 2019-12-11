@@ -36,7 +36,7 @@ void Engine::createObject(const std::string& objFileName, const ShapeInfo& newSh
   m_physics->AddShape(temp,
 		      x, y, z,
 		      Rtype);
-          
+
 }
 
 bool Engine::Initialize(char **argv)

@@ -1,5 +1,7 @@
 #include <window.h>
 
+Mix_Music* Window::backgroundMusic;
+
 Window::Window()
 {
   gWindow = NULL;
@@ -8,9 +10,23 @@ Window::Window()
 Window::~Window()
 {
   SDL_StopTextInput();
+  Mix_FreeMusic(Window::backgroundMusic);
   SDL_DestroyWindow(gWindow);
   gWindow = NULL;
   SDL_Quit();
+}
+
+void Window::PlayMusic(bool isPlaying)
+{
+  if(isPlaying)
+  {
+    Mix_PlayMusic(backgroundMusic,-1);;
+    isPlayingMusic = true;
+  } else
+  {
+    Mix_HaltMusic();
+    isPlayingMusic = false;
+  }
 }
 
 bool Window::Initialize(const string &name, int* width, int* height)
@@ -21,6 +37,18 @@ bool Window::Initialize(const string &name, int* width, int* height)
     printf("SDL failed to initialize: %s\n", SDL_GetError());
     return false;
   }
+
+  if (MIX_INIT_MP3 != (Mix_Init(MIX_INIT_MP3))) {
+    printf("Could not initialize mixer (result:).\n");
+    printf("Mix_Init: %s\n", Mix_GetError());
+    // return false;
+  }
+
+  // Sound Initialization
+  Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024);
+  Window::backgroundMusic = Mix_LoadMUS(BACKGROUND_MUSIC);
+  Mix_AllocateChannels(16);
+  Mix_PlayMusic(backgroundMusic,-1);
 
   // Start OpenGL for SDL
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -39,12 +67,12 @@ bool Window::Initialize(const string &name, int* width, int* height)
   if (*height == 0 && *width == 0)
   {
    // uncomment for full screen
-    // *height = current.h;
-    // *width = current.w;
+    *height = current.h;
+    *width = current.w;
 
     // uncomment the following for windowed size
-    *height = 600;
-    *width = 800;
+    // *height = 600;
+    // *width = 800;
   }
 
   gWindow = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, *width, *height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
