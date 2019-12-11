@@ -258,7 +258,8 @@ void Engine::Keyboard()
 		  break;
 
     case SDLK_r: //restart disk
-      randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6 
+      randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
+      m_physics->resetRotation(objs[diskIndex]);
       m_physics->moveObject(objs, diskIndex,
 			    randSpawnVal, 6, -3);
       

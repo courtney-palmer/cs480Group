@@ -164,6 +164,29 @@ void Physics::AddShape(Object* obj, float x, float y, float z, int bodyType)
     dynamicsWorld->addRigidBody(rigidBody);
 }
 
+void Physics::resetRotation(Object* obj) {
+  btTransform trans; // to store transform
+  btScalar m[16];
+
+  obj->RBody->getMotionState()->getWorldTransform(trans);
+  trans.getOpenGLMatrix(m);
+
+  btScalar x[3]; // store scaling in x
+  x[0] = sqrt(m[0]); // x?
+  x[5] = sqrt(m[5]); // y?
+  x[10] = sqrt(m[10]); // z?
+
+  m[0] = 0; m[1] = 0; m[2] = 0;
+  m[4] = 0; m[5] = 0; m[6] = 0;
+  m[8] = 0; m[9] = 0; m[10] = 0;
+
+  //trans.setRotation(btQuaternion(btVector3(0.0, 0.0, 0.0), 90)); //set an objects rotation back to 0.
+
+  trans.setFromOpenGLMatrix(m);
+  obj->RBody->getMotionState()->setWorldTransform(trans);
+  obj->RBody->setWorldTransform(trans);
+}
+
 void Physics::moveObject(std::vector<Object*>& objs, int objIndex,
 			 float x, float y, float z) {
   // Check if objIndex is valid first
