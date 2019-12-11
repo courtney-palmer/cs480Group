@@ -270,7 +270,7 @@ glm::mat4 Object::GetModel()
   return model;
 }
 
-void Object::Render(int numElms)
+void Object::Render(int numOfElements)
 {
   glEnableVertexAttribArray(0); // position attribute
   glEnableVertexAttribArray(1); // color attribute
@@ -295,7 +295,7 @@ void Object::Render(int numElms)
     }
     
     //glenum mode, glsizei count, glenum type, const void* indices, number of objects
-    glDrawElementsInstanced(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0, numElms);
+    glDrawElementsInstanced(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0, numOfElements);
   }
 
   glDisableVertexAttribArray(0);

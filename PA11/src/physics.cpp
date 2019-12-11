@@ -191,9 +191,9 @@ void Physics::moveObject(std::vector<Object*>& objs, int objIndex,
   objs[objIndex]->RBody->setWorldTransform(trans);
   objs[objIndex]->RBody->setLinearVelocity( btVector3(0,0,0) );
   objs[objIndex]->RBody->setAngularVelocity( btVector3(0,0,0) );
-
+  
   // Store updated position
-  objs[objIndex]->setPosition( x,y,z );
+    objs[objIndex]->setPosition( x,y,z ); 
 }
 
 /*

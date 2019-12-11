@@ -30,11 +30,13 @@ Engine::~Engine()
 void Engine::createObject(const std::string& objFileName, const ShapeInfo& newShape,
 	        const std::string& key, const std::string& texFileName,
           const float& x, const float& y, const float& z, const float& Rtype){
+
   Object* temp = new Object(objFileName, newShape, key, texFileName);
   objs.push_back(temp);
   m_physics->AddShape(temp,
 		      x, y, z,
 		      Rtype);
+          
 }
 
 bool Engine::Initialize(char **argv)
@@ -86,16 +88,16 @@ bool Engine::Initialize(char **argv)
 
 
   // add invisible wall
-  // struct ShapeInfo invWallInfo(box, 100, 100, 1);
-  // createObject("testCube.obj", invWallInfo, "box", "NA", 0, 0, -8.5, 3);
+  struct ShapeInfo invWallInfo(box, 15, 15, 1);
+  createObject("bucket.obj", invWallInfo, "glassTop", NA, 0, 0, -5, 3);
 
   // Add board : Static (type 3)
   struct ShapeInfo boardInfo(mesh);
-  createObject("board.obj", boardInfo, "board", "wood.jpg", 0, 0, 0, 3);
+  createObject("window.obj", boardInfo, "board", "wood.jpg", 0, 0, 0, 3);
 
   // Add disks : Dynamic (type 1)
   struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
-  createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 6, -3, 1);
+  createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
   diskIndex = objs.size()-1;
 
   // Add basket : Kinematic (type 2)
@@ -103,6 +105,16 @@ bool Engine::Initialize(char **argv)
   createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -7, -3, 2);
   basketIndex = objs.size() - 1;
  
+  // Add Pegs : Static (type 3)
+  // TODO: instantiate pegs to cut down on rendering
+  struct ShapeInfo pegInfo(mesh);
+  for(int y = -3; y <= 6; y += 3){ // rows at -3, 0, 3, 6
+    for(int x = -9; x <= 9; x += 3){ // columns at -9, -6, -3, 0, 3, 6, 9
+      if(y == 0 || y == 6) // add an extra offset for alternating rows
+        x += 1.5;
+      createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
+    }
+  }
 
   /* WIP
   // Try to add ghost object
@@ -112,51 +124,7 @@ bool Engine::Initialize(char **argv)
   m_physics->AddShape(temp, 0,-5,-3, 3);
   */
   
-  
-  
-  // Add Pegs : Static (type 3)
-  struct ShapeInfo pegInfo1(mesh);
-  createObject("peg.obj", pegInfo1, "peg", "metal.jpg", -9, 0, 0, 3);
-
-  struct ShapeInfo pegInfo2(mesh);
-  createObject("peg.obj", pegInfo2, "peg", "metal.jpg", -6, 0, 0, 3);
-
-  struct ShapeInfo pegInfo3(mesh);
-  createObject("peg.obj", pegInfo3, "peg", "metal.jpg", -3, 0, 0, 3);
-
-  struct ShapeInfo pegInfo4(mesh);
-  createObject("peg.obj", pegInfo4, "peg", "metal.jpg", 0, 0, 0, 3);
-
-  struct ShapeInfo pegInfo5(mesh);
-  createObject("peg.obj", pegInfo5, "peg", "metal.jpg", 3, 0, 0, 3);
-  
-  struct ShapeInfo pegInfo6(mesh);
-  createObject("peg.obj", pegInfo6, "peg", "metal.jpg", 6, 0, 0, 3);
-  
-  struct ShapeInfo pegInfo7(mesh);
-  createObject("peg.obj", pegInfo7, "peg", "metal.jpg", 9, 0, 0, 3);
-
-  //////////////// Starting Upper row
-
-  struct ShapeInfo pegInfo8(mesh);
-  createObject("peg.obj", pegInfo8, "peg", "metal.jpg", -7.5, 3, 0, 3);
-
-  struct ShapeInfo pegInfo9(mesh);
-  createObject("peg.obj", pegInfo9, "peg", "metal.jpg", -4.5, 3, 0, 3);
-
-  struct ShapeInfo pegInfo10(mesh);
-  createObject("peg.obj", pegInfo10, "peg", "metal.jpg", -1.5, 3, 0, 3);
-
-  struct ShapeInfo pegInfo11(mesh);
-  createObject("peg.obj", pegInfo11, "peg", "metal.jpg", 1.5, 3, 0, 3);
-
-  struct ShapeInfo pegInfo12(mesh);
-  createObject("peg.obj", pegInfo12, "peg", "metal.jpg", 4.5, 3, 0, 3);
-  
-  struct ShapeInfo pegInfo13(mesh);
-  createObject("peg.obj", pegInfo13, "peg", "metal.jpg", 7.5, 3, 0, 3);
-
-  // ========================= End Object Creation :> =================
+//  ========================= End Object Creation :> =================
 
   buffer = 0;
   bufferMax = 1;
