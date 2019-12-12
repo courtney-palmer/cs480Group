@@ -6,6 +6,7 @@ Courtney Palmer<br/><br/>
 Christine Vaughan
 
 ## NOTES
+remodel the board/ rotate the board so it's vertical and takes up more of the screen<br/>
 make a christas tree shaped peg setup <br/>
 as time progresses more disks will appear at a time<br/>
 Maybe some fall faster than others (change weights)<br/>

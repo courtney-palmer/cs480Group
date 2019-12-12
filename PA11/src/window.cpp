@@ -71,8 +71,8 @@ bool Window::Initialize(const string &name, int* width, int* height)
     *width = current.w;
 
     // uncomment the following for windowed size
-    // *height = 600;
-    // *width = 800;
+    //*height = 600;
+     //*width = 800;
   }
 
   gWindow = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, *width, *height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
