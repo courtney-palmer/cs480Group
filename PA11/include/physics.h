@@ -4,6 +4,8 @@
 #include "graphics_headers.h"
 #include "object.h"
 
+#include <cmath>
+
 class Engine;
 
 class Physics
@@ -18,6 +20,8 @@ class Physics
     // default : obj starts at origin as dynamic collision object
     void AddShape(Object* obj,float x = 0, float y = 0, float z = 0,
 		  int bodyType = 0);
+
+    void resetRotation(Object* obj);
 
     void moveObject(std::vector<Object*>& objs, int objIndex,
 		    float x, float y, float z);
