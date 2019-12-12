@@ -61,6 +61,9 @@ NOTES:
 ### Game
 'right'  | Move basket right
 'left'   | Move basket left
+'l'      | Add Disk to Game
+'k'      | Remove Disk from Game
+'r'      | Respawn Disks
 
 <!--### Pinball Controls
 'p'/'e'  | Right Paddle<br/>
