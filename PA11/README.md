@@ -59,11 +59,11 @@ NOTES:
 'n'      | Increase specular light<br/>
 
 ### Game
-'right'  | Move basket right
-'left'   | Move basket left
-'l'      | Add Disk to Game
-'k'      | Remove Disk from Game
-'r'      | Respawn Disks
+'right'  | Move basket right<br/>
+'left'   | Move basket left<br/>
+'l'      | Add Disk to Game<br/>
+'k'      | Remove Disk from Game<br/>
+'r'      | Respawn Disks<br/>
 
 <!--### Pinball Controls
 'p'/'e'  | Right Paddle<br/>
