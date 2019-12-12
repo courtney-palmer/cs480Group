@@ -28,8 +28,8 @@ Engine::~Engine()
 
 
 void Engine::createObject(const std::string& objFileName, const ShapeInfo& newShape,
-	        const std::string& key, const std::string& texFileName,
-          const float& x, const float& y, const float& z, const float& Rtype){
+			  const std::string& key, const std::string& texFileName,
+			  const float& x, const float& y, const float& z, const float& Rtype){
 
   Object* temp = new Object(objFileName, newShape, key, texFileName);
   objs.push_back(temp);
@@ -38,6 +38,18 @@ void Engine::createObject(const std::string& objFileName, const ShapeInfo& newSh
 		      Rtype);
 
 }
+void Engine::createDisk(const std::string& objFileName, const ShapeInfo& newShape,
+			  const std::string& key, const std::string& texFileName,
+			  const float& x, const float& y, const float& z, const float& Rtype){
+
+  Object* temp = new Object(objFileName, newShape, key, texFileName);
+  disks.push_back(temp);
+  m_physics->AddShape(temp,
+		      x, y, z,
+		      Rtype);
+
+}
+
 
 bool Engine::Initialize(char **argv)
 {
@@ -86,18 +98,21 @@ bool Engine::Initialize(char **argv)
   //                                x, y, z are initial coordinates, bodyType: 1 = dynamic, 2 = kinematic, 3 = static
   //                                note: mesh cannot be dynamic
 
-
+  
   // add invisible wall
-  struct ShapeInfo invWallInfo(box, 15, 15, 1);
-  createObject("bucket.obj", invWallInfo, "glassTop", NA, 0, 0, -5, 3);
+  //struct ShapeInfo invWallInfo(box, 100, 100, 1);
+  struct ShapeInfo invWallInfo(mesh);
+  //createObject("bucket.obj", invWallInfo, "glassTop", NA, 0, 0, -5, 3);
+  createObject("window.obj", invWallInfo, "glassTop", NA, 0, 0, -4, 3);
+  
 
   // Add board : Static (type 3)
   struct ShapeInfo boardInfo(mesh);
-  createObject("window.obj", boardInfo, "board", "wood.jpg", 0, 0, 0, 3);
+  createObject("window.obj", boardInfo, "board", "wood.jpg", 0, 0, -1, 3);
 
   // Add basket : Kinematic (type 2)
   struct ShapeInfo bucketInfo(mesh);
-  createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -7, -3, 2);
+  createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -7, -2.5, 2);
   basketIndex = objs.size() - 1;
  
   // Add Pegs : Static (type 3)
@@ -119,9 +134,11 @@ bool Engine::Initialize(char **argv)
   /* WIP
   // Try to add ghost object
   struct ShapeInfo ghostTest(ghostObject_mesh);
-  temp = new Object("bucket.obj", ghostTest, "ghost", "wood.jpg");
+  Object* temp = new Object("bucket.obj", ghostTest, "ghost", "wood.jpg");
   objs.push_back(temp);
-  m_physics->AddShape(temp, 0,-5,-3, 3);
+  m_physics->AddShape(temp, 0,-5,-3, 4);
+  ghostIndex = objs.size() -1;
+  std::cout << "Ghost index: " << ghostIndex << std::endl;
   */
 
 //  for(int i = 0; i < objs.size(); i++)
@@ -132,6 +149,8 @@ bool Engine::Initialize(char **argv)
 //  {
 //    std::cout << ((Object*)(objs[i]->physicsObject->getUserPointer()))->getKeyname() << std::endl;
 //  }
+  //outputObjects();
+  
   
 //  ========================= End Object Creation :> =================
 
@@ -158,14 +177,41 @@ void Engine::Run()
     }
 
     // Update physics
-    m_physics->Update(objs, score);
+    m_physics->Update();
+    //    m_physics->Update(objs, score);
+
+    // DEBUG COLLISION TESTING for danny phantom
+    /*
+    std::cout << "Testing ghost collision?\n";
+    btGhostObject* tempGhost = nullptr;
+    tempGhost = btGhostObject::upcast(objs[ghostIndex]->physicsObject);
+    if(tempGhost != nullptr) {
+      // Test for ghost object collision here and output to terminal
+      std::cout << tempGhost->getNumOverlappingObjects()
+	      << std::endl;
+    }
+    //else
+      //std::cout << "Tempghost is nullptr" << std::endl;
+      */
+    
 
     // Update Graphics, send in physics instance and each single object.
     for(int i = 0; i < objs.size(); i++) {
       m_graphics->Update(objs[i]);
     }
-    // Render, send in objs vector array
-    m_graphics->Render(objs);
+    for(int i = 0; i < disks.size(); i++) {
+      m_graphics->Update(disks[i]);
+    }
+
+    // Render, send in ALL OBJECTS stored in composite objects
+
+    std::vector<Object*> compositeObjects = objs;
+    // add the rest of the objects to the composite objects array
+    for(int i = 0 ;  i < disks.size(); i++) {
+      compositeObjects.push_back(disks[i]);
+    }
+
+    m_graphics->Render(compositeObjects);
      
     // Swap to the Window
     m_window->Swap();
@@ -266,12 +312,32 @@ void Engine::Keyboard()
 		  //objs[basketIndex]->RBody->setLinearVelocity(btVector3(-10, 0, 0));
 		  break;
 
-    case SDLK_r: //restart disk
-      randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
-      m_physics->resetRotation(objs[diskIndex]);
-      m_physics->moveObject(objs, diskIndex,
-			    randSpawnVal, 6, -3);
-      
+    case SDLK_r: //respawn each disk
+     
+      for(int i = 0; i < disks.size(); i++) {
+	randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
+	m_physics->resetRotation(disks[i]);
+	m_physics->moveObject(disks, i,
+			      randSpawnVal, 6, -3);
+      }
+      break;
+    case SDLK_l: // Add disk
+      {
+	struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
+	createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,10,-3,1);
+
+	// spawn in random position
+	randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
+	m_physics->resetRotation(disks.back());
+	m_physics->moveObject(disks, disks.size()-1,
+			      randSpawnVal, 6, -3);
+      }
+		 
+      break;
+    case SDLK_k: // Remove disk
+      disks.pop_back();
+      break;
+     
       default:
         break;
     }

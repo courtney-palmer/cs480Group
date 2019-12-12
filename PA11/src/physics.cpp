@@ -39,6 +39,8 @@ Physics::~Physics()
 bool Physics::Initialize()
 {
   broadphase = new btDbvtBroadphase(); //creates a broadphase that tells bullet how to check for collisions
+  // init to allow ghost callback?
+  broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
   
   collisionConfiguration = new btDefaultCollisionConfiguration(); //collision algorithm
   
@@ -63,6 +65,10 @@ bool Physics::Initialize()
   // Set ballIndex
 
   return true;
+}
+
+void Physics::Update() {
+ dynamicsWorld->stepSimulation(1.0f/30.f, 10); //sped up simulation speed
 }
 
 void Physics::Update(std::vector<Object*>& objs,
@@ -139,12 +145,13 @@ void Physics::AddShape(Object* obj, float x, float y, float z, int bodyType)
   // 1 = dynamic
   // 2 = kinematic
   // 3 = static
+  // 4 = static ghost? wip
 
   // btVector3 stores the initial starting position in xyz
   btDefaultMotionState *shapeMotionState = \
     new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
 					 btVector3(x, y, z)));
- 
+
   btScalar mass = (bodyType == 1) ? 1 : 0;
   
   btVector3 inertia(0, 0, 0);
@@ -160,8 +167,36 @@ void Physics::AddShape(Object* obj, float x, float y, float z, int bodyType)
     rigidBody->setCollisionFlags(flags);
   }
 
+  if(bodyType == 4){
+    /*
+      TRY THIS : https://stackoverflow.com/questions/5202594/ghost-objects-bulletphysics
+      Add a new function to add ghost objects using dynamicsworld->addCollisionObject
+      instead of adding by rigid body
+     */
+    /* 
+       obj->physicsObject is btCollisionObject* that holds btGhostObject
+       physicsObject->shape is nullptr i believe
+    */
+    int flags = rigidBody->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE;
+    rigidBody->setCollisionFlags(flags);
+
     obj->RBody = rigidBody;
-    dynamicsWorld->addRigidBody(rigidBody);
+    //dynamicsWorld->addRigidBody(rigidBody);
+
+    std::cout << "Trying to add collision object to world\n";
+    
+    if(obj->physicsObject == nullptr)
+      std::cout << "physics object is nullptr" << std::endl;
+    dynamicsWorld->addCollisionObject(obj->physicsObject);
+    //dynamicsWorld->addCollisionObject(btGhostObject::upcast(obj->physicsObject),
+    //				      btBroadphaseProxy::DefaultFilter,
+    //				      btBroadphaseProxy::AllFilter);
+    std::cout << "Added collision object?\n";
+    return;
+  }
+
+  obj->RBody = rigidBody;
+  dynamicsWorld->addRigidBody(rigidBody);
 }
 
 void Physics::resetRotation(Object* obj) {

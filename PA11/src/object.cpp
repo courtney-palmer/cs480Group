@@ -21,21 +21,27 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
   switch(newShape.shapeName) {
     case box:
       shape = new btBoxShape(newShape.getBtVector3()); // 1 1 1
+      physicsObject = new btCollisionObject();
       break;
     case sphere:
       shape = new btSphereShape(newShape.extents[0]);
+      physicsObject = new btCollisionObject();
       break;
     case plane:
       shape = new btBoxShape(newShape.getBtVector3());
+      physicsObject = new btCollisionObject();
       break;
     case cylind:
       shape = new btCylinderShape(newShape.getBtVector3());
+      physicsObject = new btCollisionObject();
       break;
     case mesh:
       // if mesh, the object cannot be a dynamic object, and it has to be
       // initialized. See loadModel() for loading in the mesh
       // particularly the parts w/ if (objTriMesh != nullptr)
       objTriMesh = new btTriangleMesh();
+      physicsObject = new btCollisionObject();
+      physicsObject->setCollisionShape(shape);
       break;
 
       // Basically implementing the option of ghostObjects could make collisions really convenient if it gets working
@@ -45,14 +51,9 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
     case ghostObject_mesh: // Added object to make this a ghostObject
       physicsObject = new btGhostObject();
       objTriMesh = new btTriangleMesh();
-      // btGhostObject
+      shape = new btBoxShape(btVector3(2,2,2)); // filler so shape is not nullptr wIP
       physicsObject->setCollisionShape(shape); // shape should still be nullptr at this point
       break;
-      /* things to be checked for it:
-        - if the model still loads as intended
-        - if objects do indeed just pass through it also as expected
-        - basically test what needs to be initialized in order to create a ghostObject object
-      */
   }
 
   // LOAD MODEL
@@ -74,9 +75,9 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
   }
 
   //if(newShape.shapeName == mesh)
-  physicsObject = new btCollisionObject();
-  physicsObject->setCollisionShape(shape);
-  physicsObject->setUserPointer((void*)this);
+  // physicsObject = new btCollisionObject();
+  // physicsObject->setCollisionShape(shape);
+  // physicsObject->setUserPointer((void*)this);
 
   // Set up vertices and indices for rendering this object
   glGenBuffers(1, &VB);
