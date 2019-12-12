@@ -8,7 +8,6 @@
 #include <assimp/postprocess.h>
 #include <assimp/color4.h>
 
-
 const std::string NA("NA"); // Constant to define n/a text file name
 
 class Object
