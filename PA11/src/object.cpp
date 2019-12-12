@@ -55,8 +55,6 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
       */
   }
 
-  physicsObject = new btCollisionObject();
-
   // LOAD MODEL
   if(!loadModel(objFileName)) {
     std::cout << "Model not loaded." << std::endl;
@@ -75,8 +73,10 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
       textured = true;
   }
 
-  if(newShape.shapeName == mesh)
-    physicsObject->setCollisionShape(shape);
+  //if(newShape.shapeName == mesh)
+  physicsObject = new btCollisionObject();
+  physicsObject->setCollisionShape(shape);
+  physicsObject->setUserPointer((void*)this);
 
   // Set up vertices and indices for rendering this object
   glGenBuffers(1, &VB);

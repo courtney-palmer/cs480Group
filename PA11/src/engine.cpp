@@ -95,11 +95,6 @@ bool Engine::Initialize(char **argv)
   struct ShapeInfo boardInfo(mesh);
   createObject("window.obj", boardInfo, "board", "wood.jpg", 0, 0, 0, 3);
 
-  // Add disks : Dynamic (type 1)
-  struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
-  createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
-  diskIndex = objs.size()-1;
-
   // Add basket : Kinematic (type 2)
   struct ShapeInfo bucketInfo(mesh);
   createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -7, -3, 2);
@@ -116,6 +111,11 @@ bool Engine::Initialize(char **argv)
     }
   }
 
+  // Add disks : Dynamic (type 1)
+  struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
+  createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
+  diskIndex = objs.size()-1;
+
   /* WIP
   // Try to add ghost object
   struct ShapeInfo ghostTest(ghostObject_mesh);
@@ -123,6 +123,15 @@ bool Engine::Initialize(char **argv)
   objs.push_back(temp);
   m_physics->AddShape(temp, 0,-5,-3, 3);
   */
+
+//  for(int i = 0; i < objs.size(); i++)
+//  {
+//    objs[i]->physicsObject->setUserPointer(objs[i]);
+//  }
+//   for(int i = 0; i < objs.size(); i++)
+//  {
+//    std::cout << ((Object*)(objs[i]->physicsObject->getUserPointer()))->getKeyname() << std::endl;
+//  }
   
 //  ========================= End Object Creation :> =================
 
