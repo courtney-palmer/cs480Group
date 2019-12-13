@@ -8,11 +8,12 @@
 #include <assimp/postprocess.h>
 #include <assimp/color4.h>
 
-
 const std::string NA("NA"); // Constant to define n/a text file name
 
 class Object
 {
+  friend class Physics;
+  friend class Graphics;
   public:
     Object(const std::string& objFileName, const ShapeInfo& newShape,
 		const std::string& key = NA, const std::string& texFileName = NA);
@@ -57,9 +58,7 @@ class Object
     btTriangleMesh *objTriMesh; // used if shape is mesh, otherwise null
     Shape shapeType;
     btRigidBody *RBody;
-    // for INLINE Getters & setters
-    //btCollisionObject getCollisionObject() {return *physicsObject;}
-    //btCollisionShape getCollisionShape() {return *shape;}
+
 
     bool isTextured() const { return textured; }
 

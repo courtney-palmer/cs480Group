@@ -6,6 +6,7 @@ Courtney Palmer<br/><br/>
 Christine Vaughan
 
 ## NOTES
+remodel the board/ rotate the board so it's vertical and takes up more of the screen<br/>
 make a christas tree shaped peg setup <br/>
 as time progresses more disks will appear at a time<br/>
 Maybe some fall faster than others (change weights)<br/>
@@ -58,8 +59,11 @@ NOTES:
 'n'      | Increase specular light<br/>
 
 ### Game
-'right'  | Move basket right
-'left'   | Move basket left
+'right'  | Move basket right<br/>
+'left'   | Move basket left<br/>
+'l'      | Add Disk to Game<br/>
+'k'      | Remove Disk from Game<br/>
+'r'      | Respawn Disks<br/>
 
 <!--### Pinball Controls
 'p'/'e'  | Right Paddle<br/>

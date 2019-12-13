@@ -5,6 +5,7 @@
 #include <sys/time.h>
 #include <assert.h>
 
+#include"BulletCollision/CollisionDispatch/btGhostObject.h"
 #include "window.h"
 #include "graphics.h"
 #include "camera.h"
@@ -31,12 +32,16 @@ class Engine
     int getIndexOf(const std::string& key); // Returns index from 0-objs.size();
 
     std::vector<Object*> objs;
+    std::vector<Object*> disks;
 
     Sound objectCollidedSound;
 
     void createObject(const std::string& objFileName, const ShapeInfo& newShape,
-	        const std::string& key, const std::string& texFileName,
-          const float& x, const float& y, const float& z, const float& Rtype);
+		      const std::string& key, const std::string& texFileName,
+		      const float& x, const float& y, const float& z, const float& Rtype);
+    void createDisk(const std::string& objFileName, const ShapeInfo& newShape,
+		    const std::string& key, const std::string& texFileName,
+		    const float& x, const float& y, const float& z, const float& Rtype);
 
   private:
 
@@ -64,6 +69,7 @@ class Engine
     bool playing; //determines whether the game is currently running - should the timer be counting down?
 
     int basketIndex, diskIndex;
+    int ghostIndex;
 };
 
 #endif // ENGINE_H
