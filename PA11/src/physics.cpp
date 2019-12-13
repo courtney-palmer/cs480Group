@@ -74,7 +74,7 @@ void Physics::Update() {
 void Physics::Update(std::vector<Object*>& objs,
 		     unsigned int& score) {
   dynamicsWorld->stepSimulation(1.0f/30.f, 10); //sped up simulation speed
-
+}
   //check for collisions with basket
   //code modified from https://www.raywenderlich.com/2606-bullet-physics-tutorial-getting-started#toc-anchor-010
 
@@ -116,8 +116,8 @@ void Physics::Update(std::vector<Object*>& objs,
       // }
 
       //ghostobjects https://www.gamedev.net/forums/topic/692573-bullet-btghostobject/
-
-    }
+/*
+   }
   }
 
   btTransform trans; // Stores transformations
@@ -129,7 +129,8 @@ void Physics::Update(std::vector<Object*>& objs,
 
     objs[i]->setPosition( (float)m[12], (float)m[13], (float)m[14] ); // store updated position for each obj in objs
   }
-}
+  }*/
+
 
 /* Add btCollisionObject given by newly initialized object to physics->dynamicsWorld
    aka Adds object to physics environment
