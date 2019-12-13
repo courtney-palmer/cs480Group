@@ -110,7 +110,7 @@ bool Engine::Initialize(char **argv)
   struct ShapeInfo boardInfo(mesh);
   createObject("window.obj", boardInfo, "board", "wood.jpg", 0, 0, -1, 3);
 
-  // Add basket : Kinematic (type 2)
+  // Add bucket : Kinematic (type 2)
   struct ShapeInfo bucketInfo(mesh);
   createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -7, -2.5, 2);
   basketIndex = objs.size() - 1;
@@ -122,7 +122,7 @@ bool Engine::Initialize(char **argv)
     for(int x = -9; x <= 9; x += 3){ // columns at -9, -6, -3, 0, 3, 6, 9
       if(y == 0 || y == 6) // add an extra offset for alternating rows
         x += 1.5;
-      createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
+      createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 1, 3);
     }
   }
 
@@ -177,8 +177,8 @@ void Engine::Run()
     }
 
     // Update physics
-    m_physics->Update();
-    //    m_physics->Update(objs, score);
+    //m_physics->Update();
+    m_physics->Update(objs, score);
 
     // DEBUG COLLISION TESTING for danny phantom
     /*

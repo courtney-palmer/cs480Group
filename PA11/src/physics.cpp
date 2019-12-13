@@ -1,5 +1,6 @@
 #include "physics.h"
 #include <string>
+#include "object.h"
 
 Physics::Physics(Engine* e)
 {
@@ -78,24 +79,24 @@ void Physics::Update(std::vector<Object*>& objs,
   //check for collisions with basket
   //code modified from https://www.raywenderlich.com/2606-bullet-physics-tutorial-getting-started#toc-anchor-010
 
-  // int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
-  // for (int i=0;i<numManifolds;i++)
-  // {
-	//   btPersistentManifold* contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
-  //   int numContacts = contactManifold->getNumContacts();
-  //   if (numContacts > 0)
-  //   {
-  //     const btCollisionObject* b0 = contactManifold->getBody0();
-  //     const btCollisionObject* b1 = contactManifold->getBody1();
+  int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
+  for (int i=0;i<numManifolds;i++)
+  {
+	  btPersistentManifold* contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+    int numContacts = contactManifold->getNumContacts();
+    if (numContacts > 0)
+    {
+      // const btCollisionObject* b0 = contactManifold->getBody0();
+      // const btCollisionObject* b1 = contactManifold->getBody1();
 
-  //     //std::cout << ((Object*)(b0->getUserPointer()))->getKeyname() << std::endl;
+      //std::cout << ((Object*)(b0->getUserPointer()))->getKeyname() << std::endl;
 
-  //     Object* obj0 = ((Object*)(b0->getUserPointer()));
-  //     if(obj0 != nullptr)
-  //       std::cout << obj0->getKeyname() << std::endl;
-  //     Object* obj1 = ((Object*)(b1->getUserPointer()));
-  //     if(obj1 != nullptr)
-  //       std::cout << obj1->getKeyname() << std::endl;
+      Object* obj0 = (Object*)(contactManifold->getBody0()->getUserPointer());
+      if(obj0 != nullptr)
+        std::cout << "obj0 is " << obj0->getKeyname() << std::endl;
+      Object* obj1 = (Object*)(contactManifold->getBody1()->getUserPointer());
+      if(obj1 != nullptr)
+        std::cout << "obj1 is " << obj1->getKeyname() << std::endl;
      
       // std::string s0(((Object*)(b0->getUserPointer()))->getKeyname());
       // std::string s1(((Object*)(b1->getUserPointer()))->getKeyname());
@@ -192,11 +193,14 @@ void Physics::AddShape(Object* obj, float x, float y, float z, int bodyType)
     //				      btBroadphaseProxy::DefaultFilter,
     //				      btBroadphaseProxy::AllFilter);
     std::cout << "Added collision object?\n";
+
     return;
   }
 
   obj->RBody = rigidBody;
   dynamicsWorld->addRigidBody(rigidBody);
+  dynamicsWorld->addCollisionObject(obj->physicsObject);
+  //obj->physicsObject->setUserPointer(obj);
 }
 
 void Physics::resetRotation(Object* obj) {
