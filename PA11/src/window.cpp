@@ -1,7 +1,5 @@
 #include <window.h>
 
-//Mix_Music* Window::backgroundMusic;
-
 Window::Window()
 {
   gWindow = NULL;
@@ -16,39 +14,14 @@ Window::~Window()
   SDL_Quit();
 }
 
-// void Window::PlayMusic(bool isPlaying)
-// {
-//   if(isPlaying)
-//   {
-//     Mix_PlayMusic(backgroundMusic,-1);;
-//     isPlayingMusic = true;
-//   } else
-//   {
-//     Mix_HaltMusic();
-//     isPlayingMusic = false;
-//   }
-// }
-
 bool Window::Initialize(const string &name, int* width, int* height)
 {
     // Start SDL
   if(SDL_Init(SDL_INIT_VIDEO) < 0)
   {
-    printf("SDL failed to initialize: %s\n", SDL_GetError());
+    printf("SDL video failed to initialize: %s\n", SDL_GetError());
     return false;
   }
-
-  // if (MIX_INIT_MP3 != (Mix_Init(MIX_INIT_MP3))) {
-  //   printf("Could not initialize mixer (result:).\n");
-  //   printf("Mix_Init: %s\n", Mix_GetError());
-    // return false;
-  //}
-
-  // Sound Initialization
-  // Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024);
-  // Window::backgroundMusic = Mix_LoadMUS(BACKGROUND_MUSIC);
-  // Mix_AllocateChannels(16);
-  // Mix_PlayMusic(backgroundMusic,-1);
 
   // Start OpenGL for SDL
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);

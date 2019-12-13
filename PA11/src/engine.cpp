@@ -49,6 +49,14 @@ bool Engine::Initialize(char **argv)
     return false;
   }  
 
+  // objectCollidedSound.loadSound(HIT_SOUND);
+  // objectCollidedSound.launchSound();
+  // objectCollidedSound.playSound();
+
+  //start sound
+  // m_sound = new Sound();
+  // m_sound->Initialize();
+
   // Start the graphics
   m_graphics = new Graphics();
   if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, argv)) //initialize new instance of Objects here
@@ -108,13 +116,13 @@ bool Engine::Initialize(char **argv)
   // Add Pegs : Static (type 3)
   // TODO: instantiate pegs to cut down on rendering
   struct ShapeInfo pegInfo(mesh);
-  for(int y = -3; y <= 6; y += 3){ // rows at -3, 0, 3, 6
-    for(int x = -9; x <= 9; x += 3){ // columns at -9, -6, -3, 0, 3, 6, 9
-      if(y == 0 || y == 6) // add an extra offset for alternating rows
-        x += 1.5;
-      createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
-    }
-  }
+  // for(int y = -3; y <= 6; y += 3){ // rows at -3, 0, 3, 6
+  //   for(int x = -9; x <= 9; x += 3){ // columns at -9, -6, -3, 0, 3, 6, 9
+  //     if(y == 0 || y == 6) // add an extra offset for alternating rows
+  //       x += 1.5;
+      createObject("peg.obj", pegInfo, "peg", "metal.jpg", 0, 0, 0, 3);
+  //   }
+  // }
 
   /* WIP
   // Try to add ghost object
