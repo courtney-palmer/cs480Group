@@ -15,7 +15,7 @@ class Physics
     ~Physics();
     bool Initialize();
 
-    void Update(); // just used to stepSimulation
+    void Update(std::vector<Object*>& objs, std::vector<Object*>& disks); // just used to stepSimulation and update positions
     void Update(std::vector<Object*>& objs, unsigned int& score);
     
     // default : obj starts at origin as dynamic collision object
