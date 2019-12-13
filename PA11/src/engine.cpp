@@ -61,13 +61,10 @@ bool Engine::Initialize(char **argv)
     return false;
   }  
 
-  // objectCollidedSound.loadSound(HIT_SOUND);
-  // objectCollidedSound.launchSound();
+  objectCollidedSound.loadSound(HIT_SOUND);
+  objectCollidedSound.launchSound();
   // objectCollidedSound.playSound();
 
-  //start sound
-  // m_sound = new Sound();
-  // m_sound->Initialize();
 
   // Start the graphics
   m_graphics = new Graphics();
@@ -130,9 +127,11 @@ bool Engine::Initialize(char **argv)
   //   for(int x = -9; x <= 9; x += 3){ // columns at -9, -6, -3, 0, 3, 6, 9
   //     if(y == 0 || y == 6) // add an extra offset for alternating rows
   //       x += 1.5;
-      createObject("peg.obj", pegInfo, "peg", "metal.jpg", 0, 0, 0, 3);
+  //     createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
   //   }
   // }
+
+  createObject("peg.obj", pegInfo, "peg", "metal.jpg", 0, 0, 0, 3);
 
   // Add disks : Dynamic (type 1)
   struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
@@ -321,25 +320,26 @@ void Engine::Keyboard()
 		  break;
 
     case SDLK_r: //respawn each disk
-     
+      objectCollidedSound.loadSound(HIT_SOUND);
+      objectCollidedSound.launchSound();
       for(int i = 0; i < disks.size(); i++) {
-	randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
-	m_physics->resetRotation(disks[i]);
-	m_physics->moveObject(disks, i,
-			      randSpawnVal, 6, -3);
-      }
+      randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
+      m_physics->resetRotation(disks[i]);
+      m_physics->moveObject(disks, i,
+                randSpawnVal, 6, -3);
+          }
       break;
     case SDLK_l: // Add disk
       {
-	struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
-	createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,10,-3,1);
+        struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
+        createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,10,-3,1);
 
-	// spawn in random position
-	randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
-	m_physics->resetRotation(disks.back());
-	m_physics->moveObject(disks, disks.size()-1,
-			      randSpawnVal, 6, -3);
-      }
+        // spawn in random position
+        randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
+        m_physics->resetRotation(disks.back());
+        m_physics->moveObject(disks, disks.size()-1,
+                  randSpawnVal, 6, -3);
+            }
 		 
       break;
     case SDLK_k: // Remove disk
