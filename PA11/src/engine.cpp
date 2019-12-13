@@ -128,7 +128,8 @@ bool Engine::Initialize(char **argv)
 
   // Add disks : Dynamic (type 1)
   struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
-  createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
+  //createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
+  createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
   diskIndex = objs.size()-1;
 
   /* WIP
@@ -154,9 +155,6 @@ bool Engine::Initialize(char **argv)
   
 //  ========================= End Object Creation :> =================
 
-  buffer = 0;
-  bufferMax = 1;
-
   // No errors
   return true;
 }
@@ -177,8 +175,8 @@ void Engine::Run()
     }
 
     // Update physics
-    m_physics->Update();
-    //    m_physics->Update(objs, score);
+    m_physics->Update(objs, disks);
+    //m_physics->Update(objs, score);
 
     // DEBUG COLLISION TESTING for danny phantom
     /*
@@ -204,14 +202,15 @@ void Engine::Run()
     }
 
     // Render, send in ALL OBJECTS stored in composite objects
-
     std::vector<Object*> compositeObjects = objs;
     // add the rest of the objects to the composite objects array
     for(int i = 0 ;  i < disks.size(); i++) {
       compositeObjects.push_back(disks[i]);
     }
-
     m_graphics->Render(compositeObjects);
+
+    // Game Logic
+    deleteOutOfBoundsDisks();
      
     // Swap to the Window
     m_window->Swap();
@@ -401,4 +400,20 @@ int Engine::getIndexOf(const std::string& key) {
       return i;
   }
   return -1; // Key not found 
+}
+
+void Engine::deleteOutOfBoundsDisks() {
+  int boundary = -10;
+
+  //std::cout << disks.size() << std::endl;
+  //std::cout << "x" << disks.at(0)->x << " y" << disks.at(0)->y
+  //	    << " z" << disks.at(0)->z << std::endl;
+  
+  for(int i = 0; i < disks.size(); i++) {
+    if(disks[i]->y <= boundary) {
+      //erase only works with c++ iterators, not regular integers for some reason.
+      std::vector<Object*>::iterator index = disks.begin() + i;
+      disks.erase(index);
+    }
+  }
 }

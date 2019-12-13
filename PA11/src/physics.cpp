@@ -67,13 +67,41 @@ bool Physics::Initialize()
   return true;
 }
 
-void Physics::Update() {
+void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks) {
  dynamicsWorld->stepSimulation(1.0f/30.f, 10); //sped up simulation speed
+
+ btTransform trans; // Stores transformations
+  btScalar m[16]; // 4x4 matrix to store transformations
+  // Update the position of every object
+  for(int i = 0; i < objs.size(); i++) {
+    objs[i]->RBody->getMotionState()->getWorldTransform(trans);
+    trans.getOpenGLMatrix(m);
+
+    objs[i]->setPosition( (float)m[12], (float)m[13], (float)m[14] ); // store updated position for each obj in objs
+  }
+
+  // update position of every disk
+  for(int i = 0; i < disks.size(); i++) {
+    disks[i]->RBody->getMotionState()->getWorldTransform(trans);
+    trans.getOpenGLMatrix(m);
+
+    disks[i]->setPosition( (float)m[12], (float)m[13], (float)m[14] ); // store updated position for each obj in objs
+  }
 }
 
 void Physics::Update(std::vector<Object*>& objs,
 		     unsigned int& score) {
   dynamicsWorld->stepSimulation(1.0f/30.f, 10); //sped up simulation speed
+
+  btTransform trans; // Stores transformations
+  btScalar m[16]; // 4x4 matrix to store transformations
+  // Update the position of every object
+  for(int i = 0; i < objs.size(); i++) {
+    objs[i]->RBody->getMotionState()->getWorldTransform(trans);
+    trans.getOpenGLMatrix(m);
+
+    objs[i]->setPosition( (float)m[12], (float)m[13], (float)m[14] ); // store updated position for each obj in objs
+  }
 }
   //check for collisions with basket
   //code modified from https://www.raywenderlich.com/2606-bullet-physics-tutorial-getting-started#toc-anchor-010
@@ -118,17 +146,7 @@ void Physics::Update(std::vector<Object*>& objs,
       //ghostobjects https://www.gamedev.net/forums/topic/692573-bullet-btghostobject/
 /*
    }
-  }
 
-  btTransform trans; // Stores transformations
-  btScalar m[16]; // 4x4 matrix to store transformations
-  // Update the position of every object
-  for(int i = 0; i < objs.size(); i++) {
-    objs[i]->RBody->getMotionState()->getWorldTransform(trans);
-    trans.getOpenGLMatrix(m);
-
-    objs[i]->setPosition( (float)m[12], (float)m[13], (float)m[14] ); // store updated position for each obj in objs
-  }
   }*/
 
 
