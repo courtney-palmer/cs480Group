@@ -133,6 +133,7 @@ bool Engine::Initialize(char **argv)
 
   createObject("peg.obj", pegInfo, "peg", "metal.jpg", 0, 0, 0, 3);
 
+  
   // Add Triangular Walls // see above for instancing problem
   struct ShapeInfo triangleInfo(mesh);
   // Create left wall
@@ -142,6 +143,7 @@ bool Engine::Initialize(char **argv)
       createObject("triangleprism.obj", triangleInfo, "leftwall", "wood.jpg", leftWallx, y, 0, 3);
     }
   }
+  
 
   // Add disks : Dynamic (type 1)
   struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
@@ -363,19 +365,28 @@ void Engine::Keyboard()
         m_physics->resetRotation(disks.back());
         m_physics->moveObject(disks, disks.size()-1,
 			      randSpawnVal, 10, -0.5);
-    }
+      }
 		 
       break;
       
     case SDLK_k: // Remove disk
       deleteObject(disks, disks.size()-1);
       break;
-     
-      default:
-        break;
+
+          // DEBUGGING , not for GAME USE
+    case SDLK_b: // Show Collision Objects list and show objects in objects
+      std::cout << "Collision Objects: " << std::endl;
+      m_physics->OutputCollisionObjects();
+
+      std::cout << "Engine Objects: " << std::endl;
+      outputObjects();
+      break;
+      
+    default:
+      break;
     }
 
-    // DEBUGGING , not for GAME USE
+
   }
   else if (m_event.type == SDL_KEYUP)
   {
@@ -427,6 +438,14 @@ void Engine::outputObjects() const {
 	      << " z" << objs[i]->z
 	      << std::endl;
   }
+  std::cout << std::endl;
+  for(int i = 0; i < disks.size(); i++) {
+    std::cout << i << ": " << disks[i]->getKeyname()
+      	      << " x" << disks[i]->x
+	      << " y" << disks[i]->y
+	      << " z" << disks[i]->z
+	      << std::endl;
+  }
   std::cout << "=======================" << std::endl;
 }
 
@@ -449,6 +468,10 @@ void Engine::deleteOutOfBoundsDisks() {
   }
 }
 
+/*
+  Use this to remove an object from one of the arrays without the issue of leaks(particularly 
+  when considering m_physics->dynamicsWorld)
+ */
 void Engine::deleteObject(std::vector<Object*>& objArray, int objIndex) {
 
   /* Debugging statement : Used to check for successful deletion from physics
