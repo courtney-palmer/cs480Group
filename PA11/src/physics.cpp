@@ -298,3 +298,13 @@ void Physics::OutputCollisionObjects() const {
   }
   std::cout << std::endl;
 }
+
+// This needs to be called before removing the object from its vector array
+void Physics::removeCollisionObject(Object* toDelete) {
+
+  // Remove rigid body and associated properties
+  delete toDelete->RBody->getMotionState();
+  delete toDelete->RBody->getCollisionShape();
+  dynamicsWorld->removeRigidBody(toDelete->RBody);
+
+}

@@ -103,16 +103,16 @@ bool Engine::Initialize(char **argv)
   //struct ShapeInfo invWallInfo(box, 100, 100, 1);
   struct ShapeInfo invWallInfo(mesh);
   //createObject("bucket.obj", invWallInfo, "glassTop", NA, 0, 0, -5, 3);
-  createObject("window.obj", invWallInfo, "glassTop", NA, 0, 0, -4, 3);
-  
+  createObject("window.obj", invWallInfo, "glassTop", NA, 0, 0, -2, 3);
+  //createObject("verticalboard.obj", invWallInfo, "regTop", "steel.jpg", 0,0,-2,3); // Visible version for testing
 
   // Add board : Static (type 3)
   struct ShapeInfo boardInfo(mesh);
-  createObject("window.obj", boardInfo, "board", "wood.jpg", 0, 0, -1, 3);
+  createObject("verticalboard.obj", boardInfo, "board", "wood.jpg", 0, 0, 0, 3);
 
   // Add basket : Kinematic (type 2)
   struct ShapeInfo bucketInfo(mesh);
-  createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -7, -2.5, 2);
+  createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -14, -1.25, 2);
   basketIndex = objs.size() - 1;
  
   // Add Pegs : Static (type 3)
@@ -126,10 +126,20 @@ bool Engine::Initialize(char **argv)
     }
   }
 
+  // Add Triangular Walls // see above for instancing problem
+  struct ShapeInfo triangleInfo(mesh);
+  // Create left wall
+  {
+    int leftWallx = -8;
+    for(int y = 13; y >= -12; y -= 4) {
+      createObject("triangleprism.obj", triangleInfo, "leftwall", "wood.jpg", leftWallx, y, 0, 3);
+    }
+  }
+
   // Add disks : Dynamic (type 1)
   struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
   //createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
-  createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
+  createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -0.5, 1);
   diskIndex = objs.size()-1;
 
   /* WIP
@@ -173,6 +183,7 @@ void Engine::Run()
     {
       Keyboard();
     }
+
 
     // Update physics
     m_physics->Update(objs, disks);
@@ -294,52 +305,64 @@ void Engine::Keyboard()
         break;
 
 	/**************************GAME CONTROLS**************************/
-	  case SDLK_LEFT:
-		  objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+    case SDLK_d: // Set to default view
+      m_graphics->m_camera->Update(0,0,-35,
+				   0,0,0,
+				   0,1,0);
+      break;
+    case SDLK_t: // Set to top down camera view
+      m_graphics->m_camera->Update(0,30,0,
+				   0,0,0,
+				   0,0,1);
+      break;
+    case SDLK_LEFT:
+      objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
 		  
-		  objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
-		  newTrans.getOrigin() += btVector3(1, 0, 0);
-		  objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
-		  //objs[basketIndex]->RBody->setLinearVelocity(btVector3(10, 0, 0));
-		  break;
-	  case SDLK_RIGHT:
-		  objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
+      objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
+      newTrans.getOrigin() += btVector3(1, 0, 0);
+      objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
+      //objs[basketIndex]->RBody->setLinearVelocity(btVector3(10, 0, 0));
+      break;
+    case SDLK_RIGHT:
+      objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
 		  
-		  objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
-		  newTrans.getOrigin() += btVector3(-1, 0, 0);
-		  objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
-		  //objs[basketIndex]->RBody->setLinearVelocity(btVector3(-10, 0, 0));
-		  break;
+      objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
+      newTrans.getOrigin() += btVector3(-1, 0, 0);
+      objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
+      //objs[basketIndex]->RBody->setLinearVelocity(btVector3(-10, 0, 0));
+      break;
 
     case SDLK_r: //respawn each disk
-     
       for(int i = 0; i < disks.size(); i++) {
 	randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
 	m_physics->resetRotation(disks[i]);
 	m_physics->moveObject(disks, i,
-			      randSpawnVal, 6, -3);
+			      randSpawnVal, 10, -0.5);
       }
       break;
+      
     case SDLK_l: // Add disk
       {
 	struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
-	createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,10,-3,1);
+	createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,10,1,1);
 
 	// spawn in random position
 	randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
 	m_physics->resetRotation(disks.back());
 	m_physics->moveObject(disks, disks.size()-1,
-			      randSpawnVal, 6, -3);
+			      randSpawnVal, 10, -0.5);
       }
-		 
       break;
+      
     case SDLK_k: // Remove disk
-      disks.pop_back();
+      deleteObject(disks, disks.size()-1);
       break;
      
       default:
         break;
     }
+
+    // DEBUGGING , not for GAME USE
   }
   else if (m_event.type == SDL_KEYUP)
   {
@@ -403,17 +426,32 @@ int Engine::getIndexOf(const std::string& key) {
 }
 
 void Engine::deleteOutOfBoundsDisks() {
-  int boundary = -10;
+  int boundary = -15;
 
-  //std::cout << disks.size() << std::endl;
-  //std::cout << "x" << disks.at(0)->x << " y" << disks.at(0)->y
-  //	    << " z" << disks.at(0)->z << std::endl;
-  
   for(int i = 0; i < disks.size(); i++) {
     if(disks[i]->y <= boundary) {
       //erase only works with c++ iterators, not regular integers for some reason.
-      std::vector<Object*>::iterator index = disks.begin() + i;
-      disks.erase(index);
+      deleteObject(disks, i);
     }
   }
+}
+
+void Engine::deleteObject(std::vector<Object*>& objArray, int objIndex) {
+
+  /* Debugging statement : Used to check for successful deletion from physics
+  m_physics->OutputCollisionObjects();
+  std::cout << "Removing Object\n";
+  */ 
+  
+  // Remove from physics context
+  m_physics->removeCollisionObject(objArray.at(objIndex));
+
+  
+  // Remove from Engine object array
+  std::vector<Object*>::iterator i = objArray.begin() + objIndex;
+  objArray.erase(i);
+
+  // m_physics->OutputCollisionObjects(); // Debugging Statement
+
+  return;
 }

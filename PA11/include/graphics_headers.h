@@ -87,5 +87,21 @@ struct ShapeInfo { // Goes along with shape
 };
 
 
+/* Ignore this
+// Define default camera views
+struct CameraView {
+  int pos[3];
+  int front[3];
+  int up[3];
+  CameraView(int px, int py, int pz,
+	     int fx, int fy, int fz,
+	     int ux, int uy, int uz) {
+    pos[0] = px; pos[1] = py; pos[2] = pz;
+    front[0] = fx; front[1] = fy; front[2] = fz;
+    
+  }
+};
+*/
+
 
 #endif /* GRAPHICS_HEADERS_H */
