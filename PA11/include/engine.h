@@ -10,6 +10,7 @@
 #include "graphics.h"
 #include "camera.h"
 #include "physics.h"
+#include "sound.h"
 
 class Engine
 {
@@ -30,6 +31,8 @@ class Engine
 
     std::vector<Object*> objs;
     std::vector<Object*> disks;
+
+    Sound objectCollidedSound;
 
     void createObject(const std::string& objFileName, const ShapeInfo& newShape,
 		      const std::string& key, const std::string& texFileName,
@@ -52,6 +55,8 @@ class Engine
     int m_WINDOW_HEIGHT;
     bool m_FULLSCREEN;
     SDL_Event m_event;
+
+    Sound *m_sound;
 
     Graphics *m_graphics;
     Physics *m_physics;

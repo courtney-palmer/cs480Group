@@ -8,7 +8,6 @@
 
 #include "engine.h"
 
-
 int main(int argc, char **argv)
 {
   // Start an engine and run it then cleanup after
@@ -21,6 +20,7 @@ int main(int argc, char **argv)
     engine = NULL;
     return 1;
   }
+  
   engine->Run();
   delete engine;
   engine = NULL;

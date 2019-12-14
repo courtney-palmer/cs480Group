@@ -61,6 +61,11 @@ bool Engine::Initialize(char **argv)
     return false;
   }  
 
+  objectCollidedSound.loadSound(HIT_SOUND);
+  objectCollidedSound.launchSound();
+  // objectCollidedSound.playSound();
+
+
   // Start the graphics
   m_graphics = new Graphics();
   if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, argv)) //initialize new instance of Objects here
@@ -118,13 +123,15 @@ bool Engine::Initialize(char **argv)
   // Add Pegs : Static (type 3)
   // TODO: instantiate pegs to cut down on rendering
   struct ShapeInfo pegInfo(mesh);
-  for(int y = -3; y <= 6; y += 3){ // rows at -3, 0, 3, 6
-    for(int x = -9; x <= 9; x += 3){ // columns at -9, -6, -3, 0, 3, 6, 9
-      if(y == 0 || y == 6) // add an extra offset for alternating rows
-        x += 1.5;
-      createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
-    }
-  }
+  // for(int y = -3; y <= 6; y += 3){ // rows at -3, 0, 3, 6
+  //   for(int x = -9; x <= 9; x += 3){ // columns at -9, -6, -3, 0, 3, 6, 9
+  //     if(y == 0 || y == 6) // add an extra offset for alternating rows
+  //       x += 1.5;
+  //     createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
+  //   }
+  // }
+
+  createObject("peg.obj", pegInfo, "peg", "metal.jpg", 0, 0, 0, 3);
 
   // Add Triangular Walls // see above for instancing problem
   struct ShapeInfo triangleInfo(mesh);
@@ -333,25 +340,31 @@ void Engine::Keyboard()
       break;
 
     case SDLK_r: //respawn each disk
+
+      objectCollidedSound.loadSound(HIT_SOUND);
+      objectCollidedSound.launchSound();
       for(int i = 0; i < disks.size(); i++) {
-	randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
-	m_physics->resetRotation(disks[i]);
-	m_physics->moveObject(disks, i,
-			      randSpawnVal, 10, -0.5);
-      }
+      randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
+      m_physics->resetRotation(disks[i]);
+      m_physics->moveObject(disks, i,
+                randSpawnVal, 6, -3);
+          }
+
       break;
       
     case SDLK_l: // Add disk
       {
-	struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
-	createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,10,1,1);
 
-	// spawn in random position
-	randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
-	m_physics->resetRotation(disks.back());
-	m_physics->moveObject(disks, disks.size()-1,
+        struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
+        createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,0,0,1);
+
+        // spawn in random position
+        randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
+        m_physics->resetRotation(disks.back());
+        m_physics->moveObject(disks, disks.size()-1,
 			      randSpawnVal, 10, -0.5);
-      }
+    }
+		 
       break;
       
     case SDLK_k: // Remove disk
