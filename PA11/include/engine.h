@@ -10,6 +10,7 @@
 #include "graphics.h"
 #include "camera.h"
 #include "physics.h"
+#include "sound.h"
 
 class Engine
 {
@@ -24,8 +25,6 @@ class Engine
     long long GetCurrentTimeMillis();
 
     int shaderToggle = 0;
-    int buffer;
-    int bufferMax;
 
     void outputObjects() const;
     int getIndexOf(const std::string& key); // Returns index from 0-objs.size();
@@ -33,9 +32,13 @@ class Engine
     std::vector<Object*> objs;
     std::vector<Object*> disks;
 
+    Sound objectCollidedSound;
+
     void createObject(const std::string& objFileName, const ShapeInfo& newShape,
 		      const std::string& key, const std::string& texFileName,
 		      const float& x, const float& y, const float& z, const float& Rtype);
+
+    // adds to disk vector instead
     void createDisk(const std::string& objFileName, const ShapeInfo& newShape,
 		    const std::string& key, const std::string& texFileName,
 		    const float& x, const float& y, const float& z, const float& Rtype);
@@ -50,6 +53,8 @@ class Engine
     bool m_FULLSCREEN;
     SDL_Event m_event;
 
+    Sound *m_sound;
+
     Graphics *m_graphics;
     Physics *m_physics;
     unsigned int m_DT;
@@ -62,6 +67,8 @@ class Engine
     unsigned int timer; //should be in milliseconds, to work with getDT()
     const unsigned int MAX_TIME = 60000; //ms
     bool playing; //determines whether the game is currently running - should the timer be counting down?
+
+    void deleteOutOfBoundsDisks();
 
     int basketIndex, diskIndex;
     int ghostIndex;

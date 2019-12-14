@@ -16,32 +16,44 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
   keyname = key;
 
 //////////////////// BULLET STUFF //////////////////////
-  objTriMesh = nullptr; // Used to store btTriangleMesh if it will be used
-  shape = nullptr;      // Will be used to store collision shape when initialized // btCollisionShape* shape
+  //objTriMesh = nullptr; // Used to store btTriangleMesh if it will be used
+  //shape = nullptr;      // Will be used to store collision shape when initialized // btCollisionShape* shape
   switch(newShape.shapeName) {
     case box:
       shape = new btBoxShape(newShape.getBtVector3()); // 1 1 1
-      //physicsObject = new btCollisionObject();
+      physicsObject = new btCollisionObject();
+      physicsObject->setCollisionShape(shape);
+      objTriMesh = nullptr;
+      ghostObj = nullptr;
       break;
     case sphere:
       shape = new btSphereShape(newShape.extents[0]);
-      //physicsObject = new btCollisionObject();
+      physicsObject = new btCollisionObject();
+      physicsObject->setCollisionShape(shape);
+      objTriMesh = nullptr;
+      ghostObj = nullptr;
       break;
     case plane:
       shape = new btBoxShape(newShape.getBtVector3());
-      //physicsObject = new btCollisionObject();
+      physicsObject = new btCollisionObject();
+      physicsObject->setCollisionShape(shape);
+      objTriMesh = nullptr;
+      ghostObj = nullptr;
       break;
     case cylind:
       shape = new btCylinderShape(newShape.getBtVector3());
-      //physicsObject = new btCollisionObject();
+      physicsObject = new btCollisionObject();
+      physicsObject->setCollisionShape(shape);
+      objTriMesh = nullptr;
+      ghostObj = nullptr;
       break;
     case mesh:
       // if mesh, the object cannot be a dynamic object, and it has to be
       // initialized. See loadModel() for loading in the mesh
       // particularly the parts w/ if (objTriMesh != nullptr)
       objTriMesh = new btTriangleMesh();
-      //physicsObject = new btCollisionObject();
-      //physicsObject->setCollisionShape(shape);
+      physicsObject = nullptr;
+      ghostObj = nullptr;
       break;
 
       // Basically implementing the option of ghostObjects could make collisions really convenient if it gets working
@@ -49,10 +61,11 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
       //     btGhostObject can be used to quickly detect if _anything_ is colliding with it through function 
       //     getNumOverlappingObjects() which returns the number of objects overlapping with the ghost object
     case ghostObject_mesh: // Added object to make this a ghostObject
-      physicsObject = new btGhostObject();
-      objTriMesh = new btTriangleMesh();
-      shape = new btBoxShape(btVector3(2,2,2)); // filler so shape is not nullptr wIP
-      //physicsObject->setCollisionShape(shape); // shape should still be nullptr at this point
+      shape = new btBoxShape(newShape.getBtVector3()); // filler so shape is not nullptr wIP
+      ghostObj = new btGhostObject();
+      ghostObj->setCollisionShape(shape);
+      physicsObject = nullptr;
+      objTriMesh = nullptr;
       break;
   }
 
@@ -74,9 +87,8 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
       textured = true;
   }
 
-  physicsObject = new btCollisionObject();
-  physicsObject->setCollisionShape(shape);
-  physicsObject->setUserPointer(this);
+  if(physicsObject != nullptr)
+    physicsObject->setUserPointer(this);
 
   // Set up vertices and indices for rendering this object
   glGenBuffers(1, &VB);

@@ -36,7 +36,6 @@ void Engine::createObject(const std::string& objFileName, const ShapeInfo& newSh
   m_physics->AddShape(temp,
 		      x, y, z,
 		      Rtype);
-
 }
 void Engine::createDisk(const std::string& objFileName, const ShapeInfo& newShape,
 			  const std::string& key, const std::string& texFileName,
@@ -47,7 +46,6 @@ void Engine::createDisk(const std::string& objFileName, const ShapeInfo& newShap
   m_physics->AddShape(temp,
 		      x, y, z,
 		      Rtype);
-
 }
 
 
@@ -60,6 +58,11 @@ bool Engine::Initialize(char **argv)
     printf("window failed to initialize.\n");
     return false;
   }  
+
+  objectCollidedSound.loadSound(HIT_SOUND);
+  objectCollidedSound.launchSound();
+  // objectCollidedSound.playSound();
+
 
   // Start the graphics
   m_graphics = new Graphics();
@@ -114,6 +117,11 @@ bool Engine::Initialize(char **argv)
   struct ShapeInfo bucketInfo(mesh);
   createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -7, -2.5, 2);
   basketIndex = objs.size() - 1;
+
+  // Try to add ghost object
+  struct ShapeInfo ghostTest(ghostObject_mesh);
+  createObject("ghost.obj", ghostTest, "ghost", "galaxy.jpg", 0, -5, -3, 4);
+  ghostIndex = objs.size() -1;  
  
   // Add Pegs : Static (type 3)
   // TODO: instantiate pegs to cut down on rendering
@@ -122,24 +130,16 @@ bool Engine::Initialize(char **argv)
     for(int x = -9; x <= 9; x += 3){ // columns at -9, -6, -3, 0, 3, 6, 9
       if(y == 0 || y == 6) // add an extra offset for alternating rows
         x += 1.5;
-      createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 1, 3);
+      createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
     }
   }
 
   // Add disks : Dynamic (type 1)
   struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
-  createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
+  //createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
+  createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
   diskIndex = objs.size()-1;
 
-  /* WIP
-  // Try to add ghost object
-  struct ShapeInfo ghostTest(ghostObject_mesh);
-  Object* temp = new Object("bucket.obj", ghostTest, "ghost", "wood.jpg");
-  objs.push_back(temp);
-  m_physics->AddShape(temp, 0,-5,-3, 4);
-  ghostIndex = objs.size() -1;
-  std::cout << "Ghost index: " << ghostIndex << std::endl;
-  */
 
 //  for(int i = 0; i < objs.size(); i++)
 //  {
@@ -153,9 +153,6 @@ bool Engine::Initialize(char **argv)
   
   
 //  ========================= End Object Creation :> =================
-
-  buffer = 0;
-  bufferMax = 1;
 
   // No errors
   return true;
@@ -178,7 +175,7 @@ void Engine::Run()
 
     // Update physics
     //m_physics->Update();
-    m_physics->Update(objs, score);
+    m_physics->Update(objs, score, ghostIndex);
 
     // DEBUG COLLISION TESTING for danny phantom
     /*
@@ -204,14 +201,15 @@ void Engine::Run()
     }
 
     // Render, send in ALL OBJECTS stored in composite objects
-
     std::vector<Object*> compositeObjects = objs;
     // add the rest of the objects to the composite objects array
     for(int i = 0 ;  i < disks.size(); i++) {
       compositeObjects.push_back(disks[i]);
     }
-
     m_graphics->Render(compositeObjects);
+
+    // Game Logic
+    deleteOutOfBoundsDisks();
      
     // Swap to the Window
     m_window->Swap();
@@ -297,41 +295,48 @@ void Engine::Keyboard()
 	/**************************GAME CONTROLS**************************/
 	  case SDLK_LEFT:
 		  objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-		  
 		  objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
 		  newTrans.getOrigin() += btVector3(1, 0, 0);
 		  objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
-		  //objs[basketIndex]->RBody->setLinearVelocity(btVector3(10, 0, 0));
+
+      // objs[ghostIndex]->RBody->setActivationState(DISABLE_DEACTIVATION); 
+		  // objs[ghostIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
+		  // newTrans.getOrigin() += btVector3(1, 0, 0);
+		  // objs[ghostIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
 		  break;
 	  case SDLK_RIGHT:
-		  objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
-		  
+		  objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION); 
 		  objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
 		  newTrans.getOrigin() += btVector3(-1, 0, 0);
 		  objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
-		  //objs[basketIndex]->RBody->setLinearVelocity(btVector3(-10, 0, 0));
+
+      // objs[ghostIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);  
+		  // objs[ghostIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
+		  // newTrans.getOrigin() += btVector3(-1, 0, 0);
+		  // objs[ghostIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
 		  break;
 
     case SDLK_r: //respawn each disk
-     
+      objectCollidedSound.loadSound(HIT_SOUND);
+      objectCollidedSound.launchSound();
       for(int i = 0; i < disks.size(); i++) {
-	randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
-	m_physics->resetRotation(disks[i]);
-	m_physics->moveObject(disks, i,
-			      randSpawnVal, 6, -3);
-      }
+      randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
+      m_physics->resetRotation(disks[i]);
+      m_physics->moveObject(disks, i,
+                randSpawnVal, 6, -3);
+          }
       break;
     case SDLK_l: // Add disk
       {
-	struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
-	createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,10,-3,1);
+        struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
+        createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,10,-3,1);
 
-	// spawn in random position
-	randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
-	m_physics->resetRotation(disks.back());
-	m_physics->moveObject(disks, disks.size()-1,
-			      randSpawnVal, 6, -3);
-      }
+        // spawn in random position
+        randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
+        m_physics->resetRotation(disks.back());
+        m_physics->moveObject(disks, disks.size()-1,
+                  randSpawnVal, 6, -3);
+            }
 		 
       break;
     case SDLK_k: // Remove disk
@@ -401,4 +406,20 @@ int Engine::getIndexOf(const std::string& key) {
       return i;
   }
   return -1; // Key not found 
+}
+
+void Engine::deleteOutOfBoundsDisks() {
+  int boundary = -10;
+
+  //std::cout << disks.size() << std::endl;
+  //std::cout << "x" << disks.at(0)->x << " y" << disks.at(0)->y
+  //	    << " z" << disks.at(0)->z << std::endl;
+  
+  for(int i = 0; i < disks.size(); i++) {
+    if(disks[i]->y <= boundary) {
+      //erase only works with c++ iterators, not regular integers for some reason.
+      std::vector<Object*>::iterator index = disks.begin() + i;
+      disks.erase(index);
+    }
+  }
 }
