@@ -19,6 +19,7 @@ class Physics
     void Update(std::vector<Object*>& objs, unsigned int& score, int ghostIndex);
     
     // default : obj starts at origin as dynamic collision object
+    // inserts obj by way of rigid bodies, not by collision objects
     void AddShape(Object* obj,float x = 0, float y = 0, float z = 0,
 		  int bodyType = 0);
 
@@ -28,6 +29,12 @@ class Physics
 		    float x, float y, float z);
 
     void OutputCollisionObjects() const;
+
+    btCollisionObject* getCollisionObject(unsigned int i);
+    int getNumCollisionObjects() { return dynamicsWorld->getNumCollisionObjects(); }
+
+    // remove by given object
+    void removeCollisionObject(Object* toDelete);
     
     btDiscreteDynamicsWorld *dynamicsWorld;
 

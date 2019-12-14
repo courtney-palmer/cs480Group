@@ -67,7 +67,8 @@ class Graphics
     float theta;
 
     Camera *m_camera;
-  private:
+
+ private:
     std::string ErrorString(GLenum error);
 
     GLint m_projectionMatrix;

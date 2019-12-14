@@ -65,6 +65,11 @@ NOTES:
 'k'      | Remove Disk from Game<br/>
 'r'      | Respawn Disks<br/>
 
+### Misc.
+'b'	 | Output physics objects and engine object arrays to terminal for debugging
+'d' 	 | Change to Default Camera View
+'t'	 | Change to Top Down Camera View
+
 <!--### Pinball Controls
 'p'/'e'  | Right Paddle<br/>
 'i'/'q'	 | Left Paddle<br/>

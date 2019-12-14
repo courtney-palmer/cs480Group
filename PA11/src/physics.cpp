@@ -300,6 +300,7 @@ void Physics::moveObject(std::vector<Object*>& objs, int objIndex,
  */
 void Physics::OutputCollisionObjects() const {
   int upper = dynamicsWorld->getNumCollisionObjects();
+  std::cout << "Number of Collision Objects: " << upper << std::endl;
   for(int i = 0; i < upper; i++) {
     btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
     btRigidBody* body = btRigidBody::upcast(obj);
@@ -317,4 +318,23 @@ void Physics::OutputCollisionObjects() const {
 	      << trans.getOrigin().getZ() << std::endl;
   }
   std::cout << std::endl;
+}
+
+btCollisionObject* Physics::getCollisionObject(unsigned int i) {
+  // bounds checking
+  if(i < 0 || i >= dynamicsWorld->getNumCollisionObjects()) {
+    return nullptr;
+  }
+
+  return dynamicsWorld->getCollisionObjectArray()[i];
+}
+
+// This needs to be called before removing the object from its vector array
+void Physics::removeCollisionObject(Object* toDelete) {
+
+  // Remove rigid body and associated properties
+  delete toDelete->RBody->getMotionState();
+  delete toDelete->RBody->getCollisionShape();
+  dynamicsWorld->removeRigidBody(toDelete->RBody);
+
 }

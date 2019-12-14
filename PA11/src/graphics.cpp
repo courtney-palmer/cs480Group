@@ -56,6 +56,10 @@ bool Graphics::Initialize(int width, int height, char **argv)
     printf("Camera Failed to Initialize\n");
     return false;
   }
+  // default view
+  m_camera->Update(0,0,-35,
+		   0,0,0,
+		   0,1,0);
 
   shaderIndex = 0;
 
