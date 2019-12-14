@@ -30,6 +30,9 @@ class Physics
 
     void OutputCollisionObjects() const;
 
+    btCollisionObject* getCollisionObject(unsigned int i);
+    int getNumCollisionObjects() { return dynamicsWorld->getNumCollisionObjects(); }
+
     // remove by given object
     void removeCollisionObject(Object* toDelete);
     

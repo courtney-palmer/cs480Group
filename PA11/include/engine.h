@@ -46,6 +46,11 @@ class Engine
     // Handles object deletion for physics and from engine array
     void deleteObject(std::vector<Object*>& objArray, int objIndex);
 
+    // Clears all object arrays, except for basket in obj
+    void clearObjects(bool clearBasket = false);
+
+    // void loadLevel(std::string levelFile);
+
   private:
 
     // Window related variables
@@ -73,7 +78,7 @@ class Engine
 
     void deleteOutOfBoundsDisks();
 
-    int basketIndex, diskIndex;
+    int basketIndex;
     int ghostIndex;
 };
 

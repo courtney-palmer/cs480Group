@@ -1,0 +1,6 @@
+obj board board.obj wood.jpg static mesh
+0 0 0
+obj peg peg.obj metal.jpg static mesh
+0 0 0
+0 2 0
+0 -2 0

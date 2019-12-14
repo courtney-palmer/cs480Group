@@ -103,8 +103,13 @@ bool Engine::Initialize(char **argv)
   //                                x, y, z are initial coordinates, bodyType: 1 = dynamic, 2 = kinematic, 3 = static
   //                                note: mesh cannot be dynamic
 
+  // LET BASKET BE THE first thing to be created? make sure it's index 0 or it may break things
+  // Add basket : Kinematic (type 2)
+  struct ShapeInfo bucketInfo(mesh);
+  createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -14, -1.25, 2);
+  basketIndex = objs.size() - 1;
   
-  // add invisible wall
+  // add invisible wall :: i0
   //struct ShapeInfo invWallInfo(box, 100, 100, 1);
   struct ShapeInfo invWallInfo(mesh);
   //createObject("bucket.obj", invWallInfo, "glassTop", NA, 0, 0, -5, 3);
@@ -114,11 +119,10 @@ bool Engine::Initialize(char **argv)
   // Add board : Static (type 3)
   struct ShapeInfo boardInfo(mesh);
   createObject("verticalboard.obj", boardInfo, "board", "wood.jpg", 0, 0, 0, 3);
+  // Set 0 friction for board
+  m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
 
-  // Add basket : Kinematic (type 2)
-  struct ShapeInfo bucketInfo(mesh);
-  createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -14, -1.25, 2);
-  basketIndex = objs.size() - 1;
+
  
   // Add Pegs : Static (type 3)
   // TODO: instantiate pegs to cut down on rendering
@@ -149,7 +153,6 @@ bool Engine::Initialize(char **argv)
   struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
   //createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
   createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -0.5, 1);
-  diskIndex = objs.size()-1;
 
   /* WIP
   // Try to add ghost object
@@ -236,6 +239,14 @@ void Engine::Run()
     m_window->Swap();
   }
 }
+
+/*
+  This Function parses file information in order to load a level
+
+ void Engine::loadLevel(std::string levelFile) {
+
+ }
+*/
 
 void Engine::Keyboard()
 {
@@ -375,13 +386,16 @@ void Engine::Keyboard()
 
           // DEBUGGING , not for GAME USE
     case SDLK_b: // Show Collision Objects list and show objects in objects
-      std::cout << "Collision Objects: " << std::endl;
       m_physics->OutputCollisionObjects();
 
       std::cout << "Engine Objects: " << std::endl;
       outputObjects();
       break;
-      
+
+    case SDLK_x: // Clear board
+      clearObjects();
+      break;
+
     default:
       break;
     }
@@ -490,4 +504,22 @@ void Engine::deleteObject(std::vector<Object*>& objArray, int objIndex) {
   // m_physics->OutputCollisionObjects(); // Debugging Statement
 
   return;
+}
+
+/*
+  Clears most objects and disks
+ */
+void Engine::clearObjects(bool clearBasket) {
+  int i;
+
+  // clear objs
+  // starts from 1 because basket should be index 0
+  for(i = objs.size()-1; i >= 1; i--) {
+    deleteObject(objs, i);
+  }
+  
+  // clear disks
+  for(i = disks.size()-1; i >= 0; i--) {
+    deleteObject(disks, i);
+  }
 }
