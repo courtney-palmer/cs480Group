@@ -95,11 +95,11 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
   numObjectsInGhost = ghostObj->getNumOverlappingObjects();
   if(numObjectsInGhost > 0)
     std::cout << "number of objects inside ghost: " << numObjectsInGhost << std::endl;
-  for(int i=0; i<numObjectsInGhost;++i)
+  for(int i=0; i<numObjectsInGhost;i++)
   {
     btCollisionObject* obj = ghostObj->getOverlappingObject(i);
     if(obj != nullptr)
-      std::cout << "obj is " << ((Object*)obj->getUserPointer())->getKeyname() << std::endl;
+      std::cout << "obj is not null" << std::endl;
     else
       std::cout << "obj is null" << std::endl;
   }
