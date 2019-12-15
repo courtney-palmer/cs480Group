@@ -75,6 +75,7 @@ class Engine
     unsigned int timer; //should be in milliseconds, to work with getDT()
     const unsigned int MAX_TIME = 60000; //ms
     bool playing; //determines whether the game is currently running - should the timer be counting down?
+    bool levelLoaded;
 
     void deleteOutOfBoundsDisks();
 

@@ -111,7 +111,7 @@ bool Engine::Initialize(char **argv)
   //struct ShapeInfo invWallInfo(box, 100, 100, 1);
   struct ShapeInfo invWallInfo(mesh);
   //createObject("bucket.obj", invWallInfo, "glassTop", NA, 0, 0, -5, 3);
-  createObject("window.obj", invWallInfo, "glassTop", NA, 0, 0, -2, 3);
+  createObject("window.obj", invWallInfo, "glassTop", NA, 0, 0, -3, 3);
   //createObject("verticalboard.obj", invWallInfo, "regTop", "steel.jpg", 0,0,-2,3); // Visible version for testing
 
   // Add board : Static (type 3)
@@ -120,19 +120,17 @@ bool Engine::Initialize(char **argv)
   // Set 0 friction for board
   m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
 
-
-<<<<<<< HEAD
+  /*
   // Add bucket : Kinematic (type 2)
   struct ShapeInfo bucketInfo(mesh);
   createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -7, -2.5, 2);
   basketIndex = objs.size() - 1;
+  */
 
   // Try to add ghost object
   struct ShapeInfo ghostTest(ghostObject_mesh);
   createObject("ghost.obj", ghostTest, "ghost", "galaxy.jpg", 0, -5, -3, 4);
   ghostIndex = objs.size() -1;  
-=======
->>>>>>> e8db337dd82eef8d422f2ab792552aec3bb72805
  
   // Add Pegs : Static (type 3)
   // TODO: instantiate pegs to cut down on rendering
@@ -155,6 +153,8 @@ bool Engine::Initialize(char **argv)
       createObject("triangleprism.obj", triangleInfo, "leftwall", "wood.jpg", leftWallx, y, 0, 3);
     }
   }
+
+  levelLoaded = true;
   
 
   // Add disks : Dynamic (type 1)
@@ -393,6 +393,8 @@ void Engine::Keyboard()
 
     case SDLK_x: // Clear board
       clearObjects();
+      levelLoaded = false;
+      std::cout << "Board cleared!" << std::endl;
       break;
 
     default:
@@ -514,6 +516,7 @@ void Engine::clearObjects(bool clearBasket) {
   // clear objs
   // starts from 1 because basket should be index 0
   for(i = objs.size()-1; i >= 1; i--) {
+    //std::cout << "deleting object " << i << std::endl;
     deleteObject(objs, i);
   }
   
@@ -521,4 +524,6 @@ void Engine::clearObjects(bool clearBasket) {
   for(i = disks.size()-1; i >= 0; i--) {
     deleteObject(disks, i);
   }
+
+  return;
 }
