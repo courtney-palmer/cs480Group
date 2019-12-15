@@ -444,6 +444,7 @@ void Engine::Keyboard()
     case SDLK_1: // Load Level 1
       loadLevel(1);
 
+      break;
     default:
       break;
     }
@@ -614,7 +615,11 @@ void Engine::loadLevel(int level) {
 
   m_physics->AddGhost(0, -16, -1.25);
 
-  
+  switch(level) {
+      std::fstream lvlFile("../Assets/level1.txt");
+  }
+
+  // Display all the information for testing purposes before attempting to load
 
   
 
