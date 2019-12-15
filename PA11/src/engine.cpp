@@ -62,7 +62,6 @@ bool Engine::Initialize(char **argv)
   objectCollidedSound.launchSound();
   // objectCollidedSound.playSound();
 
-
   // Start the graphics
   m_graphics = new Graphics();
   if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, argv)) //initialize new instance of Objects here
@@ -107,10 +106,7 @@ bool Engine::Initialize(char **argv)
   createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -14, -1.25, 2);
   basketIndex = objs.size() - 1;
 
-  // Known issue : Ghost object needs to be added somehow to engine.objs
-  // Because synchronization between physics-dynamicsWorld & engine objs causes issues
-  // Commented out now for further debugging
-    m_physics->AddGhost(0, -14, -1.25);
+  m_physics->AddGhost(0, -14, -1.25);
   
   // add invisible wall :: i0
   //struct ShapeInfo invWallInfo(box, 100, 100, 1);
@@ -202,7 +198,7 @@ void Engine::Run()
     // if there's no level, aka no objects to update then don't run
     if(!levelLoaded) {
       m_graphics->clearScreen();
-      std::cout << "No level loaded." << std::endl;
+      //std::cout << "No level loaded." << std::endl;
       continue;
     }
 
@@ -492,11 +488,7 @@ void Engine::deleteOutOfBoundsDisks() {
 
   for(int i = 0; i < disks.size(); i++) {
     if(disks[i]->y <= boundary) {
-      //erase only works with c++ iterators, not regular integers for some reason.
-      std::cout << "Deleting disk " << i << std::endl;
       deleteObject(disks, i);
-      std::cout << "Remaining disks: " << disks.size() << std::endl;
-      outputObjects();
     }
   }
 }
@@ -548,6 +540,8 @@ void Engine::clearObjects() {
   for(i = disks.size()-1; i >= 0; i--) {
     deleteObject(disks, i);
   }
+
+  // CLear any remaining objects from dynamics world
 
   return;
 }

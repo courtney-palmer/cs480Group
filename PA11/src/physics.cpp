@@ -384,3 +384,7 @@ void Physics::removeCollisionObject(Object* toDelete) {
   dynamicsWorld->removeRigidBody(toDelete->RBody);
 
 }
+
+/*void Physics::clearDynamicsWorld() {
+  int objs = dynamicsWorld->getNumCollisionObjects
+  }*/
