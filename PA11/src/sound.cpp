@@ -1,7 +1,6 @@
 #include <sound.h>
 #include "iostream"
 
-#define HIT_SOUND "Single-yard-dog-woof.wav"
 Uint8 *soundPosition;
 Uint32 soundRemaining;
 SDL_atomic_t audioCallbackLeft;
