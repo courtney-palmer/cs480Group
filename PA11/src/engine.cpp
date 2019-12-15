@@ -48,7 +48,6 @@ void Engine::createDisk(const std::string& objFileName, const ShapeInfo& newShap
 		      Rtype);
 }
 
-
 bool Engine::Initialize(char **argv)
 {
   // Start a window
@@ -108,6 +107,8 @@ bool Engine::Initialize(char **argv)
   struct ShapeInfo bucketInfo(mesh);
   createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -14, -1.25, 2);
   basketIndex = objs.size() - 1;
+
+  m_physics->AddGhost(0, -14, -1.25);
   
   // add invisible wall :: i0
   //struct ShapeInfo invWallInfo(box, 100, 100, 1);
@@ -122,11 +123,10 @@ bool Engine::Initialize(char **argv)
   // Set 0 friction for board
   m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
 
-
   // Try to add ghost object
-  struct ShapeInfo ghostTest(ghostObject_mesh);
-  createObject("ghost.obj", ghostTest, "ghost", "galaxy.jpg", 0, -5, -3, 4);
-  ghostIndex = objs.size() -1;  
+  // struct ShapeInfo ghostTest(ghostObject_mesh);
+  // createObject("ghost.obj", ghostTest, "ghost", "galaxy.jpg", 0, -5, -3, 4);
+  // ghostIndex = objs.size() -1;
  
   // Add Pegs : Static (type 3)
   // TODO: instantiate pegs to cut down on rendering
@@ -168,6 +168,7 @@ bool Engine::Initialize(char **argv)
 //  {
 //    std::cout << ((Object*)(objs[i]->physicsObject->getUserPointer()))->getKeyname() << std::endl;
 //  }
+
   //outputObjects();
   
   
@@ -201,9 +202,10 @@ void Engine::Run()
 
     // Update physics
     //m_physics->Update();
-    m_physics->Update(objs, disks);
-    std::cout << "Physics successfully updated\n";
-    //m_physics->Update(objs, score, ghostIndex);
+    std::cout << "Updating physics\n";
+    m_physics->Update(objs, disks, score);
+    std::cout << "Physics update done\n";
+
 
     // DEBUG COLLISION TESTING for danny phantom
     /*
@@ -346,6 +348,7 @@ void Engine::Keyboard()
       objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
       newTrans.getOrigin() += btVector3(1, 0, 0);
       objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
+      m_physics->MoveGhost(newTrans);
       //objs[basketIndex]->RBody->setLinearVelocity(btVector3(10, 0, 0));
       break;
     case SDLK_RIGHT:
@@ -354,6 +357,7 @@ void Engine::Keyboard()
       objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
       newTrans.getOrigin() += btVector3(-1, 0, 0);
       objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
+      m_physics->MoveGhost(newTrans);
       //objs[basketIndex]->RBody->setLinearVelocity(btVector3(-10, 0, 0));
       break;
 
@@ -554,6 +558,7 @@ void Engine::loadLevel(int level) {
   
   // ========== Load Levels down below ==========
   if(level == 0) { // Default level
+
     // Add basket : Kinematic (type 2)
     struct ShapeInfo bucketInfo(mesh);
     createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -14, -1.25, 2);
@@ -605,6 +610,9 @@ void Engine::loadLevel(int level) {
     createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -0.5, 1);
 
     levelLoaded = true;
+
   } // End load Level 0
-  
+
+
+  std::cout << "Level " << level << " loaded.\n";
 }

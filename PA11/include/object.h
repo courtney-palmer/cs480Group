@@ -54,7 +54,7 @@ class Object
  public: // PUblic for testing reasons currently
     // Used for physics
     btCollisionObject *physicsObject; // Holds both world transform & shape, see shape
-    btGhostObject* ghostObj; //holds collisionObject for ghost object
+    //btGhostObject* ghostObj; //holds collisionObject for ghost object
     btCollisionShape *shape; // Defines shape of collision object
     btTriangleMesh *objTriMesh; // used if shape is mesh, otherwise null
     Shape shapeType;
