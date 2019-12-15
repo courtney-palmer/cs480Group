@@ -58,10 +58,6 @@ bool Engine::Initialize(char **argv)
     return false;
   }  
 
-  objectCollidedSound.loadSound(HIT_SOUND);
-  objectCollidedSound.launchSound();
-  // objectCollidedSound.playSound();
-
   // Start the graphics
   m_graphics = new Graphics();
   if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, argv)) //initialize new instance of Objects here
@@ -191,6 +187,11 @@ bool Engine::Initialize(char **argv)
   
 //  ========================= End Object Creation :> =================
 
+
+  objectCollidedSound.loadSound(BACGROUND_SOUND);
+  objectCollidedSound.launchSound();
+  // objectCollidedSound.playSound();
+  
   // No errors
   return true;
 }
