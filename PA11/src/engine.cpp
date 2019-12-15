@@ -379,18 +379,14 @@ void Engine::Keyboard()
       break;
       
     case SDLK_l: // Add disk
-      {
+      struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
+      createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,0,0,1);
 
-        struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
-        createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,0,0,1);
-
-        // spawn in random position
-        randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
-        m_physics->resetRotation(disks.back());
-        m_physics->moveObject(disks, disks.size()-1,
-			      randSpawnVal, 10, -0.5);
-      }
-		 
+      // spawn in random position
+      randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
+      m_physics->resetRotation(disks.back());
+      m_physics->moveObject(disks, disks.size()-1,
+			    randSpawnVal, 10, -0.5);
       break;
       
     case SDLK_k: // Remove disk
@@ -414,6 +410,16 @@ void Engine::Keyboard()
       timer = MAX_TIME;
       playing = true;
       score = 0;
+
+      //spawn disk
+      struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
+      createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,0,0,1);
+
+      // spawn in random position
+      randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
+      m_physics->resetRotation(disks.back());
+      m_physics->moveObject(disks, disks.size()-1,
+			    randSpawnVal, 10, -0.5);
       break;
 
     default:
