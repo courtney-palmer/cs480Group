@@ -102,13 +102,15 @@ bool Engine::Initialize(char **argv)
   //                                note: mesh cannot be dynamic
 
 
-  /*
   // Add basket : Kinematic (type 2)
   struct ShapeInfo bucketInfo(mesh);
   createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -14, -1.25, 2);
   basketIndex = objs.size() - 1;
 
-  m_physics->AddGhost(0, -14, -1.25);
+  // Known issue : Ghost object needs to be added somehow to engine.objs
+  // Because synchronization between physics-dynamicsWorld & engine objs causes issues
+  // Commented out now for further debugging
+    m_physics->AddGhost(0, -14, -1.25);
   
   // add invisible wall :: i0
   //struct ShapeInfo invWallInfo(box, 100, 100, 1);
@@ -121,7 +123,7 @@ bool Engine::Initialize(char **argv)
   struct ShapeInfo boardInfo(mesh);
   createObject("verticalboard.obj", boardInfo, "board", "wood.jpg", 0, 0, 0, 3);
   // Set 0 friction for board
-  m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
+  //m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
 
   // Try to add ghost object
   // struct ShapeInfo ghostTest(ghostObject_mesh);
@@ -156,8 +158,12 @@ bool Engine::Initialize(char **argv)
 
   levelLoaded = true;
 
-  */ // Level 0 initialization moved to function
-  loadLevel(0);
+  //  std::cout << "Object Initial values\n";
+  //  outputObjects();
+
+  // Level 0 initialization moved to function, uncomment when ready to move to function
+  // body of code above should be copied to loadLevel when finalized
+  //loadLevel(0);
 
 
 //  for(int i = 0; i < objs.size(); i++)
@@ -202,10 +208,8 @@ void Engine::Run()
 
     // Update physics
     //m_physics->Update();
-    std::cout << "Updating physics\n";
     m_physics->Update(objs, disks, score);
-    std::cout << "Physics update done\n";
-
+    //outputObjects();
 
     // DEBUG COLLISION TESTING for danny phantom
     /*
@@ -237,7 +241,7 @@ void Engine::Run()
       compositeObjects.push_back(disks[i]);
     }
     m_graphics->Render(compositeObjects);
-    std::cout << "Graphics successfully rendered\n";
+    //std::cout << "Graphics successfully rendered\n";
 
     // Game Logic
     deleteOutOfBoundsDisks();
@@ -348,7 +352,7 @@ void Engine::Keyboard()
       objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
       newTrans.getOrigin() += btVector3(1, 0, 0);
       objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
-      m_physics->MoveGhost(newTrans);
+      m_physics->MoveGhost(newTrans); 
       //objs[basketIndex]->RBody->setLinearVelocity(btVector3(10, 0, 0));
       break;
     case SDLK_RIGHT:
@@ -503,13 +507,15 @@ void Engine::deleteOutOfBoundsDisks() {
  */
 void Engine::deleteObject(std::vector<Object*>& objArray, int objIndex) {
 
-  /* Debugging statement : Used to check for successful deletion from physics
+  // Debugging statement : Used to check for successful deletion from physics
   m_physics->OutputCollisionObjects();
   std::cout << "Removing Object\n";
-  */ 
+  
   
   // Remove from physics context
   m_physics->removeCollisionObject(objArray.at(objIndex));
+  std::cout << "Objects after disk removal: \n";
+  m_physics->OutputCollisionObjects();
 
   
   // Remove from Engine object array
@@ -559,57 +565,58 @@ void Engine::loadLevel(int level) {
   // ========== Load Levels down below ==========
   if(level == 0) { // Default level
 
-    // Add basket : Kinematic (type 2)
-    struct ShapeInfo bucketInfo(mesh);
-    createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -14, -1.25, 2);
-    basketIndex = objs.size() - 1;
+      // Add basket : Kinematic (type 2)
+  struct ShapeInfo bucketInfo(mesh);
+  createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -14, -1.25, 2);
+  basketIndex = objs.size() - 1;
+
+  m_physics->AddGhost(0, -14, -1.25);
   
-    // add invisible wall :: i0
-    //struct ShapeInfo invWallInfo(box, 100, 100, 1);
-    struct ShapeInfo invWallInfo(mesh);
-    //createObject("bucket.obj", invWallInfo, "glassTop", NA, 0, 0, -5, 3);
-    createObject("window.obj", invWallInfo, "glassTop", NA, 0, 0, -3, 3);
-    //createObject("verticalboard.obj", invWallInfo, "regTop", "steel.jpg", 0,0,-2,3); // Visible version for testing
+  // add invisible wall :: i0
+  //struct ShapeInfo invWallInfo(box, 100, 100, 1);
+  struct ShapeInfo invWallInfo(mesh);
+  //createObject("bucket.obj", invWallInfo, "glassTop", NA, 0, 0, -5, 3);
+  createObject("window.obj", invWallInfo, "glassTop", NA, 0, 0, -3, 3);
+  //createObject("verticalboard.obj", invWallInfo, "regTop", "steel.jpg", 0,0,-2,3); // Visible version for testing
 
-    // Add board : Static (type 3)
-    struct ShapeInfo boardInfo(mesh);
-    createObject("verticalboard.obj", boardInfo, "board", "wood.jpg", 0, 0, 0, 3);
-    // Set 0 friction for board
-    m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
+  // Add board : Static (type 3)
+  struct ShapeInfo boardInfo(mesh);
+  createObject("verticalboard.obj", boardInfo, "board", "wood.jpg", 0, 0, 0, 3);
+  // Set 0 friction for board
+  m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
 
-
-    // Try to add ghost object
-    struct ShapeInfo ghostTest(ghostObject_mesh);
-    createObject("ghost.obj", ghostTest, "ghost", "galaxy.jpg", 0, -5, -3, 4);
-    ghostIndex = objs.size() -1;  
+  // Try to add ghost object
+  // struct ShapeInfo ghostTest(ghostObject_mesh);
+  // createObject("ghost.obj", ghostTest, "ghost", "galaxy.jpg", 0, -5, -3, 4);
+  // ghostIndex = objs.size() -1;
  
-    // Add Pegs : Static (type 3)
-    // TODO: instantiate pegs to cut down on rendering
-    struct ShapeInfo pegInfo(mesh);
-    for(int y = -3; y <= 6; y += 3){ // rows at -3, 0, 3, 6
-      for(int x = -9; x <= 9; x += 3){ // columns at -9, -6, -3, 0, 3, 6, 9
-	if(y == 0 || y == 6) // add an extra offset for alternating rows
-	  x += 1.5;
-	createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
-      }
+  // Add Pegs : Static (type 3)
+  // TODO: instantiate pegs to cut down on rendering
+  struct ShapeInfo pegInfo(mesh);
+  for(int y = -3; y <= 6; y += 3){ // rows at -3, 0, 3, 6
+    for(int x = -9; x <= 9; x += 3){ // columns at -9, -6, -3, 0, 3, 6, 9
+      if(y == 0 || y == 6) // add an extra offset for alternating rows
+        x += 1.5;
+      createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
     }
+  }
   
-    // Add Triangular Walls // see above for instancing problem
-    struct ShapeInfo triangleInfo(mesh);
-    // Create left wall
-    {
-      int leftWallx = -8;
-      for(int y = 13; y >= -12; y -= 4) {
-	createObject("triangleprism.obj", triangleInfo, "leftwall", "wood.jpg", leftWallx, y, 0, 3);
-      }
+  // Add Triangular Walls // see above for instancing problem
+  struct ShapeInfo triangleInfo(mesh);
+  // Create left wall
+  {
+    int leftWallx = -8;
+    for(int y = 13; y >= -12; y -= 4) {
+      createObject("triangleprism.obj", triangleInfo, "leftwall", "wood.jpg", leftWallx, y, 0, 3);
     }
+  }
 
-    // Add disks : Dynamic (type 1)
-    struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
-    //createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
-    createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -0.5, 1);
+  // Add disks : Dynamic (type 1)
+  struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
+  //createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
+  createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -0.5, 1);
 
-    levelLoaded = true;
+  levelLoaded = true;
 
   } // End load Level 0
 

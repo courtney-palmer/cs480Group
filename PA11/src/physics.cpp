@@ -73,9 +73,11 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
  dynamicsWorld->stepSimulation(1.0f/30.f, 10); //sped up simulation speed
 
  btTransform trans; // Stores transformations
-  btScalar m[16]; // 4x4 matrix to store transformations
+ btScalar m[16]; // 4x4 matrix to store transformations
+
   // Update the position of every object
   for(int i = 0; i < objs.size(); i++) {
+    //std::cout << "objs i: " << i << std::endl;
     objs[i]->RBody->getMotionState()->getWorldTransform(trans);
     trans.getOpenGLMatrix(m);
 
@@ -84,12 +86,15 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
 
   // update position of every disk
   for(int i = 0; i < disks.size(); i++) {
+    //std::cout << "disks i: " << i << std::endl;
     disks[i]->RBody->getMotionState()->getWorldTransform(trans);
     trans.getOpenGLMatrix(m);
 
     disks[i]->setPosition( (float)m[12], (float)m[13], (float)m[14] ); // store updated position for each obj in objs
   }
 
+  //std::cout << "Ghost stuff\n";
+  
   //// Handling ghost stuff ////
   int numObjectsInGhost = 0;
   numObjectsInGhost = ghostObj->getNumOverlappingObjects();
@@ -103,6 +108,9 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
     else
       std::cout << "obj is null" << std::endl;
   }
+  
+
+  //std::cout << "End ghost stuff\n";
 }
 
 // void Physics::Update(std::vector<Object*>& objs, unsigned int& score)
@@ -246,8 +254,8 @@ void Physics::AddShape(Object* obj, float x, float y, float z, int bodyType)
 
   obj->RBody = rigidBody;
   dynamicsWorld->addRigidBody(rigidBody);
-  if(obj->physicsObject != nullptr)
-    dynamicsWorld->addCollisionObject(obj->physicsObject);
+  //if(obj->physicsObject != nullptr)
+    //dynamicsWorld->addCollisionObject(obj->physicsObject);
   //obj->physicsObject->setUserPointer(obj);
 }
 
