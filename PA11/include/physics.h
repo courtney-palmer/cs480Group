@@ -15,13 +15,16 @@ class Physics
     ~Physics();
     bool Initialize();
 
-    void Update(std::vector<Object*>& objs, std::vector<Object*>& disks); // just used to stepSimulation and update positions
-    void Update(std::vector<Object*>& objs, unsigned int& score, int ghostIndex);
+    void Update(std::vector<Object*>& objs, std::vector<Object*>& disks, unsigned int& score); // just used to stepSimulation and update positions
+    //void Update(std::vector<Object*>& objs, unsigned int& score);
     
     // default : obj starts at origin as dynamic collision object
     // inserts obj by way of rigid bodies, not by collision objects
     void AddShape(Object* obj,float x = 0, float y = 0, float z = 0,
 		  int bodyType = 0);
+
+    void AddGhost(float x = 0, float y = 0, float z = 0);
+    void MoveGhost(btTransform trans);
 
     void resetRotation(Object* obj);
 
@@ -43,6 +46,7 @@ class Physics
     btDefaultCollisionConfiguration *collisionConfiguration;
     btCollisionDispatcher *dispatcher;
     btSequentialImpulseConstraintSolver *solver;
+    btGhostObject* ghostObj;
     
     Engine* m_engine;
 };
