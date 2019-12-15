@@ -128,12 +128,17 @@ bool Engine::Initialize(char **argv)
  
   // Add Pegs : Static (type 3)
   // TODO: instantiate pegs to cut down on rendering
-  struct ShapeInfo pegInfo(mesh);
-  for(int y = -3; y <= 6; y += 3){ // rows at -3, 0, 3, 6
-    for(int x = -9; x <= 9; x += 3){ // columns at -9, -6, -3, 0, 3, 6, 9
-      if(y == 0 || y == 6) // add an extra offset for alternating rows
-        x += 1.5;
-      createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
+  struct ShapeInfo pegInfo(cylind, 0.75, 0.75, 0.75);
+  for(int y = -9; y <= 9; y += 3){ // rows at -9, -6, 3, 0, 3, 6, 9
+    if(y == -9 || y == -3 || y == 3 || y == 9){
+      for(int x = -3; x <= 6; x += 3){ // columns at -3, 0, 3, 6,
+        createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
+      }
+    }
+    else{
+     for(int x = -4.5; x <= 7.5; x += 3){ // columns at -4.5, -1.5, 1.5, 4.5, 7.5
+        createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
+      }
     }
   }
   
@@ -141,9 +146,15 @@ bool Engine::Initialize(char **argv)
   struct ShapeInfo triangleInfo(mesh);
   // Create left wall
   {
-    int leftWallx = -8;
     for(int y = 13; y >= -12; y -= 4) {
-      createObject("triangleprism.obj", triangleInfo, "leftwall", "wood.jpg", leftWallx, y, 0, 3);
+      for(int x = -8; x <= 10; x += 18){
+         if(x == -8){
+           createObject("triangleprism.obj", triangleInfo, "leftwall", "wood.jpg", x, y, 0, 3);
+         }
+         else{
+           createObject("trianglprismL.obj", triangleInfo, "rightwall", "wood.jpg", x, y, 0, 3);
+         }
+       }
     }
   }
 
@@ -154,6 +165,10 @@ bool Engine::Initialize(char **argv)
 
   levelLoaded = true;
 
+  // Add disks : Dynamic (type 1)
+  struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
+  //createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
+  // createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -0.5, 1);
   //  std::cout << "Object Initial values\n";
   //  outputObjects();
 
@@ -516,16 +531,9 @@ void Engine::deleteOutOfBoundsDisks() {
   when considering m_physics->dynamicsWorld)
  */
 void Engine::deleteObject(std::vector<Object*>& objArray, int objIndex) {
-
-  // Debugging statement : Used to check for successful deletion from physics
-  m_physics->OutputCollisionObjects();
-  std::cout << "Removing Object\n";
-  
   
   // Remove from physics context
   m_physics->removeCollisionObject(objArray.at(objIndex));
-  std::cout << "Objects after disk removal: \n";
-  m_physics->OutputCollisionObjects();
 
   
   // Remove from Engine object array
