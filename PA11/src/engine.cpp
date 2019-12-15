@@ -62,7 +62,6 @@ bool Engine::Initialize(char **argv)
   objectCollidedSound.launchSound();
   // objectCollidedSound.playSound();
 
-
   // Start the graphics
   m_graphics = new Graphics();
   if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, argv)) //initialize new instance of Objects here
@@ -84,6 +83,7 @@ bool Engine::Initialize(char **argv)
 
   // ============= Initialize game logic ===============================
   playing = false;
+  levelLoaded = false;
   score = 0;
   timer = MAX_TIME;
 
@@ -100,13 +100,13 @@ bool Engine::Initialize(char **argv)
   //                                x, y, z are initial coordinates, bodyType: 1 = dynamic, 2 = kinematic, 3 = static
   //                                note: mesh cannot be dynamic
 
-  // LET BASKET BE THE first thing to be created? make sure it's index 0 or it may break things
+
   // Add basket : Kinematic (type 2)
   struct ShapeInfo bucketInfo(mesh);
-  createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -14, -1.25, 2);
+  createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -16, -1.25, 2);
   basketIndex = objs.size() - 1;
 
-  m_physics->AddGhost(0, -14, -1.25);
+  m_physics->AddGhost(0, -16, -1.25);
   
   // add invisible wall :: i0
   //struct ShapeInfo invWallInfo(box, 100, 100, 1);
@@ -119,12 +119,7 @@ bool Engine::Initialize(char **argv)
   struct ShapeInfo boardInfo(mesh);
   createObject("verticalboard.obj", boardInfo, "board", "wood.jpg", 0, 0, 0, 3);
   // Set 0 friction for board
-  m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
-
-  // Add bucket : Kinematic (type 2)
-  // struct ShapeInfo bucketInfo(mesh);
-  // createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -7, -2.5, 2);
-  // basketIndex = objs.size() - 1;
+  //m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
 
   // Try to add ghost object
   // struct ShapeInfo ghostTest(ghostObject_mesh);
@@ -141,7 +136,6 @@ bool Engine::Initialize(char **argv)
       createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
     }
   }
-
   
   // Add Triangular Walls // see above for instancing problem
   struct ShapeInfo triangleInfo(mesh);
@@ -159,13 +153,33 @@ bool Engine::Initialize(char **argv)
     }
   }
 
+  // Add disks : Dynamic (type 1)
+  // struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
+  // //createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
+  // createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -0.5, 1);
+
   levelLoaded = true;
-  
 
   // Add disks : Dynamic (type 1)
   struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
   //createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
   // createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -0.5, 1);
+  //  std::cout << "Object Initial values\n";
+  //  outputObjects();
+
+  // Level 0 initialization moved to function, uncomment when ready to move to function
+  // body of code above should be copied to loadLevel when finalized
+  //loadLevel(0);
+
+
+//  for(int i = 0; i < objs.size(); i++)
+//  {
+//    objs[i]->physicsObject->setUserPointer(objs[i]);
+//  }
+//   for(int i = 0; i < objs.size(); i++)
+//  {
+//    std::cout << ((Object*)(objs[i]->physicsObject->getUserPointer()))->getKeyname() << std::endl;
+//  }
 
   //outputObjects();
   
@@ -191,10 +205,17 @@ void Engine::Run()
       Keyboard();
     }
 
+    // if there's no level, aka no objects to update then don't run
+    if(!levelLoaded) {
+      m_graphics->clearScreen();
+      //std::cout << "No level loaded." << std::endl;
+      continue;
+    }
 
     // Update physics
     //m_physics->Update();
     m_physics->Update(objs, disks, score);
+    //outputObjects();
 
     // DEBUG COLLISION TESTING for danny phantom
     /*
@@ -226,6 +247,7 @@ void Engine::Run()
       compositeObjects.push_back(disks[i]);
     }
     m_graphics->Render(compositeObjects);
+    //std::cout << "Graphics successfully rendered\n";
 
     // Game Logic
     deleteOutOfBoundsDisks();
@@ -335,18 +357,22 @@ void Engine::Keyboard()
 		  
       objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
       newTrans.getOrigin() += btVector3(1, 0, 0);
-      objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
-      m_physics->MoveGhost(newTrans);
-      //objs[basketIndex]->RBody->setLinearVelocity(btVector3(10, 0, 0));
+      if(newTrans.getOrigin().getX() < 10)
+      {
+        objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
+        m_physics->MoveGhost(newTrans); 
+      }
       break;
     case SDLK_RIGHT:
       objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
 		  
       objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
       newTrans.getOrigin() += btVector3(-1, 0, 0);
-      objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
-      m_physics->MoveGhost(newTrans);
-      //objs[basketIndex]->RBody->setLinearVelocity(btVector3(-10, 0, 0));
+      if(newTrans.getOrigin().getX() > -8)
+      {
+        objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
+        m_physics->MoveGhost(newTrans); 
+      }
       break;
 
     case SDLK_r: //respawn each disk
@@ -391,21 +417,24 @@ void Engine::Keyboard()
 
     case SDLK_x: // Clear board
       clearObjects();
-      levelLoaded = false;
-      std::cout << "Board cleared!" << std::endl;
+      std::cout << "Objects cleared!" << std::endl;
+      break;
+
+    case SDLK_SPACE: //start the game!
+      timer = MAX_TIME;
+      playing = true;
+      score = 0;
       break;
 
     default:
       break;
     }
-
-
   }
-  else if (m_event.type == SDL_KEYUP)
-  {
-    // handle key up events here
-    switch(m_event.key.keysym.sym)
-    {
+  // else if (m_event.type == SDL_KEYUP)
+  // {
+  //   // handle key up events here
+  //   switch(m_event.key.keysym.sym)
+  //   {
 		/**************************GAME CONTROLS**************************/
 		//case SDLK_LEFT:
 		//	objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
@@ -416,10 +445,10 @@ void Engine::Keyboard()
 		//	objs[basketIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
 		//	break;
 
-      default:
-        break;
-    }
-  }
+  //     default:
+  //       break;
+  //   }
+  // }
 }
 
 unsigned int Engine::getDT()
@@ -443,6 +472,8 @@ long long Engine::GetCurrentTimeMillis()
    Outputs indexes and keynames of all objects in objs
  */
 void Engine::outputObjects() const {
+  m_physics->OutputCollisionObjects();
+  
   std::cout << "== Objects in engine ==" << std::endl;
   for(int i = 0; i < objs.size(); i++) {
     std::cout << i << ": " << objs[i]->getKeyname()
@@ -475,7 +506,6 @@ void Engine::deleteOutOfBoundsDisks() {
 
   for(int i = 0; i < disks.size(); i++) {
     if(disks[i]->y <= boundary) {
-      //erase only works with c++ iterators, not regular integers for some reason.
       deleteObject(disks, i);
     }
   }
@@ -486,11 +516,6 @@ void Engine::deleteOutOfBoundsDisks() {
   when considering m_physics->dynamicsWorld)
  */
 void Engine::deleteObject(std::vector<Object*>& objArray, int objIndex) {
-
-  /* Debugging statement : Used to check for successful deletion from physics
-  m_physics->OutputCollisionObjects();
-  std::cout << "Removing Object\n";
-  */ 
   
   // Remove from physics context
   m_physics->removeCollisionObject(objArray.at(objIndex));
@@ -508,13 +533,17 @@ void Engine::deleteObject(std::vector<Object*>& objArray, int objIndex) {
 /*
   Clears most objects and disks
  */
-void Engine::clearObjects(bool clearBasket) {
+void Engine::clearObjects() {
   int i;
 
-  // clear objs
-  // starts from 1 because basket should be index 0
-  for(i = objs.size()-1; i >= 1; i--) {
-    //std::cout << "deleting object " << i << std::endl;
+  // Set indexes to -1
+  basketIndex = -1;
+
+  // No Level is loaded...
+  levelLoaded = false;
+
+  // clear all objs
+  for(i = objs.size()-1; i >= 0; i--) {
     deleteObject(objs, i);
   }
   
@@ -523,5 +552,79 @@ void Engine::clearObjects(bool clearBasket) {
     deleteObject(disks, i);
   }
 
+  // CLear any remaining objects from dynamics world
+
   return;
+}
+
+/*
+  This function loads levels corresponding to a string file or defaults to level 0, which is what the
+  game starts with.
+ */
+void Engine::loadLevel(int level) {
+
+  clearObjects(); // Clears other objects
+  
+  std::cout << "Loading level " << level << std::endl;
+  
+  // ========== Load Levels down below ==========
+  if(level == 0) { // Default level
+
+      // Add basket : Kinematic (type 2)
+  struct ShapeInfo bucketInfo(mesh);
+  createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -14, -1.25, 2);
+  basketIndex = objs.size() - 1;
+
+  m_physics->AddGhost(0, -14, -1.25);
+  
+  // add invisible wall :: i0
+  //struct ShapeInfo invWallInfo(box, 100, 100, 1);
+  struct ShapeInfo invWallInfo(mesh);
+  //createObject("bucket.obj", invWallInfo, "glassTop", NA, 0, 0, -5, 3);
+  createObject("window.obj", invWallInfo, "glassTop", NA, 0, 0, -3, 3);
+  //createObject("verticalboard.obj", invWallInfo, "regTop", "steel.jpg", 0,0,-2,3); // Visible version for testing
+
+  // Add board : Static (type 3)
+  struct ShapeInfo boardInfo(mesh);
+  createObject("verticalboard.obj", boardInfo, "board", "wood.jpg", 0, 0, 0, 3);
+  // Set 0 friction for board
+  m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
+
+  // Try to add ghost object
+  // struct ShapeInfo ghostTest(ghostObject_mesh);
+  // createObject("ghost.obj", ghostTest, "ghost", "galaxy.jpg", 0, -5, -3, 4);
+  // ghostIndex = objs.size() -1;
+ 
+  // Add Pegs : Static (type 3)
+  // TODO: instantiate pegs to cut down on rendering
+  struct ShapeInfo pegInfo(mesh);
+  for(int y = -3; y <= 6; y += 3){ // rows at -3, 0, 3, 6
+    for(int x = -9; x <= 9; x += 3){ // columns at -9, -6, -3, 0, 3, 6, 9
+      if(y == 0 || y == 6) // add an extra offset for alternating rows
+        x += 1.5;
+      createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
+    }
+  }
+  
+  // Add Triangular Walls // see above for instancing problem
+  struct ShapeInfo triangleInfo(mesh);
+  // Create left wall
+  {
+    int leftWallx = -8;
+    for(int y = 13; y >= -12; y -= 4) {
+      createObject("triangleprism.obj", triangleInfo, "leftwall", "wood.jpg", leftWallx, y, 0, 3);
+    }
+  }
+
+  // Add disks : Dynamic (type 1)
+  struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
+  //createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
+  createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -0.5, 1);
+
+  levelLoaded = true;
+
+  } // End load Level 0
+
+
+  std::cout << "Level " << level << " loaded.\n";
 }
