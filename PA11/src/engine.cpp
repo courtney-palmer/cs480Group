@@ -464,7 +464,7 @@ long long Engine::GetCurrentTimeMillis()
 void Engine::outputObjects() const {
   m_physics->OutputCollisionObjects();
   
-  std::cout << "== Objects in engine ==" << std::endl;
+  std::cout << "== Objects in engine: " << objs.size() << " + " << disks.size() << std::endl;
   for(int i = 0; i < objs.size(); i++) {
     std::cout << i << ": " << objs[i]->getKeyname()
 	      << " x" << objs[i]->x
@@ -515,7 +515,6 @@ void Engine::deleteObject(std::vector<Object*>& objArray, int objIndex) {
   std::vector<Object*>::iterator i = objArray.begin() + objIndex;
   objArray.erase(i);
 
-  // m_physics->OutputCollisionObjects(); // Debugging Statement
 
   return;
 }
@@ -543,6 +542,12 @@ void Engine::clearObjects() {
   }
 
   // CLear any remaining objects from dynamics world
+  m_physics->clearDynamicsWorld();
+
+  outputObjects();
+
+  // Clear Screen
+  m_graphics->clearScreen();
 
   return;
 }
