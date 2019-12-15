@@ -94,6 +94,8 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
     trans.getOpenGLMatrix(m);
 
     disks[i]->setPosition( (float)m[12], (float)m[13], (float)m[14] ); // store updated position for each obj in objs
+    m[10] = m[5] = 0;
+    disks[i]->RBody->getMotionState()->setWorldTransform(trans);
   }
 
   //std::cout << "Ghost stuff\n";
@@ -101,16 +103,16 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
   //// Handling ghost stuff ////
   int numObjectsInGhost = 0;
   numObjectsInGhost = ghostObj->getNumOverlappingObjects();
-  if(numObjectsInGhost > 0)
-    std::cout << "number of objects inside ghost: " << numObjectsInGhost << std::endl;
-  for(int i=0; i<numObjectsInGhost;i++)
-  {
-    btCollisionObject* obj = ghostObj->getOverlappingObject(i);
-    if(obj != nullptr)
-      std::cout << "obj is not null" << std::endl;
-    else
-      std::cout << "obj is null" << std::endl;
-  }
+  // if(numObjectsInGhost > 0)
+  //   std::cout << "number of objects inside ghost: " << numObjectsInGhost << std::endl;
+  // for(int i=0; i<numObjectsInGhost;i++)
+  // {
+  //   btCollisionObject* obj = ghostObj->getOverlappingObject(i);
+  //   if(obj != nullptr)
+  //     std::cout << "obj is not null" << std::endl;
+  //   else
+  //     std::cout << "obj is null" << std::endl;
+  // }
   
 
   //std::cout << "End ghost stuff\n";
@@ -205,35 +207,6 @@ void Physics::AddShape(Object* obj, float x, float y, float z, int bodyType)
   // 1 = dynamic
   // 2 = kinematic
   // 3 = static
-  // 4 = static ghost? wip
-
-  // if(bodyType == 4){
-  //   /*
-  //     TRY THIS : https://stackoverflow.com/questions/5202594/ghost-objects-bulletphysics
-  //     Add a new function to add ghost objects using dynamicsworld->addCollisionObject
-  //     instead of adding by rigid body
-  //    */
-  //   /* 
-  //      obj->physicsObject is btCollisionObject* that holds btGhostObject
-  //      physicsObject->shape is nullptr i believe
-  //   */
-  //   int flags = obj->ghostObj->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE;
-  //   obj->ghostObj->setCollisionFlags(flags);
-
-  //   //obj->ghostObj->setWorldTransform(btTransform(btQuaternion(0, 0, 0, 1),
-	// 				// btVector3(x, y, z)));
-
-  //   //obj->RBody = rigidBody;
-  //   //dynamicsWorld->addRigidBody(rigidBody);
-    
-  //   if(obj->ghostObj == nullptr)
-  //     std::cout << "ghost object is null" << std::endl;
-  //   dynamicsWorld->addCollisionObject(obj->ghostObj);
-  //   //dynamicsWorld->addCollisionObject(btGhostObject::upcast(obj->physicsObject),
-  //   //				      btBroadphaseProxy::DefaultFilter,
-  //   //				      btBroadphaseProxy::AllFilter);
-  //   //return;
-  // }
 
   // btVector3 stores the initial starting position in xyz
   btDefaultMotionState *shapeMotionState = \
@@ -256,6 +229,7 @@ void Physics::AddShape(Object* obj, float x, float y, float z, int bodyType)
   }
 
   obj->RBody = rigidBody;
+  obj->RBody->setAngularFactor(btVector3(1.0f, 0.0f, 1.0f));
   dynamicsWorld->addRigidBody(rigidBody);
   //if(obj->physicsObject != nullptr)
     //dynamicsWorld->addCollisionObject(obj->physicsObject);

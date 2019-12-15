@@ -379,6 +379,7 @@ void Engine::Keyboard()
       break;
       
     case SDLK_l: // Add disk
+    {
       struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
       createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,0,0,1);
 
@@ -387,6 +388,7 @@ void Engine::Keyboard()
       m_physics->resetRotation(disks.back());
       m_physics->moveObject(disks, disks.size()-1,
 			    randSpawnVal, 10, -0.5);
+    }
       break;
       
     case SDLK_k: // Remove disk
@@ -407,6 +409,7 @@ void Engine::Keyboard()
       break;
 
     case SDLK_SPACE: //start the game!
+    {
       timer = MAX_TIME;
       playing = true;
       score = 0;
@@ -420,6 +423,7 @@ void Engine::Keyboard()
       m_physics->resetRotation(disks.back());
       m_physics->moveObject(disks, disks.size()-1,
 			    randSpawnVal, 10, -0.5);
+      }
       break;
 
     default:
