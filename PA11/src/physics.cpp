@@ -368,6 +368,8 @@ btCollisionObject* Physics::getCollisionObject(unsigned int i) {
 // This needs to be called before removing the object from its vector array
 void Physics::removeCollisionObject(Object* toDelete) {
 
+  //std::cout << "removeCollisionObject(Object* called)\n";
+  
   // Remove rigid body and associated properties
   delete toDelete->RBody->getMotionState();
   delete toDelete->RBody->getCollisionShape();
