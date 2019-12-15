@@ -8,7 +8,7 @@
 #include <string>
 #include <thread>
 
-#define HIT_SOUND "Single-yard-dog-woof.wav"
+#define HIT_SOUND "../Assets/Sounds/Single-yard-dog-woof.wav"
 
 using namespace std;
 

@@ -103,10 +103,10 @@ bool Engine::Initialize(char **argv)
   // LET BASKET BE THE first thing to be created? make sure it's index 0 or it may break things
   // Add basket : Kinematic (type 2)
   struct ShapeInfo bucketInfo(mesh);
-  createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -14, -1.25, 2);
+  createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -16, -1.25, 2);
   basketIndex = objs.size() - 1;
 
-  m_physics->AddGhost(0, -14, -1.25);
+  m_physics->AddGhost(0, -16, -1.25);
   
   // add invisible wall :: i0
   //struct ShapeInfo invWallInfo(box, 100, 100, 1);
@@ -157,9 +157,9 @@ bool Engine::Initialize(char **argv)
   
 
   // Add disks : Dynamic (type 1)
-  struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
-  //createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
-  createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -0.5, 1);
+  // struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
+  // //createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
+  // createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -0.5, 1);
 
   //outputObjects();
   
@@ -329,18 +329,22 @@ void Engine::Keyboard()
 		  
       objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
       newTrans.getOrigin() += btVector3(1, 0, 0);
-      objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
-      m_physics->MoveGhost(newTrans);
-      //objs[basketIndex]->RBody->setLinearVelocity(btVector3(10, 0, 0));
+      if(newTrans.getOrigin().getX() < 10)
+      {
+        objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
+        m_physics->MoveGhost(newTrans); 
+      }
       break;
     case SDLK_RIGHT:
       objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
 		  
       objs[basketIndex]->RBody->getMotionState()->getWorldTransform(newTrans);
       newTrans.getOrigin() += btVector3(-1, 0, 0);
-      objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
-      m_physics->MoveGhost(newTrans);
-      //objs[basketIndex]->RBody->setLinearVelocity(btVector3(-10, 0, 0));
+      if(newTrans.getOrigin().getX() > -8)
+      {
+        objs[basketIndex]->RBody->getMotionState()->setWorldTransform(newTrans);
+        m_physics->MoveGhost(newTrans); 
+      }
       break;
 
     case SDLK_r: //respawn each disk
@@ -389,17 +393,21 @@ void Engine::Keyboard()
       std::cout << "Board cleared!" << std::endl;
       break;
 
+    case SDLK_SPACE: //start the game!
+      timer = MAX_TIME;
+      playing = true;
+      score = 0;
+      break;
+
     default:
       break;
     }
-
-
   }
-  else if (m_event.type == SDL_KEYUP)
-  {
-    // handle key up events here
-    switch(m_event.key.keysym.sym)
-    {
+  // else if (m_event.type == SDL_KEYUP)
+  // {
+  //   // handle key up events here
+  //   switch(m_event.key.keysym.sym)
+  //   {
 		/**************************GAME CONTROLS**************************/
 		//case SDLK_LEFT:
 		//	objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
@@ -410,10 +418,10 @@ void Engine::Keyboard()
 		//	objs[basketIndex]->RBody->setLinearVelocity(btVector3(0, 0, 0));
 		//	break;
 
-      default:
-        break;
-    }
-  }
+  //     default:
+  //       break;
+  //   }
+  // }
 }
 
 unsigned int Engine::getDT()

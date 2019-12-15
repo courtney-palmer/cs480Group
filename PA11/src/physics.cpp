@@ -35,6 +35,9 @@ Physics::~Physics()
 
   delete solver;
   solver = nullptr;
+
+  delete ghostObj;
+  ghostObj = nullptr;
 }
 
 bool Physics::Initialize()
