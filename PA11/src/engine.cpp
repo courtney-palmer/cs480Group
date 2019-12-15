@@ -506,16 +506,9 @@ void Engine::deleteOutOfBoundsDisks() {
   when considering m_physics->dynamicsWorld)
  */
 void Engine::deleteObject(std::vector<Object*>& objArray, int objIndex) {
-
-  // Debugging statement : Used to check for successful deletion from physics
-  m_physics->OutputCollisionObjects();
-  std::cout << "Removing Object\n";
-  
   
   // Remove from physics context
   m_physics->removeCollisionObject(objArray.at(objIndex));
-  std::cout << "Objects after disk removal: \n";
-  m_physics->OutputCollisionObjects();
 
   
   // Remove from Engine object array
