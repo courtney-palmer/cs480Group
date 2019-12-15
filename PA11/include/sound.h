@@ -9,6 +9,7 @@
 #include <thread>
 
 #define HIT_SOUND "../Assets/Sounds/Single-yard-dog-woof.wav"
+#define BACGROUND_SOUND "../Assets/Sounds/background.wav"
 
 using namespace std;
 
