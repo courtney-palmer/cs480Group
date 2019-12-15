@@ -128,12 +128,17 @@ bool Engine::Initialize(char **argv)
  
   // Add Pegs : Static (type 3)
   // TODO: instantiate pegs to cut down on rendering
-  struct ShapeInfo pegInfo(mesh);
+  struct ShapeInfo pegInfo(cylind, 0.75, 0.75, 0.75);
   for(int y = -9; y <= 9; y += 3){ // rows at -9, -6, 3, 0, 3, 6, 9
-    for(int x = -6; x <= 9; x += 3){ // columns at -9, -6, -3, 0, 3, 6, 9
-      if(y == -9 || y == -3 || y == 3 || y == 9) // add an extra offset for alternating rows
-        x += 1.5;
-      createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
+    if(y == -9 || y == -3 || y == 3 || y == 9){
+      for(int x = -3; x <= 6; x += 3){ // columns at -3, 0, 3, 6,
+        createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
+      }
+    }
+    else{
+     for(int x = -4.5; x <= 7.5; x += 3){ // columns at -4.5, -1.5, 1.5, 4.5, 7.5
+        createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
+      }
     }
   }
   
