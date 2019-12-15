@@ -431,6 +431,9 @@ void Engine::Keyboard()
       score = 0;
       break;
 
+    case SDLK_1: // Load Level 1
+      loadLevel(1);
+
     default:
       break;
     }
@@ -580,60 +583,30 @@ void Engine::loadLevel(int level) {
   // ========== Load Levels down below ==========
   if(level == 0) { // Default level
 
-      // Add basket : Kinematic (type 2)
-  struct ShapeInfo bucketInfo(mesh);
-  createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -14, -1.25, 2);
-  basketIndex = objs.size() - 1;
+    // Insert object initialization here for default level
 
-  m_physics->AddGhost(0, -14, -1.25);
-  
-  // add invisible wall :: i0
-  //struct ShapeInfo invWallInfo(box, 100, 100, 1);
-  struct ShapeInfo invWallInfo(mesh);
-  //createObject("bucket.obj", invWallInfo, "glassTop", NA, 0, 0, -5, 3);
-  createObject("window.obj", invWallInfo, "glassTop", NA, 0, 0, -3, 3);
-  //createObject("verticalboard.obj", invWallInfo, "regTop", "steel.jpg", 0,0,-2,3); // Visible version for testing
+    // Add basket : Kinematic (type 2)
+    struct ShapeInfo bucketInfo(mesh);
+    createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -16, -1.25, 2);
+    basketIndex = objs.size() - 1;
 
-  // Add board : Static (type 3)
-  struct ShapeInfo boardInfo(mesh);
-  createObject("verticalboard.obj", boardInfo, "board", "wood.jpg", 0, 0, 0, 3);
-  // Set 0 friction for board
-  m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
+    m_physics->AddGhost(0, -16, -1.25);
 
-  // Try to add ghost object
-  // struct ShapeInfo ghostTest(ghostObject_mesh);
-  // createObject("ghost.obj", ghostTest, "ghost", "galaxy.jpg", 0, -5, -3, 4);
-  // ghostIndex = objs.size() -1;
- 
-  // Add Pegs : Static (type 3)
-  // TODO: instantiate pegs to cut down on rendering
-  struct ShapeInfo pegInfo(mesh);
-  for(int y = -3; y <= 6; y += 3){ // rows at -3, 0, 3, 6
-    for(int x = -9; x <= 9; x += 3){ // columns at -9, -6, -3, 0, 3, 6, 9
-      if(y == 0 || y == 6) // add an extra offset for alternating rows
-        x += 1.5;
-      createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
-    }
-  }
-  
-  // Add Triangular Walls // see above for instancing problem
-  struct ShapeInfo triangleInfo(mesh);
-  // Create left wall
-  {
-    int leftWallx = -8;
-    for(int y = 13; y >= -12; y -= 4) {
-      createObject("triangleprism.obj", triangleInfo, "leftwall", "wood.jpg", leftWallx, y, 0, 3);
-    }
-  }
-
-  // Add disks : Dynamic (type 1)
-  struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
-  //createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
-  createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -0.5, 1);
-
-  levelLoaded = true;
+    levelLoaded = true;
 
   } // End load Level 0
+
+  // Add basket because it's common amongst All Levels
+  // Add basket : Kinematic (type 2)
+  struct ShapeInfo bucketInfo(mesh);
+  createObject("bucket.obj", bucketInfo, "bucket", "steel.jpg", 0, -16, -1.25, 2);
+  basketIndex = objs.size() - 1;
+
+  m_physics->AddGhost(0, -16, -1.25);
+
+  
+
+  
 
 
   std::cout << "Level " << level << " loaded.\n";
