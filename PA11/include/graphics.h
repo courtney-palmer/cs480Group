@@ -32,6 +32,8 @@ class Graphics
 
     void Render(std::vector<Object*>& objs);
 
+    void clearScreen();
+
     // === Attributes ===
     Object *board; //static
     Object *basket; //kinematic

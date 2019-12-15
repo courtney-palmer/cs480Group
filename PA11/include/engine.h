@@ -47,8 +47,9 @@ class Engine
     void deleteObject(std::vector<Object*>& objArray, int objIndex);
 
     // Clears all object arrays, except for basket in obj
-    void clearObjects(bool clearBasket = false);
+    void clearObjects();
 
+    void loadLevel(int level = 0);
     // void loadLevel(std::string levelFile);
 
   private:

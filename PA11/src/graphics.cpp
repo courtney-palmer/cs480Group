@@ -212,6 +212,12 @@ void Graphics::Update(Object *o)
   o->model = glm::make_mat4(m);
 }
 
+void Graphics::clearScreen() {
+ //clear the screen
+  glClearColor(0.0, 0.0, 0.2, 1.0);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 void Graphics::Render(std::vector<Object*>& objs)
 {
   //clear the screen
