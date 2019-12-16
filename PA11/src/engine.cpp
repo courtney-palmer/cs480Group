@@ -402,7 +402,7 @@ void Engine::Keyboard()
       randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
       m_physics->resetRotation(disks.back());
       m_physics->moveObject(disks, disks.size()-1,
-			    randSpawnVal, 10, -0.5);
+			    randSpawnVal, 13, -0.5);
     }
       break;
       
