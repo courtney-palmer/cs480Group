@@ -196,6 +196,7 @@ bool Engine::Initialize(char **argv)
 void Engine::Run()
 {
   m_running = true;
+  std::cout << "You have 60 seconds to catch as many disks as you can.\nPress space to begin." << std::endl;
 
   while(m_running)
   {
@@ -262,20 +263,48 @@ void Engine::Run()
     if(playing){
       //cout << timer << std::endl;
       timer -= getDT();
-      if(timer <= 40000 && spawn40){
-        //std::cout << "40 secs" << std::endl;
+      if(timer <= 54000 && spawn54){
         spawnDisk();
-        spawn40 = false;
+        spawn54 = false;
       }
-      else if(timer <= 20000 && spawn20){
-        //std::cout << "20 secs" << std::endl;
+      else if(timer <= 48000 && spawn48){
         spawnDisk();
-        spawn20 = false;
+        spawn48 = false;
+      }
+      else if(timer <= 42000 && spawn42){
+        spawnDisk();
+        spawn42 = false;
+      }
+      else if(timer <= 36000 && spawn36){
+        spawnDisk();
+        spawn36 = false;
+      }
+      else if(timer <= 30000 && spawn30){
+        spawnDisk();
+        spawn30 = false;
+      }
+      else if(timer <= 24000 && spawn24){
+        spawnDisk();
+        spawn24 = false;
+      }
+      else if(timer <= 18000 && spawn18){
+        spawnDisk();
+        spawn18 = false;
+      }
+      else if(timer <= 12000 && spawn12){
+        spawnDisk();
+        spawn12 = false;
+      }
+      else if(timer <= 6000 && spawn6){
+        spawnDisk();
+        spawn6 = false;
       }
       else if(timer <= 0){
         std::cout << "GAME OVER" << std::endl;
         sound.loadSound(GAMEOVER_SOUND);
         sound.launchSound();
+        std::cout << "FINAL SCORE: " << score << std::endl;
+        std::cout << "Press space to restart." << std::endl;
         playing = false;
       }
     }
@@ -373,7 +402,7 @@ void Engine::Keyboard()
         m_graphics->specular.z -= 0.05f;
         break;
 
-	/**************************GAME CONTROLS**************************/
+	/**************************CAMERA CONTROLS**************************/
     case SDLK_d: // Set to default view
       m_graphics->m_camera->Update(0,0,-35,
 				   0,0,0,
@@ -384,6 +413,8 @@ void Engine::Keyboard()
 				   0,0,0,
 				   0,0,1);
       break;
+
+  /**************************GAME CONTROLS**************************/
     case SDLK_LEFT:
       objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
 		  
@@ -407,13 +438,31 @@ void Engine::Keyboard()
       }
       break;
 
+    case SDLK_SPACE: //start the game!
+      timer = MAX_TIME;
+      playing = true;
+      score = 0;
+      spawn54 = true;
+      spawn48 = true;
+      spawn42 = true;
+      spawn36 = true;
+      spawn30 = true;
+      spawn24 = true;
+      spawn18 = true;
+      spawn12 = true;
+      spawn6 = true;
+      spawnDisk();
+      break;
+
+      /***************** OTHER ********************************/
+/*
     case SDLK_r: //respawn each disk
 
 
       break;
       
     case SDLK_l: // Add disk
-    /*
+    
       {
       struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
       createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,0,0,1);
@@ -424,14 +473,14 @@ void Engine::Keyboard()
       m_physics->moveObject(disks, disks.size()-1,
 			    randSpawnVal, 13, -0.5);
     }
-    */
+    
       spawnDisk();
       break;
       
     case SDLK_k: // Remove disk
       deleteObject(disks, disks.size()-1);
       break;
-
+*/
           // DEBUGGING , not for GAME USE
     case SDLK_b: // Show Collision Objects list and show objects in objects
       m_physics->OutputCollisionObjects();
@@ -443,13 +492,6 @@ void Engine::Keyboard()
     case SDLK_x: // Clear board
       clearObjects();
       std::cout << "Objects cleared!" << std::endl;
-      break;
-
-    case SDLK_SPACE: //start the game!
-      timer = MAX_TIME;
-      playing = true;
-      score = 0;
-      spawnDisk();
       break;
 
     case SDLK_1: // Load Level 1

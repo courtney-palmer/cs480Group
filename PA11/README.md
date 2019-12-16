@@ -5,7 +5,7 @@ Ashanti Cudiamat<br/><br/>
 Courtney Palmer<br/><br/>
 Christine Vaughan
 
-## NOTES
+<!--## NOTES
 remodel the board/ rotate the board so it's vertical and takes up more of the screen<br/>
 make a christas tree shaped peg setup <br/>
 as time progresses more disks will appear at a time<br/>
@@ -15,9 +15,14 @@ add an invisible top to the board<br/>
 Could change the angle of the board<br/>
 life system or a timer based system<br/>
 scoring<br/>
+-->
 
 ## Project Description
+<<<<<<< HEAD
 For our final project, we built a disk drop game. 
+=======
+For our final project, we built a disk drop game, similar to Plinko. Disks drop down a board with pegs that the disks will bump off of. The player uses the arrow keys to move a basket left and right to try and catch as many disks as they can within the time limit.
+>>>>>>> fd4e998189fe1551624db55be77366debeb0c1a1
 
 ## Cmake Instructions
 The building of the project is done using CMake, installation with apt-get or brew may be necessary. Later use with CMake and Shader files will be require the copy of a directory where those files are stored (ex. shaders). To do this in the ```add_custom_target``` function place 
@@ -58,26 +63,14 @@ NOTES:
 'm'      | Decrease specular light <br/>
 'n'      | Increase specular light<br/>
 
+### Camera
+'d' 	 | Change to Default Camera View<br/>
+'t'	 	 | Change to Top Down Camera View<br/>
+
 ### Game
 'right'  | Move basket right<br/>
 'left'   | Move basket left<br/>
-'l'      | Add Disk to Game<br/>
-'k'      | Remove Disk from Game<br/>
-'r'      | Respawn Disks<br/>
+'space'  | Start new game<br/>
 
-### Misc.
-'b'	 | Output physics objects and engine object arrays to terminal for debugging
-'d' 	 | Change to Default Camera View
-'t'	 | Change to Top Down Camera View
-
-<!--### Pinball Controls
-'p'/'e'  | Right Paddle<br/>
-'i'/'q'	 | Left Paddle<br/>
-'o'	     | Trigger Plunger - hold o to pull back further<br/>
-'r'	     | Reset Game<br/>
-'t'	     | Top Down Camera view<br/>
-'z'	     | Default Camera view<br/>
-'x'	     | Follow Ball<br/>-->
-
-## Extra Credit
+## Credits
 
