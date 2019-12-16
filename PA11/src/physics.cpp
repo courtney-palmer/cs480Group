@@ -5,6 +5,7 @@
 
 Physics::Physics(Engine* e)
 {
+  basketHit.loadSound(HIT_SOUND);
 	m_engine = e;
 }
 
@@ -104,7 +105,7 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks) {
   numObjectsInGhost = ghostObj->getNumOverlappingObjects();
   if(numObjectsInGhost > 0)
   {
-      //btCollisionObject* obj = ghostObj->getOverlappingObject(0);
+      basketHit.launchSound();
       m_engine->deleteObject(disks, 0);
       m_engine->increaseScore(100);
   }

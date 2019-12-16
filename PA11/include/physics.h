@@ -3,7 +3,7 @@
 
 #include "graphics_headers.h"
 #include "object.h"
-
+#include "sound.h"
 #include <cmath>
 
 class Engine;
@@ -45,6 +45,8 @@ class Physics
     void clearDynamicsWorld();
     
     btDiscreteDynamicsWorld *dynamicsWorld;
+
+    Sound basketHit;
 
   private:   
     btBroadphaseInterface *broadphase;

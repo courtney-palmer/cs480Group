@@ -188,9 +188,8 @@ bool Engine::Initialize(char **argv)
   
 //  ========================= End Object Creation :> =================
 
-
-  //objectCollidedSound.loadSound(BACGROUND_SOUND);
-  //objectCollidedSound.launchSound();
+  // objectCollidedSound.loadSound(BACGROUND_SOUND);
+  // objectCollidedSound.launchSound();
   // objectCollidedSound.playSound();
 
   // No errors
@@ -403,6 +402,18 @@ void Engine::Keyboard()
       break;
       
     case SDLK_l: // Add disk
+    /*
+      {
+      struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
+      createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,0,0,1);
+
+      // spawn in random position
+      randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
+      m_physics->resetRotation(disks.back());
+      m_physics->moveObject(disks, disks.size()-1,
+			    randSpawnVal, 13, -0.5);
+    }
+    */
       spawnDisk();
       break;
       
