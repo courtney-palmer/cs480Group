@@ -46,8 +46,6 @@ class Physics
     
     btDiscreteDynamicsWorld *dynamicsWorld;
 
-    Sound basketHit;
-
   private:   
     btBroadphaseInterface *broadphase;
     btDefaultCollisionConfiguration *collisionConfiguration;
