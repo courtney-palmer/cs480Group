@@ -113,6 +113,8 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
         break;
       }
     }
+  basketHit.loadSound(HIT_SOUND);
+  basketHit.launchSound();
     score += 100;
     std::cout << "Score: " << score << std::endl;
   }

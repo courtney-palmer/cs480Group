@@ -49,6 +49,13 @@ void Sound::loadSound( std::string soundPath )
 		std::cout << "Unable to load sound" << std::endl;
 		return;
 	}
+    
+
+    int i, count = SDL_GetNumAudioDevices(0);
+    for (i = 0; i < count; ++i) {
+        printf("Audio device %d: %s\n", i, SDL_GetAudioDeviceName(i, 0));
+    }
+
 
 	soundSpec.callback = myCallback;
 	soundSpec.userdata = NULL;
