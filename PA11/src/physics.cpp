@@ -94,8 +94,6 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
     trans.getOpenGLMatrix(m);
 
     disks[i]->setPosition( (float)m[12], (float)m[13], (float)m[14] ); // store updated position for each obj in objs
-    m[10] = m[5] = 0;
-    disks[i]->RBody->getMotionState()->setWorldTransform(trans);
   }
 
   //std::cout << "Ghost stuff\n";
@@ -103,16 +101,18 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
   //// Handling ghost stuff ////
   int numObjectsInGhost = 0;
   numObjectsInGhost = ghostObj->getNumOverlappingObjects();
-  // if(numObjectsInGhost > 0)
-  //   std::cout << "number of objects inside ghost: " << numObjectsInGhost << std::endl;
-  // for(int i=0; i<numObjectsInGhost;i++)
-  // {
-  //   btCollisionObject* obj = ghostObj->getOverlappingObject(i);
-  //   if(obj != nullptr)
-  //     std::cout << "obj is not null" << std::endl;
-  //   else
-  //     std::cout << "obj is null" << std::endl;
-  // }
+  for(int i=0; i<numObjectsInGhost;i++)
+  {
+    btCollisionObject* obj = ghostObj->getOverlappingObject(i);
+    for(int d = 0; d < disks.size(); d++)
+    {
+      if(disks[d]->physicsObject == obj)
+        break;
+    }
+    m_engine->deleteObject(disks, d);
+    score += 100;
+    std::cout << "Score: " << score << endl;
+  }
   
 
   //std::cout << "End ghost stuff\n";

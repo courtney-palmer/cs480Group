@@ -545,6 +545,18 @@ void Engine::deleteObject(std::vector<Object*>& objArray, int objIndex) {
   return;
 }
 
+// void Engine::deleteDisk(Object* disk) {
+  
+//   // Remove from physics context
+//   m_physics->removeCollisionObject(disk->physicsObject);
+  
+//   // Remove from Engine disks array
+//   std::vector<Object*>::iterator i = disks.begin() + objIndex;
+//   objArray.erase(i);
+
+//   return;
+// }
+
 /*
   Clears most objects and disks
  */
