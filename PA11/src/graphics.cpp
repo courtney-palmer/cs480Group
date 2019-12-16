@@ -214,14 +214,34 @@ void Graphics::Update(Object *o)
 
 void Graphics::clearScreen() {
  //clear the screen
-  glClearColor(0.0, 0.0, 0.2, 1.0);
+  glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  m_shader->Enable();
+
+  if(shaderIndex != 2) {
+    glUniform4f(m_shader->GetUniformLocation("LightPosition"),  lightPos.x, lightPos.y, lightPos.z, 0.0f);
+    glUniform4f(m_shader->GetUniformLocation("AmbientProduct"), ambience.x, ambience.y, ambience.z, 1.0f);
+    glUniform4f(m_shader->GetUniformLocation("DiffuseProduct"), diffuse.x, diffuse.y, diffuse.z, 1.0f);
+    glUniform4f(m_shader->GetUniformLocation("SpecularProduct"), specular.x, specular.y, specular.z, 1.0f);
+    glUniform1f(m_shader->GetUniformLocation("Shininess"), shininess);
+  }
+
+
+  // Get any errors from OpenGL
+  auto error = glGetError();
+  if ( error != GL_NO_ERROR )
+  {
+    string val = ErrorString( error );
+    cout << "Error initializing OpenGL! " << error << ", " << val << endl;
+  }
 }
 
 void Graphics::Render(std::vector<Object*>& objs)
 {
   //clear the screen
-  glClearColor(0.0, 0.0, 0.2, 1.0);
+  //glClearColor(0.0, 0.0, 0.2, 1.0);
+  glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // Start the correct program

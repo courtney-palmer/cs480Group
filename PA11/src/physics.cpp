@@ -232,7 +232,7 @@ void Physics::AddShape(Object* obj, float x, float y, float z, int bodyType)
   }
 
   obj->RBody = rigidBody;
-  obj->RBody->setAngularFactor(btVector3(1.0f, 0.0f, 0.0f));
+  obj->RBody->setAngularFactor(btVector3(1.0f, 0.0f, 1.0f));
   dynamicsWorld->addRigidBody(rigidBody);
   //if(obj->physicsObject != nullptr)
     //dynamicsWorld->addCollisionObject(obj->physicsObject);

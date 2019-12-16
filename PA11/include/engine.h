@@ -43,6 +43,9 @@ class Engine
 		    const std::string& key, const std::string& texFileName,
 		    const float& x, const float& y, const float& z, const float& Rtype);
 
+    // Simplify random spawn of disk
+    void spawnDisk();
+
     // Handles object deletion for physics and from engine array
     void deleteObject(std::vector<Object*>& objArray, int objIndex);
 
