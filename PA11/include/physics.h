@@ -17,7 +17,7 @@ class Physics
 
     Engine* m_engine;
 
-    void Update(std::vector<Object*>& objs, std::vector<Object*>& disks, unsigned int& score); // just used to stepSimulation and update positions
+    void Update(std::vector<Object*>& objs, std::vector<Object*>& disks); // just used to stepSimulation and update positions
     //void Update(std::vector<Object*>& objs, unsigned int& score);
     
     // default : obj starts at origin as dynamic collision object
@@ -52,8 +52,6 @@ class Physics
     btCollisionDispatcher *dispatcher;
     btSequentialImpulseConstraintSolver *solver;
     btGhostObject* ghostObj;
-
-    bool scored; //keeps program from adding to score multiple times for a disk
 };
 
 #endif  /* PHYSICS_H */

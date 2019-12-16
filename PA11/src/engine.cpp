@@ -83,6 +83,8 @@ bool Engine::Initialize(char **argv)
   score = 0;
   timer = MAX_TIME;
 
+  maxDisks = 1;
+
   // ============= Create the objects ===============================
   // note : Objects in obj array have graphics and physics components
   //        automatically updated and rendered
@@ -219,7 +221,7 @@ void Engine::Run()
 
     // Update physics
     //m_physics->Update();
-    m_physics->Update(objs, disks, score);
+    m_physics->Update(objs, disks);
     //outputObjects();
 
     // DEBUG COLLISION TESTING for danny phantom
@@ -270,6 +272,12 @@ void Engine::Run()
 
  }
 */
+
+void Engine::increaseScore(int amount)
+{
+  score += amount;
+  std::cout << "Score: " << score << std::endl;
+}
 
 void Engine::Keyboard()
 {
