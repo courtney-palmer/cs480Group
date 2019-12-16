@@ -5,6 +5,9 @@
 #include <sys/time.h>
 #include <assert.h>
 
+#include <ctime>
+#include <cstdlib>
+
 #include"BulletCollision/CollisionDispatch/btGhostObject.h"
 #include "window.h"
 #include "graphics.h"
