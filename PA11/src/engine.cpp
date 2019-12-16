@@ -403,7 +403,7 @@ void Engine::Keyboard()
         m_graphics->specular.z -= 0.05f;
         break;
 
-	/**************************GAME CONTROLS**************************/
+	/**************************CAMERA CONTROLS**************************/
     case SDLK_d: // Set to default view
       m_graphics->m_camera->Update(0,0,-35,
 				   0,0,0,
@@ -414,6 +414,8 @@ void Engine::Keyboard()
 				   0,0,0,
 				   0,0,1);
       break;
+
+  /**************************GAME CONTROLS**************************/
     case SDLK_LEFT:
       objs[basketIndex]->RBody->setActivationState(DISABLE_DEACTIVATION);
 		  
@@ -437,46 +439,6 @@ void Engine::Keyboard()
       }
       break;
 
-    case SDLK_r: //respawn each disk
-
-      // objectCollidedSound.loadSound(HIT_SOUND);
-      // objectCollidedSound.launchSound();
-
-      break;
-      
-    case SDLK_l: // Add disk
-    /*
-      {
-      struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
-      createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,0,0,1);
-
-      // spawn in random position
-      randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
-      m_physics->resetRotation(disks.back());
-      m_physics->moveObject(disks, disks.size()-1,
-			    randSpawnVal, 13, -0.5);
-    }
-    */
-      spawnDisk();
-      break;
-      
-    case SDLK_k: // Remove disk
-      deleteObject(disks, disks.size()-1);
-      break;
-
-          // DEBUGGING , not for GAME USE
-    case SDLK_b: // Show Collision Objects list and show objects in objects
-      m_physics->OutputCollisionObjects();
-
-      std::cout << "Engine Objects: " << std::endl;
-      outputObjects();
-      break;
-
-    case SDLK_x: // Clear board
-      clearObjects();
-      std::cout << "Objects cleared!" << std::endl;
-      break;
-
     case SDLK_SPACE: //start the game!
       timer = MAX_TIME;
       playing = true;
@@ -491,6 +453,48 @@ void Engine::Keyboard()
       spawn12 = true;
       spawn6 = true;
       spawnDisk();
+      break;
+
+      /***************** OTHER ********************************/
+/*
+    case SDLK_r: //respawn each disk
+
+      // objectCollidedSound.loadSound(HIT_SOUND);
+      // objectCollidedSound.launchSound();
+
+      break;
+      
+    case SDLK_l: // Add disk
+    
+      {
+      struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
+      createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,0,0,1);
+
+      // spawn in random position
+      randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
+      m_physics->resetRotation(disks.back());
+      m_physics->moveObject(disks, disks.size()-1,
+			    randSpawnVal, 13, -0.5);
+    }
+    
+      spawnDisk();
+      break;
+      
+    case SDLK_k: // Remove disk
+      deleteObject(disks, disks.size()-1);
+      break;
+*/
+          // DEBUGGING , not for GAME USE
+    case SDLK_b: // Show Collision Objects list and show objects in objects
+      m_physics->OutputCollisionObjects();
+
+      std::cout << "Engine Objects: " << std::endl;
+      outputObjects();
+      break;
+
+    case SDLK_x: // Clear board
+      clearObjects();
+      std::cout << "Objects cleared!" << std::endl;
       break;
 
     case SDLK_1: // Load Level 1
