@@ -52,6 +52,8 @@ class Physics
     btCollisionDispatcher *dispatcher;
     btSequentialImpulseConstraintSolver *solver;
     btGhostObject* ghostObj;
+
+    bool scored; //keeps program from adding to score multiple times for a disk
 };
 
 #endif  /* PHYSICS_H */

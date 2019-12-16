@@ -6,6 +6,7 @@
 Physics::Physics(Engine* e)
 {
 	m_engine = e;
+  scored = false;
 }
 
 Physics::~Physics()
@@ -74,6 +75,7 @@ bool Physics::Initialize()
 }
 
 void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, unsigned int& score) {
+  scored = false;
  dynamicsWorld->stepSimulation(1.0f/30.f, 10); //sped up simulation speed
 
  btTransform trans; // Stores transformations
@@ -102,22 +104,27 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
   //// Handling ghost stuff ////
   int numObjectsInGhost = 0;
   numObjectsInGhost = ghostObj->getNumOverlappingObjects();
-  for(int i=0; i<numObjectsInGhost;i++)
+  if(numObjectsInGhost > 0)
   {
-    btCollisionObject* obj = ghostObj->getOverlappingObject(i);
-    for(int d = 0; d < disks.size(); d++)
+    for(int i=0; i<numObjectsInGhost;i++)
     {
-      if(disks[d]->physicsObject == obj)
+      btCollisionObject* obj = ghostObj->getOverlappingObject(i);
+      for(int d = 0; d < disks.size(); d++)
       {
-        m_engine->deleteObject(disks, d);
-        break;
+        if(disks[d]->physicsObject == obj)
+        {
+          m_engine->deleteObject(disks, d);
+          break;
+        }
       }
     }
-    score += 100;
-    std::cout << "Score: " << score << std::endl;
+    if(!scored)
+    {
+      score += 100;
+      std::cout << "Score: " << score << std::endl;
+      scored = true;
+    }
   }
-  
-
   //std::cout << "End ghost stuff\n";
 }
 
