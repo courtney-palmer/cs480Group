@@ -83,7 +83,7 @@ bool Engine::Initialize(char **argv)
   score = 0;
   timer = MAX_TIME;
 
-  maxDisks = 1;
+  //maxDisks = 1;
 
   // ============= Create the objects ===============================
   // note : Objects in obj array have graphics and physics components
@@ -132,13 +132,13 @@ bool Engine::Initialize(char **argv)
     if(y == -9 || y == -3 || y == 3 || y == 9){
       for(int x = -3; x <= 6; x += 3){ // columns at -3, 0, 3, 6,
         createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, z, 3);
-	m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
+	      m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
       }
     }
     else{
-     for(int x = -4.5; x <= 7.5; x += 3){ // columns at -4.5, -1.5, 1.5, 4.5, 7.5
+     for(int x = -5; x <= 7; x += 3){ // columns at -5, -2, 1, 4, 7
         createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, z, 3);	
-	m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
+	      m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
       }
     }
   }
@@ -322,6 +322,7 @@ void Engine::Run()
 
 void Engine::increaseScore(int amount)
 {
+  sound.launchSound();
   score += amount;
   std::cout << "Score: " << score << std::endl;
 }
@@ -442,6 +443,7 @@ void Engine::Keyboard()
       timer = MAX_TIME;
       playing = true;
       score = 0;
+      sound.loadSound(HIT_SOUND);
       spawn54 = true;
       spawn48 = true;
       spawn42 = true;
@@ -697,7 +699,7 @@ void Engine::spawnDisk() {
 
   // spawn in random position
   srand(time(0));
-  float  randSpawnVal = (rand() % 16) + (-6); //generate a random number from -6 to 9?
+  float  randSpawnVal = (rand() % 15) + (-5.2); //generate a random number from -6 to 9?
   std::cout << "Random spawn val: " << randSpawnVal << std::endl;
   m_physics->resetRotation(disks.back());
   m_physics->moveObject(disks, disks.size()-1,

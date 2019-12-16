@@ -8,7 +8,7 @@
 #include <string>
 #include <thread>
 
-#define HIT_SOUND "../Assets/Sounds/Bell-ding-loud.wav"
+#define HIT_SOUND "../Assets/Sounds/Single-yard-dog-woof.wav"
 #define BACGROUND_SOUND "../Assets/Sounds/background.wav"
 #define GAMEOVER_SOUND "../Assets/Sounds/smb_gameover.wav"
 
