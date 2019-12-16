@@ -52,6 +52,8 @@ class Engine
     // Handles object deletion for physics and from engine array
     void deleteObject(std::vector<Object*>& objArray, int objIndex);
 
+    //void deleteDisk(Object* disk);
+
     // Clears all object arrays, except for basket in obj
     void clearObjects();
 
@@ -87,7 +89,6 @@ class Engine
     void deleteOutOfBoundsDisks();
 
     int basketIndex;
-    int ghostIndex;
 };
 
 #endif // ENGINE_H
