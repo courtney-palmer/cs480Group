@@ -38,6 +38,9 @@ class Physics
 
     // remove by given object
     void removeCollisionObject(Object* toDelete);
+
+    // Basically remove every object in the dynamics world array for a clean clear
+    void clearDynamicsWorld();
     
     btDiscreteDynamicsWorld *dynamicsWorld;
 

@@ -352,16 +352,29 @@ btCollisionObject* Physics::getCollisionObject(unsigned int i) {
 
 // This needs to be called before removing the object from its vector array
 void Physics::removeCollisionObject(Object* toDelete) {
-
-  //std::cout << "removeCollisionObject(Object* called)\n";
+  if(toDelete == nullptr) {
+    std::cout << "Object passed in is nullptr. Halt.\n";
+    return;
+  }
   
   // Remove rigid body and associated properties
-  delete toDelete->RBody->getMotionState();
-  delete toDelete->RBody->getCollisionShape();
-  dynamicsWorld->removeRigidBody(toDelete->RBody);
-
+  try {
+    delete toDelete->RBody->getMotionState();
+    delete toDelete->RBody->getCollisionShape();
+    dynamicsWorld->removeRigidBody(toDelete->RBody);
+  }
+  catch (...) {
+    std::cout << "Remove object " << toDelete->getKeyname() << " unsuccessful. Check if it has a rigid body?\n";
+  }
+  return;
 }
 
-/*void Physics::clearDynamicsWorld() {
-  int objs = dynamicsWorld->getNumCollisionObjects
-  }*/
+// Clears ALL Objects from DynamicsWorld. Suck;
+void Physics::clearDynamicsWorld() {
+  int objs = dynamicsWorld->getNumCollisionObjects();
+  auto objArray = dynamicsWorld->getCollisionObjectArray();
+  for(int i = 0; i < objs; i++) {
+    dynamicsWorld->removeCollisionObject(objArray[i]);
+  }
+  
+}
