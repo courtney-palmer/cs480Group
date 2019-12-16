@@ -105,16 +105,17 @@ bool Engine::Initialize(char **argv)
   m_physics->AddGhost(0, -16, -1.25);
   
   // add invisible wall :: i0
-  struct ShapeInfo invWallInfo(box, 100, 100, 1);
+  struct ShapeInfo invWallInfo(box, 100, 100, 0.5);
   //createObject("bucket.obj", invWallInfo, "glassTop", NA, 0, 0, -5, 3);
-  //createObject("window.obj", invWallInfo, "glassTop", NA, 0, 0, -3, 3);
-  //createObject("verticalboard.obj", invWallInfo, "regTop", "steel.jpg", 0,0,-2,3); // Visible version for testing
+  createObject("verticalboard.obj", invWallInfo, "glassTop", NA, 0, 0, -1, 3);
+  //createObject("verticalboard.obj", invWallInfo, "regTop", "steel.jpg", 0,0,-3,3); // Visible version for testing
+  m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
 
   // Add board : Static (type 3)
-  struct ShapeInfo boardInfo(mesh);
+  struct ShapeInfo boardInfo(box, 100,100, 0.5);
   createObject("verticalboard.obj", boardInfo, "board", "wood.jpg", 0, 0, 0, 3);
   // Set 0 friction for board
-  //m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
+  m_physics->getCollisionObject(m_physics->getNumCollisionObjects()-1)->setFriction(btScalar(0.0f));
 
   // Try to add ghost object
   // struct ShapeInfo ghostTest(ghostObject_mesh);
@@ -123,16 +124,18 @@ bool Engine::Initialize(char **argv)
  
   // Add Pegs : Static (type 3)
   // TODO: instantiate pegs to cut down on rendering
-  struct ShapeInfo pegInfo(cylind, 0.75, 0.75, 0.75);
+  struct ShapeInfo pegInfo(cylind, 0.2, 3, 3);
+  //struct ShapeInfo pegInfo(mesh);
+  int z = 0;
   for(int y = -9; y <= 9; y += 3){ // rows at -9, -6, 3, 0, 3, 6, 9
     if(y == -9 || y == -3 || y == 3 || y == 9){
       for(int x = -3; x <= 6; x += 3){ // columns at -3, 0, 3, 6,
-        createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
+        createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, z, 3);
       }
     }
     else{
      for(int x = -4.5; x <= 7.5; x += 3){ // columns at -4.5, -1.5, 1.5, 4.5, 7.5
-        createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, 0, 3);
+        createObject("peg.obj", pegInfo, "peg", "metal.jpg", x, y, z, 3);
       }
     }
   }
@@ -160,10 +163,6 @@ bool Engine::Initialize(char **argv)
 
   levelLoaded = true;
 
-  // Add disks : Dynamic (type 1)
-  struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
-  //createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
-  // createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -0.5, 1);
   //  std::cout << "Object Initial values\n";
   //  outputObjects();
 
@@ -394,16 +393,7 @@ void Engine::Keyboard()
       break;
       
     case SDLK_l: // Add disk
-    {
-      struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
-      createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,0,0,1);
-
-      // spawn in random position
-      randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
-      m_physics->resetRotation(disks.back());
-      m_physics->moveObject(disks, disks.size()-1,
-			    randSpawnVal, 10, -0.5);
-    }
+      spawnDisk();
       break;
       
     case SDLK_k: // Remove disk
@@ -424,21 +414,10 @@ void Engine::Keyboard()
       break;
 
     case SDLK_SPACE: //start the game!
-    {
       timer = MAX_TIME;
       playing = true;
       score = 0;
-
-      //spawn disk
-      struct ShapeInfo defaultDisk(cylind, 0.75, 0.75, 0.75);
-      createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,0,0,1);
-
-      // spawn in random position
-      randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
-      m_physics->resetRotation(disks.back());
-      m_physics->moveObject(disks, disks.size()-1,
-			    randSpawnVal, 10, -0.5);
-      }
+      spawnDisk();
       break;
 
     case SDLK_1: // Load Level 1
@@ -616,13 +595,23 @@ void Engine::loadLevel(int level) {
   m_physics->AddGhost(0, -16, -1.25);
 
   switch(level) {
-      std::fstream lvlFile("../Assets/level1.txt");
+    //std::fstream lvlFile("../Assets/level1.txt");
   }
 
   // Display all the information for testing purposes before attempting to load
 
-  
-
 
   std::cout << "Level " << level << " loaded.\n";
+}
+
+void Engine::spawnDisk() {
+  //spawn disk
+  struct ShapeInfo defaultDisk(cylind, 0.75, 0.075, 0.075);
+  createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,0,0,1);
+
+  // spawn in random position
+  int  randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
+  m_physics->resetRotation(disks.back());
+  m_physics->moveObject(disks, disks.size()-1,
+			randSpawnVal, 12, -0.5);
 }

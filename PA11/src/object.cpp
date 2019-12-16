@@ -41,7 +41,7 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
       //ghostObj = nullptr;
       break;
     case cylind:
-      shape = new btCylinderShape(newShape.getBtVector3());
+      shape = new btCylinderShapeZ(newShape.getBtVector3());
       physicsObject = new btCollisionObject();
       physicsObject->setCollisionShape(shape);
       objTriMesh = nullptr;
