@@ -22,12 +22,11 @@ int main(int argc, char **argv)
   }
   
   engine->Run();
-  std::cout << "Engine run() finished\n";
-  delete engine;
-  std::cout << "Engine destroyed successfully\n";
-  engine = NULL;
-  std::cout << "engine set to null\n";
 
-  std::cout << "main end.\n";
+  delete engine;
+
+  engine = NULL;
+
+
   return 0;
 }

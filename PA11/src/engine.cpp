@@ -24,9 +24,6 @@ Engine::~Engine()
   delete m_graphics;
   m_window = NULL;
   m_graphics = NULL;
-  std::cout << "return?\n";
-  return;
-  std::cout << "RETURN?\n";
 }
 
 
@@ -263,7 +260,6 @@ void Engine::Run()
     // Swap to the Window
     m_window->Swap();
   }
-  std::cout << "End.\n";
   return;
 }
 
@@ -629,11 +625,11 @@ void Engine::spawnDisk() {
 
   // spawn in random position
   srand(time(0));
-  float  randSpawnVal = (rand() % 10) + (-6); //generate a random number from -6 to 9?
+  float  randSpawnVal = (rand() % 16) + (-6); //generate a random number from -6 to 9?
   std::cout << "Random spawn val: " << randSpawnVal << std::endl;
   m_physics->resetRotation(disks.back());
   m_physics->moveObject(disks, disks.size()-1,
 			randSpawnVal, 12, -0.5);
   // Spawn with minor downward force
-  disks.back()->RBody->setLinearVelocity(btVector3(0,-10,0));
+  //disks.back()->RBody->setLinearVelocity(btVector3(0,-10,0));
 }
