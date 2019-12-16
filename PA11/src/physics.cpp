@@ -5,6 +5,7 @@
 
 Physics::Physics(Engine* e)
 {
+  basketHit.loadSound(HIT_SOUND);
 	m_engine = e;
 }
 
@@ -113,8 +114,8 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
         break;
       }
     }
-  basketHit.loadSound(HIT_SOUND);
-  basketHit.launchSound();
+  
+    basketHit.launchSound();
     score += 100;
     std::cout << "Score: " << score << std::endl;
   }
