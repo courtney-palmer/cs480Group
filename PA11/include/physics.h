@@ -17,6 +17,7 @@ class Physics
 
     Engine* m_engine;
 
+    void spawnDisk();
     void Update(std::vector<Object*>& objs, std::vector<Object*>& disks, unsigned int& score); // just used to stepSimulation and update positions
     //void Update(std::vector<Object*>& objs, unsigned int& score);
     

@@ -118,7 +118,9 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
     basketHit.launchSound();
     score += 100;
     std::cout << "Score: " << score << std::endl;
+    spawnDisk();
   }
+  
   
 
   //std::cout << "End ghost stuff\n";
@@ -198,6 +200,21 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
 //   }
 
 // }
+
+
+void Physics::spawnDisk(){
+  // struct ShapeInfo defaultDisk(cylind, 0.75, 0.1, 0.1);
+  // createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,0,0,1);
+
+  // // spawn in random position
+  // srand(time(0));
+  // float  randSpawnVal = (rand() % 16) + (-6); //generate a random number from -6 to 9?
+  // std::cout << "Random spawn val: " << randSpawnVal << std::endl;
+  // resetRotation(disks.back());
+  // moveObject(disks, disks.size()-1,
+	// 		randSpawnVal, 12, -0.5);
+}
+
 
 /* Add btCollisionObject given by newly initialized object to physics->dynamicsWorld
    aka Adds object to physics environment

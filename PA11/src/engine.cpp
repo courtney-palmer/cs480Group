@@ -258,6 +258,26 @@ void Engine::Run()
      
     // Swap to the Window
     m_window->Swap();
+
+    //std::cout <<timer << std::endl;
+    if(playing){
+      //cout << timer << std::endl;
+      timer -= getDT();
+      if(timer <= 40000 && spawn40){
+        //std::cout << "40 secs" << std::endl;
+        spawnDisk();
+        spawn40 = false;
+      }
+      else if(timer <= 20000 && spawn20){
+        //std::cout << "20 secs" << std::endl;
+        spawnDisk();
+        spawn20 = false;
+      }
+      else if(timer <= 0){
+        std::cout << "GAME OVER" << std::endl;
+        playing = false;
+      }
+    }
   }
   return;
 }
@@ -382,14 +402,8 @@ void Engine::Keyboard()
 
     case SDLK_r: //respawn each disk
 
-      objectCollidedSound.loadSound(HIT_SOUND);
-      objectCollidedSound.launchSound();
-      for(int i = 0; i < disks.size(); i++) {
-      randSpawnVal = rand() % 16 + (-6); //generate a random number from -6 to 6
-      m_physics->resetRotation(disks[i]);
-      m_physics->moveObject(disks, i,
-                randSpawnVal, 6, -3);
-          }
+      // objectCollidedSound.loadSound(HIT_SOUND);
+      // objectCollidedSound.launchSound();
 
       break;
       
@@ -406,7 +420,7 @@ void Engine::Keyboard()
 			    randSpawnVal, 13, -0.5);
     }
     */
-      spawnDisk();
+      m_physics->spawnDisk();
       break;
       
     case SDLK_k: // Remove disk
