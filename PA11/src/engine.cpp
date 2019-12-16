@@ -188,9 +188,6 @@ bool Engine::Initialize(char **argv)
   
 //  ========================= End Object Creation :> =================
 
-  // objectCollidedSound.loadSound(BACGROUND_SOUND);
-  // objectCollidedSound.launchSound();
-  // objectCollidedSound.playSound();
 
   // No errors
   return true;
@@ -277,6 +274,8 @@ void Engine::Run()
       }
       else if(timer <= 0){
         std::cout << "GAME OVER" << std::endl;
+        sound.loadSound(GAMEOVER_SOUND);
+        sound.launchSound();
         playing = false;
       }
     }
@@ -410,8 +409,6 @@ void Engine::Keyboard()
 
     case SDLK_r: //respawn each disk
 
-      // objectCollidedSound.loadSound(HIT_SOUND);
-      // objectCollidedSound.launchSound();
 
       break;
       

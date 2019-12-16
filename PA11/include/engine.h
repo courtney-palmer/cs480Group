@@ -35,7 +35,7 @@ class Engine
     std::vector<Object*> objs;
     std::vector<Object*> disks;
 
-    Sound objectCollidedSound;
+    Sound sound;
 
     void createObject(const std::string& objFileName, const ShapeInfo& newShape,
 		      const std::string& key, const std::string& texFileName,

@@ -10,6 +10,7 @@
 
 #define HIT_SOUND "../Assets/Sounds/Bell-ding-loud.wav"
 #define BACGROUND_SOUND "../Assets/Sounds/background.wav"
+#define GAMEOVER_SOUND "../Assets/Sounds/smb_gameover.wav"
 
 using namespace std;
 
