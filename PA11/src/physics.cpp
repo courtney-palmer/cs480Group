@@ -74,7 +74,7 @@ bool Physics::Initialize()
   return true;
 }
 
-void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, unsigned int& score) {
+void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks) {
  dynamicsWorld->stepSimulation(1.0f/30.f, 10); //sped up simulation speed
 
  btTransform trans; // Stores transformations
@@ -103,8 +103,9 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
   //// Handling ghost stuff ////
   int numObjectsInGhost = 0;
   numObjectsInGhost = ghostObj->getNumOverlappingObjects();
-  for(int i=0; i<numObjectsInGhost;i++)
+  if(numObjectsInGhost > 0)
   {
+<<<<<<< HEAD
     btCollisionObject* obj = ghostObj->getOverlappingObject(i);
     for(int d = 0; d < disks.size(); d++)
     {
@@ -123,6 +124,12 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
   
   
 
+=======
+      basketHit.launchSound();
+      m_engine->deleteObject(disks, 0);
+      m_engine->increaseScore(100);
+  }
+>>>>>>> 2074884134497af8d7e183f765e5ab2aaad34b14
   //std::cout << "End ghost stuff\n";
 }
 

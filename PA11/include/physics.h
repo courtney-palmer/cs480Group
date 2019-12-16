@@ -17,8 +17,12 @@ class Physics
 
     Engine* m_engine;
 
+<<<<<<< HEAD
     void spawnDisk();
     void Update(std::vector<Object*>& objs, std::vector<Object*>& disks, unsigned int& score); // just used to stepSimulation and update positions
+=======
+    void Update(std::vector<Object*>& objs, std::vector<Object*>& disks); // just used to stepSimulation and update positions
+>>>>>>> 2074884134497af8d7e183f765e5ab2aaad34b14
     //void Update(std::vector<Object*>& objs, unsigned int& score);
     
     // default : obj starts at origin as dynamic collision object
