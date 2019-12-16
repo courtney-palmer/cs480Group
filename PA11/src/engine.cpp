@@ -161,7 +161,7 @@ bool Engine::Initialize(char **argv)
   levelLoaded = true;
 
   // Add disks : Dynamic (type 1)
-  struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
+  //struct ShapeInfo diskInfo(cylind, 0.75,  0.75,  0.75);
   //createObject("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -3, 1);
   // createDisk("disk.obj", diskInfo, "disk", "galaxy.jpg", 0, 10, -0.5, 1);
   //  std::cout << "Object Initial values\n";
@@ -187,8 +187,8 @@ bool Engine::Initialize(char **argv)
 //  ========================= End Object Creation :> =================
 
 
-  objectCollidedSound.loadSound(BACGROUND_SOUND);
-  objectCollidedSound.launchSound();
+  //objectCollidedSound.loadSound(BACGROUND_SOUND);
+  //objectCollidedSound.launchSound();
   // objectCollidedSound.playSound();
 
   // No errors

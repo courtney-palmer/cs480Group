@@ -1,6 +1,7 @@
 #include "physics.h"
 #include <string>
 #include "object.h"
+#include "engine.h"
 
 Physics::Physics(Engine* e)
 {
@@ -107,11 +108,13 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks, un
     for(int d = 0; d < disks.size(); d++)
     {
       if(disks[d]->physicsObject == obj)
+      {
+        m_engine->deleteObject(disks, d);
         break;
+      }
     }
-    m_engine->deleteObject(disks, d);
     score += 100;
-    std::cout << "Score: " << score << endl;
+    std::cout << "Score: " << score << std::endl;
   }
   
 
@@ -229,7 +232,7 @@ void Physics::AddShape(Object* obj, float x, float y, float z, int bodyType)
   }
 
   obj->RBody = rigidBody;
-  obj->RBody->setAngularFactor(btVector3(1.0f, 0.0f, 1.0f));
+  obj->RBody->setAngularFactor(btVector3(1.0f, 0.0f, 0.0f));
   dynamicsWorld->addRigidBody(rigidBody);
   //if(obj->physicsObject != nullptr)
     //dynamicsWorld->addCollisionObject(obj->physicsObject);
