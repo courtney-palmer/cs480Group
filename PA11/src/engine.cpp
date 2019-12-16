@@ -58,10 +58,6 @@ bool Engine::Initialize(char **argv)
     return false;
   }  
 
-  objectCollidedSound.loadSound(HIT_SOUND);
-  objectCollidedSound.launchSound();
-  // objectCollidedSound.playSound();
-
   // Start the graphics
   m_graphics = new Graphics();
   if(!m_graphics->Initialize(m_WINDOW_WIDTH, m_WINDOW_HEIGHT, argv)) //initialize new instance of Objects here
@@ -109,10 +105,9 @@ bool Engine::Initialize(char **argv)
   m_physics->AddGhost(0, -16, -1.25);
   
   // add invisible wall :: i0
-  //struct ShapeInfo invWallInfo(box, 100, 100, 1);
-  struct ShapeInfo invWallInfo(mesh);
+  struct ShapeInfo invWallInfo(box, 100, 100, 1);
   //createObject("bucket.obj", invWallInfo, "glassTop", NA, 0, 0, -5, 3);
-  createObject("window.obj", invWallInfo, "glassTop", NA, 0, 0, -3, 3);
+  //createObject("window.obj", invWallInfo, "glassTop", NA, 0, 0, -3, 3);
   //createObject("verticalboard.obj", invWallInfo, "regTop", "steel.jpg", 0,0,-2,3); // Visible version for testing
 
   // Add board : Static (type 3)
@@ -190,6 +185,11 @@ bool Engine::Initialize(char **argv)
   
   
 //  ========================= End Object Creation :> =================
+
+
+  objectCollidedSound.loadSound(BACGROUND_SOUND);
+  objectCollidedSound.launchSound();
+  // objectCollidedSound.playSound();
 
   // No errors
   return true;
