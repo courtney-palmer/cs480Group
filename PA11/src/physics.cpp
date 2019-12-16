@@ -105,31 +105,10 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks) {
   numObjectsInGhost = ghostObj->getNumOverlappingObjects();
   if(numObjectsInGhost > 0)
   {
-<<<<<<< HEAD
-    btCollisionObject* obj = ghostObj->getOverlappingObject(i);
-    for(int d = 0; d < disks.size(); d++)
-    {
-      if(disks[d]->physicsObject == obj)
-      {
-        m_engine->deleteObject(disks, d);
-        break;
-      }
-    }
-  
-    basketHit.launchSound();
-    score += 100;
-    std::cout << "Score: " << score << std::endl;
-    spawnDisk();
-  }
-  
-  
-
-=======
       basketHit.launchSound();
       m_engine->deleteObject(disks, 0);
       m_engine->increaseScore(100);
   }
->>>>>>> 2074884134497af8d7e183f765e5ab2aaad34b14
   //std::cout << "End ghost stuff\n";
 }
 
@@ -209,7 +188,7 @@ void Physics::Update(std::vector<Object*>& objs, std::vector<Object*>& disks) {
 // }
 
 
-void Physics::spawnDisk(){
+//void Physics::spawnDisk(){
   // struct ShapeInfo defaultDisk(cylind, 0.75, 0.1, 0.1);
   // createDisk("disk.obj", defaultDisk, "disk", "galaxy.jpg", 0,0,0,1);
 
@@ -220,7 +199,7 @@ void Physics::spawnDisk(){
   // resetRotation(disks.back());
   // moveObject(disks, disks.size()-1,
 	// 		randSpawnVal, 12, -0.5);
-}
+//}
 
 
 /* Add btCollisionObject given by newly initialized object to physics->dynamicsWorld

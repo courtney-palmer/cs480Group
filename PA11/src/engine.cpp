@@ -428,7 +428,7 @@ void Engine::Keyboard()
 			    randSpawnVal, 13, -0.5);
     }
     */
-      m_physics->spawnDisk();
+      spawnDisk();
       break;
       
     case SDLK_k: // Remove disk
