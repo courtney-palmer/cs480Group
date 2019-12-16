@@ -18,11 +18,8 @@ scoring<br/>
 -->
 
 ## Project Description
-<<<<<<< HEAD
-For our final project, we built a disk drop game. 
-=======
+
 For our final project, we built a disk drop game, similar to Plinko. Disks drop down a board with pegs that the disks will bump off of. The player uses the arrow keys to move a basket left and right to try and catch as many disks as they can within the time limit.
->>>>>>> fd4e998189fe1551624db55be77366debeb0c1a1
 
 ## Cmake Instructions
 The building of the project is done using CMake, installation with apt-get or brew may be necessary. Later use with CMake and Shader files will be require the copy of a directory where those files are stored (ex. shaders). To do this in the ```add_custom_target``` function place 
