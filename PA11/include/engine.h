@@ -64,8 +64,15 @@ class Engine
 
   private:
 
-     bool spawn40 = true;
-     bool spawn20 = true;
+     bool spawn54 = true;
+     bool spawn48 = true;
+     bool spawn42 = true;
+     bool spawn36 = true;
+     bool spawn30 = true;
+     bool spawn24 = true;
+     bool spawn18 = true;
+     bool spawn12 = true;
+     bool spawn6 = true;
     // Window related variables
     Window *m_window;    
     string m_WINDOW_NAME;

@@ -75,7 +75,7 @@ Object::Object(const std::string& objFileName, const ShapeInfo& newShape,
   }
 
   if(texFileName == NA) {
-    std::cout << "No Texture to load." << std::endl;
+    //std::cout << "No Texture to load." << std::endl;
     textured = false;
   }
   else {

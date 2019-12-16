@@ -199,6 +199,7 @@ bool Engine::Initialize(char **argv)
 void Engine::Run()
 {
   m_running = true;
+  std::cout << "You have 60 seconds to catch as many disks as you can.\nPress space to begin." << std::endl;
 
   while(m_running)
   {
@@ -265,18 +266,46 @@ void Engine::Run()
     if(playing){
       //cout << timer << std::endl;
       timer -= getDT();
-      if(timer <= 40000 && spawn40){
-        //std::cout << "40 secs" << std::endl;
+      if(timer <= 54000 && spawn54){
         spawnDisk();
-        spawn40 = false;
+        spawn54 = false;
       }
-      else if(timer <= 20000 && spawn20){
-        //std::cout << "20 secs" << std::endl;
+      else if(timer <= 48000 && spawn48){
         spawnDisk();
-        spawn20 = false;
+        spawn48 = false;
+      }
+      else if(timer <= 42000 && spawn42){
+        spawnDisk();
+        spawn42 = false;
+      }
+      else if(timer <= 36000 && spawn36){
+        spawnDisk();
+        spawn36 = false;
+      }
+      else if(timer <= 30000 && spawn30){
+        spawnDisk();
+        spawn30 = false;
+      }
+      else if(timer <= 24000 && spawn24){
+        spawnDisk();
+        spawn24 = false;
+      }
+      else if(timer <= 18000 && spawn18){
+        spawnDisk();
+        spawn18 = false;
+      }
+      else if(timer <= 12000 && spawn12){
+        spawnDisk();
+        spawn12 = false;
+      }
+      else if(timer <= 6000 && spawn6){
+        spawnDisk();
+        spawn6 = false;
       }
       else if(timer <= 0){
         std::cout << "GAME OVER" << std::endl;
+        std::cout << "FINAL SCORE: " << score << std::endl;
+        std::cout << "Press space to restart." << std::endl;
         playing = false;
       }
     }
@@ -452,6 +481,15 @@ void Engine::Keyboard()
       timer = MAX_TIME;
       playing = true;
       score = 0;
+      spawn54 = true;
+      spawn48 = true;
+      spawn42 = true;
+      spawn36 = true;
+      spawn30 = true;
+      spawn24 = true;
+      spawn18 = true;
+      spawn12 = true;
+      spawn6 = true;
       spawnDisk();
       break;
 
